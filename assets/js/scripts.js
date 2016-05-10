@@ -6,15 +6,28 @@ $( "#add-files" ).change(function(evt) {
     for (var i = 0, f; f = files[i]; i++) {
         var reader = new FileReader();
         reader.onloadend = function(e) {
-            console.log(e);
             var xml = loadXMLDoc(e.target.result);
             resultDocument = tableXSLTProcessor.transformToFragment(xml);
-            console.log(xml);
+        }
+        if (f.type !== 'text/xml') {
+            abort('Invalid XML file detected: ' + f.name, 'danger');
         }
         reader.readAsText(f);
-        console.log(f);
     }
 });
+
+
+/** Abort javascript execution and display a Bootstrap alert. */
+function abort(msg, type) {
+    $( "#alerts" ).hide();
+    $( "#alerts" ).load( "_alerts.html #alert-template" ,function(){
+        var template = document.getElementById('alert-template').innerHTML;
+        var rendered = Mustache.render(template, {msg: msg, type: type});
+        $( "#alerts" ).html(rendered);
+    });
+    $( "#alerts" ).show();
+    throw new Error(msg);
+}
 
 
 /** Clear the views. */
@@ -35,7 +48,6 @@ function loadTableXSLTProcessor() {
         var doc = loadXMLDoc(result);
         tableXSLTProcessor = new XSLTProcessor();
         tableXSLTProcessor.importStylesheet(doc);
-        console.log(tableXSLTProcessor);
     });
 }
 
