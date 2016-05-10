@@ -8,6 +8,7 @@
         <meta name="description" content="Display and export summaries of multiple TEI records">
         <meta name="author" content="Alexander Mendes">
         <link rel="stylesheet" href="assets/vendor/bootstrap-3.3.6/css/bootstrap.min.css" media="all">
+        <link rel="stylesheet" href="assets/vendor/bootstrap-select-1.10.0/css/bootstrap-select.min.css" media="screen">
         <link rel="stylesheet" href="assets/css/styles.css?v=1.0" media="screen">
         <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -18,7 +19,7 @@
             <div class="hidden-print">
                 <h1>TEI Viewer</h1>
                 <hr>
-                <form id="tei-form">
+                <form id="tei-form" role="form">
                     <span class="btn btn-success btn-file">
                         Add Files <input type="file" id="add-files" name="files[]" multiple>
                     </span>
@@ -31,6 +32,7 @@
                 <ul class="nav nav-tabs">
                     <li role="presentation" class="active"><a href="#table-view" data-toggle="tab">Table View</a></li>
                     <li role="presentation"><a href="#list-view" data-toggle="tab">List View</a></li>
+                    <li role="presentation"><a href="#settings" data-toggle="tab">Settings</a></li>
                 </ul>
             </div>
             
@@ -47,16 +49,31 @@
                         </table>
                     </div>
                 </div>
+                
                 <div id="list-view" class="tab-pane fade">
                     <ol id="tei-list">
                         <!-- TEI XML data loaded here -->
                     </ol>
+                </div>
+                
+                <div id="settings" class="tab-pane fade">
+                    <form id="settings-form" role="form" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="table-xslt">Table XSLT</label>
+                            <select class="selectpicker" id="table-xslt"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="list-xslt">List XSLT</label>
+                            <select class="selectpicker" id="list-xslt"></select>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
         
         <script src="assets/vendor/jquery-2.2.3.min.js"></script>
         <script src="assets/vendor/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+        <script src="assets/vendor/bootstrap-select-1.10.0/js/bootstrap-select.min.js"></script>
         <script src="assets/js/scripts.js"></script>
     </body>
 </html>
