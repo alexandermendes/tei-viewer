@@ -1,71 +1,111 @@
+var settings = {};  // Loaded from settings.json
 var tableXSLTProcessor, listXSLTProcessor;
 
-/** Handle the add XML files event. */
+/** Add XML files to local storage. */
 $( "#add-files" ).change(function(evt) {
     var files = evt.target.files;
     for (var i = 0, f; f = files[i]; i++) {
-        var reader = new FileReader();
-        reader.onloadend = function(e) {
-            var xml = loadXMLDoc(e.target.result);
-            resultDocument = tableXSLTProcessor.transformToFragment(xml);
-        }
         if (f.type !== 'text/xml') {
-            abort('Invalid XML file detected: ' + f.name, 'danger');
+            showAlert(f.name + ' is not a valid XML file', 'warning');
+            continue;
         }
+
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                localStorage.setItem(Date.now(), e.target.result);
+            } catch (e) {
+                showAlert(e, 'danger');
+            }
+            refreshViews();
+        };
         reader.readAsText(f);
     }
 });
 
 
-/** Abort javascript execution and display a Bootstrap alert. */
-function abort(msg, type) {
-    $( "#alerts" ).hide();
-    $( "#alerts" ).load( "_alerts.html #alert-template" ,function(){
-        var template = document.getElementById('alert-template').innerHTML;
-        var rendered = Mustache.render(template, {msg: msg, type: type});
-        $( "#alerts" ).html(rendered);
-    });
-    $( "#alerts" ).show();
-    throw new Error(msg);
+/** Refresh the table and list views. */
+function refreshViews() {
+    var mergedDocs = mergeUploadedDocs();
+    var tableDoc = tableXSLTProcessor.transformToFragment(mergedDocs, document);
+    var listDoc = listXSLTProcessor.transformToFragment(mergedDocs, document);
+    $('#table-view').html(tableDoc);
+    $('#list-view').html(listDoc);
+    $('#files-uploaded').html(localStorage.length + ' files uploaded');
+    $('#tei-form').trigger("reset");
 }
 
 
-/** Clear the views. */
-$( "#clear-views" ).click(function() {
-    $('#tei-table tbody').html("");
-    $('#tei-list').html("");
-    $('#tei-form').trigger("reset");
+/** Return all uploaded files merged into single XML document. */
+function mergeUploadedDocs(){
+    var xmlStr, values = [], keys = Object.keys(localStorage), i = keys.length;
+    while ( i-- ) {
+        values.push(localStorage.getItem(keys[i]));
+    }
+    xmlStr = '<MERGED-TEI>' + values.join("") + '</MERGED-TEI>';
+    return loadXMLDoc(xmlStr);
+}
+
+
+/** Reload XSLT processors when settings changed. */
+$( ".select-xslt" ).change(function() {
+    refreshXSLTProcessors();
 });
 
 
-/** Load the selected XSL document for tables. */
-function loadTableXSLTProcessor() {
-    var fn = $('#table-xslt>option:selected').val();
-    var promise = Promise.resolve($.ajax({
-        url: "assets/xsl/" + fn
-    }));
-    promise.then(function(result) {
-        var doc = loadXMLDoc(result);
-        tableXSLTProcessor = new XSLTProcessor();
-        tableXSLTProcessor.importStylesheet(doc);
+/** Display a Bootstrap alert. */
+function showAlert(msg, type) {
+    $( "#alerts" ).load( "_alerts.html #alert-template" ,function(){
+        var template = $('#alert-template').html();
+        var rendered = Mustache.render(template, {msg: msg, type: type});
+        $('#alert-template').remove();
+        $( "#alerts" ).append(rendered);
     });
 }
 
 
-/** Return an array containing the text for each table header. */
-function getHeaders() {
-    var headers = [];
-    $('#tei-table th').each(function(k, v) {
-        headers.push(v.innerHTML)
+/** Clear local storage and refresh views. */
+$( "#clear-views" ).click(function() {
+    localStorage.clear();
+    refreshViews();
+});
+
+
+/** Refresh the current XSLT processors. */
+function refreshXSLTProcessors() {
+    var tableXSLT = $('#select-table-xslt > option:selected').val();
+    var listXSLT = $('#select-list-xslt > option:selected').val();
+
+    // Load the table XSLT
+    var tablePromise = Promise.resolve($.ajax({
+        url: "assets/xsl/" + tableXSLT
+    })).then(function(result) {
+        tableXSLTProcessor = new XSLTProcessor();
+        tableXSLTProcessor.importStylesheet(result);
+
+        //Then load the list XSLT
+        var listPromise = Promise.resolve($.ajax({
+            url: "assets/xsl/" + listXSLT
+        })).then(function(result) {
+            listXSLTProcessor = new XSLTProcessor();
+            listXSLTProcessor.importStylesheet(result);
+            refreshViews();
+        }, function() {
+            showAlert(listXSLT + ' could not be loaded', 'danger');
+        });
+    }, function() {
+        showAlert(tableXSLT + ' could not be loaded', 'danger');
     });
-    return headers;
 }
 
 
 /** Export the data to CSV. */
 $( "#csv-export" ).click(function() {
-    var headers = getHeaders().join(",");
-    var csvRows = [headers];
+    var headers = [];
+    $('#tei-table th').each(function(k, v) {
+        headers.push(v.html())
+    });
+    var csvRows = [headers.join(',')];
     for (var i = 0; i < data.length; i++) {
         var escapedRow = [];
         for (var j = 0; j < data[i].length; j++) {
@@ -99,31 +139,41 @@ function loadXMLDoc(text) {
             return xmlDoc;
         };
     } else {
-        throw new Error("No XML parser found");
+        var msg = "No XML parser found";
+        showAlert(msg, 'danger')
+        throw new Error(msg);
     }
     return parseXml(text);
 }
 
 
-/** Load XSL file settings. */
-function loadSettings() {
-    $.getJSON( "settings.json", function( data ) {
-        $.each( data.table, function( key, val ) {
+$(function() {
+
+    // Check for required HTML5 features
+    if (typeof(localStorage) == 'undefined' ) {
+        showAlert('Your browser does not support HTML5 localStorage. \
+                  Try upgrading.', 'danger');
+    }
+    if (typeof(FileReader) == 'undefined' ) {
+        showAlert('Your browser does not support the HTML5 FileReader. \
+                  Try upgrading.', 'danger');
+    }
+
+    // Initialise settings
+    $.getJSON( "settings.json", function( settings ) {
+        $.each( settings.xsl.table, function( key, val ) {
             var html = '<option value="' + val + '">' + key + '</option>';
-            $('#table-xslt').append(html);
+            $('#select-table-xslt').append(html);
         });
-        $.each( data.list, function( key, val ) {
+        $.each( settings.xsl.list, function( key, val ) {
             var html = '<option value="' + val + '">' + key + '</option>';
-            $('#list-xslt').append(html);
+            $('#select-list-xslt').append(html);
         });
     }).then(function() {
-        $('.selectpicker').selectpicker('val', 'Default');
-        $('.selectpicker').selectpicker('refresh');
-        loadTableXSLTProcessor();
+        $('.select-xslt').selectpicker('val', 'Default');
+        $('.select-xslt').selectpicker('refresh');
+        refreshXSLTProcessors();
+    }, function(){
+        showAlert('A valid settings file could not be found', 'danger')
     });
-}
-
-
-$(function() {
-    loadSettings();
 });

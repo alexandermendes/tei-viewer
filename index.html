@@ -32,6 +32,7 @@
                 </form>
                 <hr>
 
+                <p class="pull-right"><small><span id="files-uploaded"></span></small></p>
                 <ul class="nav nav-tabs">
                     <li role="presentation" class="active"><a href="#table-view" data-toggle="tab">Table View</a></li>
                     <li role="presentation"><a href="#list-view" data-toggle="tab">List View</a></li>
@@ -40,34 +41,24 @@
             </div>
 
             <div class="tabcontent">
+
                 <div id="table-view" class="tab-pane fade in active">
-                    <div class="table-scroll">
-                        <table id="tei-table" class="table table-condensed table-responsive">
-                            <thead>
-                                <!-- Table headers loaded here -->
-                            </thead>
-                            <tbody>
-                                <!-- TEI XML data loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <!-- TEI XML data loaded here -->
                 </div>
 
                 <div id="list-view" class="tab-pane fade">
-                    <ol id="tei-list">
-                        <!-- TEI XML data loaded here -->
-                    </ol>
+                    <!-- TEI XML data loaded here -->
                 </div>
 
                 <div id="settings" class="tab-pane fade">
                     <form id="settings-form" role="form" class="form-horizontal">
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="table-xslt">Table XSLT</label>
-                            <select class="selectpicker" id="table-xslt"></select>
+                            <label class="control-label col-sm-2" for="select-table-xslt">Table XSLT</label>
+                            <select class="selectpicker select-xslt" id="select-table-xslt"></select>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="list-xslt">List XSLT</label>
-                            <select class="selectpicker" id="list-xslt"></select>
+                            <label class="control-label col-sm-2" for="select-list-xslt">List XSLT</label>
+                            <select class="selectpicker select-xslt" id="select-list-xslt"></select>
                         </div>
                     </form>
                 </div>
