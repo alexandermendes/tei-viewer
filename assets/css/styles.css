@@ -1,5 +1,5 @@
-body {
-    min-height: 800px;
+main {
+    min-height: 100vh;
 }
 
 .tabcontent {
@@ -34,4 +34,22 @@ body {
     width:100%;
     max-width:100%;
     overflow-x:auto;
+}
+
+footer {
+    margin-top: 60px;
+    text-align: center;
+    width: 100%;
+    background-color: #EEEEEE;
+    height: 60px;
+    padding-top: 20px
+}
+footer a {
+    color: #666666;
+}
+footer a:hover,
+footer a:focus,
+footer a:active {
+    color: #888888;
+    text-decoration: none;
 }
