@@ -1,19 +1,27 @@
-var settings = {};  // Loaded from settings.json
 var tableXSLTProcessor, listXSLTProcessor;
 
 /** Add XML files to local storage. */
 $( "#add-files" ).change(function(evt) {
     var files = evt.target.files;
+    var uniqueFilenames = $('#unique-fn > option:selected').val() == 'True';
     for (var i = 0, f; f = files[i]; i++) {
         if (f.type !== 'text/xml') {
             showAlert(f.name + ' is not a valid XML file', 'warning');
             continue;
         }
+        var key = f.name;
+        if (localStorage.getItem(f.name) && uniqueFilenames) {
+            showAlert('A file with the name ' + f.name + ' has already \
+                      been uploaded.', 'warning');
+            continue;
+        } else if (!uniqueFilenames) {
+            key += Date.now();
+        }
 
         var reader = new FileReader();
         reader.onload = function(e) {
             try {
-                localStorage.setItem(Date.now(), e.target.result);
+                localStorage.setItem(key, e.target.result);
             } catch (e) {
                 showAlert(e, 'danger');
             }
@@ -33,6 +41,16 @@ function refreshViews() {
     $('#list-view').html(listDoc);
     $('#files-uploaded').html(localStorage.length + ' files uploaded');
     $('#tei-form').trigger("reset");
+    enableSettings();
+}
+
+
+/** Enable settings certain settings if local storage is empty. */
+function enableSettings() {
+    if (localStorage.length == 0){
+        $('#unique-fn').attr('disabled', false);
+        $('#unique-fn').selectpicker('refresh');
+    }
 }
 
 
@@ -147,6 +165,12 @@ function loadXMLDoc(text) {
 }
 
 
+//Function to convert boolean to capitalized string
+Boolean.prototype.toCapsString = function () {
+    return this.toString().charAt(0).toUpperCase() + this.toString().slice(1);
+}
+
+
 $(function() {
 
     // Check for required HTML5 features
@@ -161,6 +185,8 @@ $(function() {
 
     // Initialise settings
     $.getJSON( "settings.json", function( settings ) {
+
+        // XSLT files
         $.each( settings.xsl.table, function( key, val ) {
             var html = '<option value="' + val + '">' + key + '</option>';
             $('#select-table-xslt').append(html);
@@ -169,9 +195,13 @@ $(function() {
             var html = '<option value="' + val + '">' + key + '</option>';
             $('#select-list-xslt').append(html);
         });
+
+        // Unique filenames
+        var uniqueFn = settings.uniqueFilenames.toCapsString()
+        $('#unique-fn').selectpicker('val', uniqueFn);
     }).then(function() {
         $('.select-xslt').selectpicker('val', 'Default');
-        $('.select-xslt').selectpicker('refresh');
+        $('.selectpicker').selectpicker('refresh');
         refreshXSLTProcessors();
     }, function(){
         showAlert('A valid settings file could not be found', 'danger')

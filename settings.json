@@ -1,8 +1,11 @@
 {
-    "table": {
-        "Default": "default-table-row.xsl"
+    "xsl": {
+        "table": {
+            "Default": "default-table-row.xsl"
+        },
+        "list": {
+            "Default": "default-list-item.xsl"
+        }
     },
-    "list": {
-        "Default": "default-list-item.xsl"
-    }
+    "uniqueFilenames": false
 }

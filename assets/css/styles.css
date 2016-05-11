@@ -1,3 +1,7 @@
+body {
+    min-height: 800px;
+}
+
 .tabcontent {
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
