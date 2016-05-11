@@ -4,8 +4,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Tei Viewer</title>
-        <meta name="description" content="Display and export summaries of multiple TEI records">
+        <title>TEI Viewer</title>
+        <meta name="description" content="A single page HTML5 application to display and export TEI records.">
         <meta name="author" content="Alexander Mendes">
         <link rel="stylesheet" href="assets/vendor/bootstrap-3.3.6/css/bootstrap.min.css" media="all">
         <link rel="stylesheet" href="assets/vendor/bootstrap-select-1.10.0/css/bootstrap-select.min.css" media="screen">
@@ -22,7 +22,7 @@
                     <!-- Alerts loaded here -->
                 </div>
                 <hr>
-                <form id="tei-form" role="form">
+                <form id="tei-form">
                     <span class="btn btn-success btn-file">
                         Add Files <input type="file" id="add-files" name="files[]" accept=".xml" multiple>
                     </span>
@@ -53,7 +53,7 @@
                 <div id="settings" class="tab-pane fade">
                     <div class="row">
                         <div class="col-sm-8">
-                            <form id="settings-form" role="form" class="form-horizontal">
+                            <form id="settings-form" class="form-horizontal">
                                 <div class="form-group">
                                     <label class="control-label col-sm-3" for="select-table-xslt">Table XSLT</label>
                                     <select class="selectpicker select-xslt col-sm-8" id="select-table-xslt"></select>
@@ -64,14 +64,14 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-3" for="unique-fn">Unique Filenames</label>
-                                    <select class="selectpicker col-sm-8" id="unique-fn" disabled="true">
+                                    <select class="selectpicker col-sm-8" id="unique-fn" disabled>
                                         <option>True</option>
                                         <option>False</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-8 col-sm-offset-3">
-                                        <button type="button" class="btn btn-default pull-right" id="default-settings" disabled="true">Default Settings</button>
+                                        <button type="button" class="btn btn-default pull-right" id="default-settings" disabled>Default Settings</button>
                                     </div>
                                 </div>
                             </form>
