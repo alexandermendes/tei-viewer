@@ -9,24 +9,28 @@ $( "#add-files" ).change(function(evt) {
             showAlert(f.name + ' is not a valid XML file', 'warning');
             continue;
         }
-        var key = f.name;
-        if (localStorage.getItem(f.name) && uniqueFilenames) {
-            showAlert('A file with the name ' + f.name + ' has already \
-                      been uploaded.', 'warning');
-            continue;
-        } else if (!uniqueFilenames) {
-            key += Date.now();
-        }
 
         var reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                localStorage.setItem(key, e.target.result);
-            } catch (e) {
-                showAlert(e, 'danger');
-            }
-            refreshViews();
-        };
+            reader.onload = (function(theFile) {
+                return function(e) {
+
+                // Check for uniqueness
+                var key = theFile.name;
+                if (localStorage.getItem(theFile.name) && uniqueFilenames) {
+                    showAlert('A file with the name ' + theFile.name + ' has \
+                              already been uploaded.', 'warning');
+                } else if (!uniqueFilenames) {
+                    key += Date.now();
+                }
+
+                try {
+                    localStorage.setItem(key, e.target.result);
+                } catch (e) {
+                    showAlert(e, 'danger');
+                }
+                refreshViews();
+            };
+        })(f);
         reader.readAsText(f);
     }
 });
@@ -35,6 +39,11 @@ $( "#add-files" ).change(function(evt) {
 /** Refresh the table and list views. */
 function refreshViews() {
     var mergedDocs = mergeUploadedDocs();
+    if (typeof tableXSLTProcessor == "undefined" ||
+        typeof listXSLTProcessor == "undefined") {
+        showAlert('XSLT processors not loaded yet, please try again.', 'warning');
+        return
+    }
     var tableDoc = tableXSLTProcessor.transformToFragment(mergedDocs, document);
     var listDoc = listXSLTProcessor.transformToFragment(mergedDocs, document);
     $('#table-view').html(tableDoc);
