@@ -45,12 +45,14 @@ function refreshViews() {
 }
 
 
-/** Enable settings certain settings if local storage is empty. */
+/** Enable or disable settings certain settings if local storage is empty. */
 function enableSettings() {
     if (localStorage.length == 0){
         $('#unique-fn').attr('disabled', false);
-        $('#unique-fn').selectpicker('refresh');
+    } else {
+        $('#unique-fn').attr('disabled', true);
     }
+    $('#unique-fn').selectpicker('refresh');
 }
 
 
@@ -195,15 +197,16 @@ $(function() {
             var html = '<option value="' + val + '">' + key + '</option>';
             $('#select-list-xslt').append(html);
         });
+        $('#select-table-xslt').selectpicker('val', settings.xsl.selectedTable);
+        $('#select-list-xslt').selectpicker('val', settings.xsl.selectedList);
 
         // Unique filenames
         var uniqueFn = settings.uniqueFilenames.toCapsString()
         $('#unique-fn').selectpicker('val', uniqueFn);
     }).then(function() {
-        $('.select-xslt').selectpicker('val', 'Default');
         $('.selectpicker').selectpicker('refresh');
         refreshXSLTProcessors();
-    }, function(){
+    }, function() {
         showAlert('A valid settings file could not be found', 'danger')
     });
 });

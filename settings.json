@@ -1,11 +1,13 @@
 {
     "xsl": {
         "table": {
-            "Default": "default-table-row.xsl"
+            "Simplified": "simplified-table.xsl"
         },
         "list": {
-            "Default": "default-list-item.xsl"
-        }
+            "Simplified": "simplified-list.xsl"
+        },
+        "selectedTable" : "Simplified",
+        "selectedListXSL" : "Simplified"
     },
     "uniqueFilenames": false
 }
