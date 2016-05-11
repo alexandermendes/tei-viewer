@@ -51,23 +51,32 @@
                 </div>
 
                 <div id="settings" class="tab-pane fade">
-                    <form id="settings-form" role="form" class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="select-table-xslt">Table XSLT</label>
-                            <select class="selectpicker select-xslt" id="select-table-xslt"></select>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <form id="settings-form" role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="select-table-xslt">Table XSLT</label>
+                                    <select class="selectpicker select-xslt col-sm-8" id="select-table-xslt"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="select-list-xslt">List XSLT</label>
+                                    <select class="selectpicker select-xslt col-sm-8" id="select-list-xslt"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="unique-fn">Unique Filenames</label>
+                                    <select class="selectpicker col-sm-8" id="unique-fn" disabled="true">
+                                        <option>True</option>
+                                        <option>False</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-8 col-sm-offset-3">
+                                        <button type="button" class="btn btn-default pull-right" id="default-settings" disabled="true">Default Settings</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="select-list-xslt">List XSLT</label>
-                            <select class="selectpicker select-xslt" id="select-list-xslt"></select>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="unique-fn">Unique Filenames</label>
-                            <select class="selectpicker" id="unique-fn" disabled="true">
-                                <option>True</option>
-                                <option>False</option>
-                            </select>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

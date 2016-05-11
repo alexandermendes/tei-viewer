@@ -3,7 +3,7 @@ var tableXSLTProcessor, listXSLTProcessor;
 /** Add XML files to local storage. */
 $( "#add-files" ).change(function(evt) {
     var files = evt.target.files;
-    var uniqueFilenames = $('#unique-fn > option:selected').val() == 'True';
+    var uniqueFilenames = $('#unique-fn').val() == 'True';
     for (var i = 0, f; f = files[i]; i++) {
         if (f.type !== 'text/xml') {
             showAlert(f.name + ' is not a valid XML file', 'warning');
@@ -49,8 +49,10 @@ function refreshViews() {
 function enableSettings() {
     if (localStorage.length == 0){
         $('#unique-fn').attr('disabled', false);
+        $('#default-settings').attr('disabled', false);
     } else {
         $('#unique-fn').attr('disabled', true);
+        $('#default-settings').attr('disabled', true);
     }
     $('#unique-fn').selectpicker('refresh');
 }
@@ -65,12 +67,6 @@ function mergeUploadedDocs(){
     xmlStr = '<MERGED-TEI>' + values.join("") + '</MERGED-TEI>';
     return loadXMLDoc(xmlStr);
 }
-
-
-/** Reload XSLT processors when settings changed. */
-$( ".select-xslt" ).change(function() {
-    refreshXSLTProcessors();
-});
 
 
 /** Display a Bootstrap alert. */
@@ -93,8 +89,8 @@ $( "#clear-views" ).click(function() {
 
 /** Refresh the current XSLT processors. */
 function refreshXSLTProcessors() {
-    var tableXSLT = $('#select-table-xslt > option:selected').val();
-    var listXSLT = $('#select-list-xslt > option:selected').val();
+    var tableXSLT = $('#select-table-xslt').val();
+    var listXSLT = $('#select-list-xslt').val();
 
     // Load the table XSLT
     var tablePromise = Promise.resolve($.ajax({
@@ -173,6 +169,78 @@ Boolean.prototype.toCapsString = function () {
 }
 
 
+/** Reset to default settings. */
+$( "#default-settings" ).click(function() {
+    loadDefaultSettings();
+});
+
+
+/** Handle change of load table XSLT setting. */
+$( "#select-table-xslt" ).change(function() {
+    var settings = Cookies.getJSON('settings');
+    settings.xsl.selectedTable = $('#select-table-xslt').val();
+    Cookies.set('settings', settings);
+    refreshXSLTProcessors();
+});
+
+
+/** Handle change of load list XSLT setting. */
+$( "#select-list-xslt" ).change(function() {
+    var settings = Cookies.getJSON('settings');
+    settings.xsl.selectedList = $('#select-list-xslt').val();
+    Cookies.set('settings', settings);
+    refreshXSLTProcessors();
+});
+
+
+/** Handle change of unique filenames setting. */
+$( "#unique-fn" ).change(function() {
+    var settings = Cookies.getJSON('settings');
+    var uniqueFn = $('#unique-fn').val() == 'True';
+    settings.uniqueFilenames = uniqueFn;
+    Cookies.set('settings', settings);
+    console.log(Cookies.get('settings'));
+});
+
+
+/** Load settings from cookie. */
+function loadSettings(){
+    var settings = Cookies.getJSON('settings');
+
+    // XSLT files
+    $.each( settings.xsl.table, function( key, val ) {
+        var html = '<option value="' + val + '">' + key + '</option>';
+        $('#select-table-xslt').append(html);
+    });
+    $.each( settings.xsl.list, function( key, val ) {
+        var html = '<option value="' + val + '">' + key + '</option>';
+        $('#select-list-xslt').append(html);
+    });
+    $('#select-table-xslt').val(settings.xsl.selectedTable);
+    $('#select-list-xslt').val(settings.xsl.selectedList);
+
+    // Unique filenames
+    var uniqueFn = settings.uniqueFilenames.toCapsString()
+    $('#unique-fn').val(uniqueFn);
+
+    $('.selectpicker').selectpicker('refresh');
+    refreshXSLTProcessors();
+}
+
+
+/** Reset to default settings. */
+function loadDefaultSettings() {
+    $.getJSON( "settings.json", function( settings ) {
+        Cookies.set('settings', settings);
+        loadSettings();
+    }).then(function() {
+        refreshXSLTProcessors();
+    }, function() {
+        showAlert('A valid settings file could not be found', 'danger')
+    });
+}
+
+
 $(function() {
 
     // Check for required HTML5 features
@@ -185,28 +253,10 @@ $(function() {
                   Try upgrading.', 'danger');
     }
 
-    // Initialise settings
-    $.getJSON( "settings.json", function( settings ) {
-
-        // XSLT files
-        $.each( settings.xsl.table, function( key, val ) {
-            var html = '<option value="' + val + '">' + key + '</option>';
-            $('#select-table-xslt').append(html);
-        });
-        $.each( settings.xsl.list, function( key, val ) {
-            var html = '<option value="' + val + '">' + key + '</option>';
-            $('#select-list-xslt').append(html);
-        });
-        $('#select-table-xslt').selectpicker('val', settings.xsl.selectedTable);
-        $('#select-list-xslt').selectpicker('val', settings.xsl.selectedList);
-
-        // Unique filenames
-        var uniqueFn = settings.uniqueFilenames.toCapsString()
-        $('#unique-fn').selectpicker('val', uniqueFn);
-    }).then(function() {
-        $('.selectpicker').selectpicker('refresh');
-        refreshXSLTProcessors();
-    }, function() {
-        showAlert('A valid settings file could not be found', 'danger')
-    });
+    // Initialise settings from cookie or defaults
+    if (typeof Cookies.get('settings') != "undefined") {
+        loadSettings();
+    } else {
+        loadDefaultSettings();
+    }
 });
