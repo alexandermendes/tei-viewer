@@ -7,10 +7,10 @@
             <table class="table table-condensed table-responsive">
                 <thead>
                     <tr>
-                        <td>Shelfmark</td>
-                        <td>Title</td>
-                        <td>Extent</td>
-                        <td>Language</td>
+                        <th>Shelfmark</th>
+                        <th>Title</th>
+                        <th>Extent</th>
+                        <th>Language</th>
                     </tr>
                 </thead>
                 <tbody>
