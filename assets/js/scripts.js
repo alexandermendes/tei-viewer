@@ -31,7 +31,10 @@ $( "#add-files" ).change(function(evt) {
                     var xmlStr = e.target.result.replace(/<\?xml.*?\?>/g, "");
                     localStorage.setItem(key, xmlStr);
                 } catch (e) {
-                    showAlert(e, 'danger');
+                    showAlert("Upload failed, local storage quota \
+                              exceeded. The currently loaded files must be \
+                              cleared before more can be uploaded.", 'danger');
+                    throw new Error(e)
                 }
 
                 --pending
