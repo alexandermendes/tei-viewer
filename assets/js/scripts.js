@@ -24,7 +24,9 @@ $( "#add-files" ).change(function(evt) {
                 }
 
                 try {
-                    localStorage.setItem(key, e.target.result);
+                    //Remove XML declaration (for merging) and store
+                    var xmlStr = e.target.result.replace(/<\?xml.*?\?>/g, "");
+                    localStorage.setItem(key, xmlStr);
                 } catch (e) {
                     showAlert(e, 'danger');
                 }
