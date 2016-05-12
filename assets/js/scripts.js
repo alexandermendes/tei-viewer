@@ -124,22 +124,27 @@ function refreshXSLTProcessors() {
 }
 
 
-/** Export the data to CSV. */
+/** Export the table to CSV. */
 $( "#csv-export" ).click(function() {
-    var headers = [];
-    $('#tei-table th').each(function(k, v) {
-        headers.push(v.html())
-    });
-    var csvRows = [headers.join(',')];
-    for (var i = 0; i < data.length; i++) {
-        var escapedRow = [];
-        for (var j = 0; j < data[i].length; j++) {
-            escapedRow.push('"' + data[i][j].replace(/"/g, '""') + '"');
-        }
-        csvRows.push(escapedRow.join(","));
+
+    // Return an escaped CSV string
+    function formatCSV(str) {
+        return escapedStr = '"' + str.replace(/"/g, '""') + '"';
     }
-    var bom = "\uFEFF";
-    var csvString = bom + csvRows.join("\n");
+
+    // Get table rows
+    var rows = [];
+    $('table tr').each(function() {
+        var row = [];
+        $(this).find('th,td').each(function () {
+            var val = $(this)[0].innerHTML;
+            row.push(val)
+        });
+        rows.push(row.join(','));
+    });
+
+    var csvString = rows.join("\n");
+    console.log(csvString);
     var encodedUri = encodeURI('data:attachment/csv;charset=utf-8,' + csvString);
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
