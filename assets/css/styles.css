@@ -36,6 +36,13 @@ main {
     overflow-x:auto;
 }
 
+.tab-pane {
+    display: none;
+}
+.tab-pane.active {
+    display: initial;
+}
+
 footer {
     margin-top: 60px;
     text-align: center;
