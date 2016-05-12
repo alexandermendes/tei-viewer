@@ -60,3 +60,16 @@ footer a:active {
     color: #888888;
     text-decoration: none;
 }
+
+@media print {
+    .tabcontent {
+        border: none;
+        padding: none;
+    }
+    .tab-pane {
+        display: none;
+    }
+    .tab-pane.active {
+        display: initial;
+    }
+}
