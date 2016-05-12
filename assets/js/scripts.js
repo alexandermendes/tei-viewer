@@ -4,6 +4,8 @@ var tableXSLTProcessor, listXSLTProcessor;
 $( "#add-files" ).change(function(evt) {
     var files = evt.target.files;
     var uniqueFilenames = $('#unique-fn').val() == 'True';
+    var pending = files.length;
+
     for (var i = 0, f; f = files[i]; i++) {
         if (f.type !== 'text/xml') {
             showAlert(f.name + ' is not a valid XML file', 'warning');
@@ -30,12 +32,24 @@ $( "#add-files" ).change(function(evt) {
                 } catch (e) {
                     showAlert(e, 'danger');
                 }
-                refreshViews();
+
+                --pending
+                if (pending == 0) {
+                    refreshViews();
+                }
             };
         })(f);
         reader.readAsText(f);
     }
 });
+
+
+/** Update progress bar. */
+function updateProgress(i) {
+    $('#upload-progress > .progress-bar').attr('aria-valuenow', i);
+    $('#upload-progress > .progress-bar').width(i + '%');
+    $('#upload-progress > .progress-bar > span').html(i + '% complete');
+}
 
 
 /** Refresh the table and list views. */
