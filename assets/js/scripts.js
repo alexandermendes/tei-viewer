@@ -2,8 +2,11 @@ var tableXSLTProcessor, listXSLTProcessor;
 
 /** Add XML files to local storage. */
 $( "#add-files" ).change(function(evt) {
+    showLoading();
     var files = evt.target.files;
     var uniqueFilenames = $('#unique-fn').val() == 'True';
+    var pending = files.length;
+
     for (var i = 0, f; f = files[i]; i++) {
         if (f.type !== 'text/xml') {
             showAlert(f.name + ' is not a valid XML file', 'warning');
@@ -28,14 +31,36 @@ $( "#add-files" ).change(function(evt) {
                     var xmlStr = e.target.result.replace(/<\?xml.*?\?>/g, "");
                     localStorage.setItem(key, xmlStr);
                 } catch (e) {
-                    showAlert(e, 'danger');
+                    hideLoading();
+                    showAlert("Upload failed, local storage quota \
+                              exceeded. The currently loaded files must be \
+                              cleared before more can be uploaded.", 'danger');
+                    throw new Error(e)
                 }
-                refreshViews();
+
+                --pending
+                if (pending == 0) {
+                    refreshViews();
+                }
             };
         })(f);
         reader.readAsText(f);
     }
 });
+
+
+/** Show loading icon. */
+function showLoading() {
+    $('#files-uploaded').hide();
+    $('#loading-icon').show();
+}
+
+
+/** Hide loading icon. */
+function hideLoading() {
+    $('#loading-icon').hide();
+    $('#files-uploaded').show();
+}
 
 
 /** Refresh the table and list views. */
@@ -44,15 +69,16 @@ function refreshViews() {
     if (typeof tableXSLTProcessor == "undefined" ||
         typeof listXSLTProcessor == "undefined") {
         showAlert('XSLT processors not loaded yet, please try again.', 'warning');
-        return
+    } else {
+        var tableDoc = tableXSLTProcessor.transformToFragment(mergedDocs, document);
+        var listDoc = listXSLTProcessor.transformToFragment(mergedDocs, document);
+        $('#table-view').html(tableDoc);
+        $('#list-view').html(listDoc);
     }
-    var tableDoc = tableXSLTProcessor.transformToFragment(mergedDocs, document);
-    var listDoc = listXSLTProcessor.transformToFragment(mergedDocs, document);
-    $('#table-view').html(tableDoc);
-    $('#list-view').html(listDoc);
     $('#files-uploaded').html(localStorage.length + ' files uploaded');
     $('#tei-form').trigger("reset");
     enableSettings();
+    hideLoading();
 }
 
 
@@ -93,6 +119,7 @@ function showAlert(msg, type) {
 
 /** Clear local storage and refresh views. */
 $( "#clear-views" ).click(function() {
+    showLoading();
     localStorage.clear();
     refreshViews();
 });
@@ -128,7 +155,6 @@ function refreshXSLTProcessors() {
 
 /** Export the table to CSV. */
 $( "#csv-export" ).click(function() {
-
     // Return an escaped CSV string
     function formatCSV(str) {
         return escapedStr = '"' + str.replace(/"/g, '""') + '"';
@@ -171,6 +197,7 @@ function loadXMLDoc(text) {
             return xmlDoc;
         };
     } else {
+        hideLoading();
         var msg = "No XML parser found";
         showAlert(msg, 'danger')
         throw new Error(msg);
@@ -193,6 +220,7 @@ $( "#default-settings" ).click(function() {
 
 /** Handle change of load table XSLT setting. */
 $( "#select-table-xslt" ).change(function() {
+    showLoading();
     var settings = Cookies.getJSON('settings');
     settings.xsl.selectedTable = $('#select-table-xslt').val();
     Cookies.set('settings', settings);
@@ -202,6 +230,7 @@ $( "#select-table-xslt" ).change(function() {
 
 /** Handle change of load list XSLT setting. */
 $( "#select-list-xslt" ).change(function() {
+    showLoading();
     var settings = Cookies.getJSON('settings');
     settings.xsl.selectedList = $('#select-list-xslt').val();
     Cookies.set('settings', settings);
@@ -258,14 +287,16 @@ function loadDefaultSettings() {
 
 
 $(function() {
+    showLoading();
 
     // Check for required HTML5 features
     if (typeof(localStorage) == 'undefined' ) {
         showAlert('Your browser does not support HTML5 localStorage. \
                   Try upgrading.', 'danger');
     }
-    if (typeof(FileReader) == 'undefined' ) {
-        showAlert('Your browser does not support the HTML5 FileReader. \
+    if (typeof(FileReader) == 'undefined' || typeof(File) == 'undefined'
+        || typeof(FileList) == 'undefined' || typeof(Blob) == 'undefined') {
+        showAlert('Your browser does not support the HTML5 File APIs. \
                   Try upgrading.', 'danger');
     }
 
