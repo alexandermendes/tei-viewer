@@ -11,24 +11,7 @@ function populateTableMenus() {
         }
     });
 
-    if (headings.length > 0) {
-        $( "#sort-menu" ).load( "_snippets.html #thead-li-template", function() {
-            var template = $('#thead-li-template').html();
-            var rendered = Mustache.render(template, {cls: 'sort-column',
-                                           headings: headings});
-            $('#thead-li-template').remove();
-            $("#sort-menu").append(rendered);
-        });
-    } else {
-        $( "#sort-menu" ).load( "_snippets.html #option-ph-template", function() {
-            var template = $('#option-ph-template').html();
-            var rendered = Mustache.render(template, {label: "Nothing to sort"});
-            $('#option-ph-template').remove();
-            $("#sort-menu").append(rendered);
-        });
-    }
-
-    if (hiddenCols != headings.length) {
+    if (headings.length - hiddenCols > 0) {
         $( "#hide-menu" ).load( "_snippets.html #thead-li-template", function() {
             var template = $('#thead-li-template').html();
             function getCls() {
@@ -109,10 +92,4 @@ function getHiddenColumns(){
         }
     });
     return hiddenCols;
-}
-
-
-/** Sort table by column. */
-function sortTable(i) {
-
 }
