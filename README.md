@@ -3,32 +3,41 @@
 A single page HTML5 application to display and export summaries of multiple
 TEI XML documents.
 
-
-## Usage
+Uploaded files are saved to local storage, transformed via XSLT, then displayed
+in both list and table formats.
 
 [Try it here](http://alexandermendes.github.io/tei-viewer/)
 
-Click the **Add Files** button to upload TEI XML documents and save them to local
-storage. These documents are merged and transformed via XSLT, to be displayed
-in both table and list formats.
 
-The **Clear** button removes all uploaded documents, the **Export to CSV**
-button exports the table to a CSV file and the **Print** button prints,
-suprisingly.
+## Toolbar
+
+The core functionality is provided via the following toolbar buttons:
+
+- **Add Files:** Upload TEI XML documents.
+
+- **Clear:** Remove all uploaded documents.
+
+- **Print:** Print the current view.
+
+- **Hide:** Hide table columns.
+
+- **Show:** Show table columns.
+
+- **Export to CSV:** Export the table to a CSV file.
 
 
 ## Settings
 
 The following settings are provided:
 
-- **Table XSLT / List XSLT:** The XSLT documents used to transform and
-display your data. Submit a pull request to add additional stylesheets
-to this repository.
+- **Table XSLT:** The XSLT document used to transform for table display.
+
+- **List XSLT:** The XSLT document used to transform for list display.
 
 - **Unique filenames:** Allow more than one file with the same filename to be
 uploaded.
 
-- **Default settings:** Result to default settings.
+- **Default settings:** Return to default settings.
 
 Note that certain settings can only be changed when no XML files are loaded.
 
@@ -49,3 +58,13 @@ python -m SimpleHTTPServer
 ```
 
 Then visit [http://localhost:8000/](http://localhost:8000/)
+
+
+## Contributing
+
+Bugs and improvements are tracked as [issues](https://github.com/alexandermendes/tei-viewer/issues).
+
+If you find that you want to display your TEI data in a particular way feel free to submit
+a pull request to add additonal XSLT scripts. Just add the script to the
+[xsl](https://github.com/alexandermendes/tei-viewer/tree/master/assets/xsl) directory
+and load it via [settings.json](settings.json).
