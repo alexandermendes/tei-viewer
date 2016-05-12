@@ -2,6 +2,7 @@ var tableXSLTProcessor, listXSLTProcessor;
 
 /** Add XML files to local storage. */
 $( "#add-files" ).change(function(evt) {
+    showLoading();
     var files = evt.target.files;
     var uniqueFilenames = $('#unique-fn').val() == 'True';
     var pending = files.length;
@@ -44,11 +45,17 @@ $( "#add-files" ).change(function(evt) {
 });
 
 
-/** Update progress bar. */
-function updateProgress(i) {
-    $('#upload-progress > .progress-bar').attr('aria-valuenow', i);
-    $('#upload-progress > .progress-bar').width(i + '%');
-    $('#upload-progress > .progress-bar > span').html(i + '% complete');
+/** Show loading icon. */
+function showLoading() {
+    $('#files-uploaded').hide();
+    $('#loading-icon').show();
+}
+
+
+/** Hide loading icon. */
+function hideLoading() {
+    $('#loading-icon').hide();
+    $('#files-uploaded').show();
 }
 
 
@@ -58,15 +65,16 @@ function refreshViews() {
     if (typeof tableXSLTProcessor == "undefined" ||
         typeof listXSLTProcessor == "undefined") {
         showAlert('XSLT processors not loaded yet, please try again.', 'warning');
-        return
+    } else {
+        var tableDoc = tableXSLTProcessor.transformToFragment(mergedDocs, document);
+        var listDoc = listXSLTProcessor.transformToFragment(mergedDocs, document);
+        $('#table-view').html(tableDoc);
+        $('#list-view').html(listDoc);
     }
-    var tableDoc = tableXSLTProcessor.transformToFragment(mergedDocs, document);
-    var listDoc = listXSLTProcessor.transformToFragment(mergedDocs, document);
-    $('#table-view').html(tableDoc);
-    $('#list-view').html(listDoc);
     $('#files-uploaded').html(localStorage.length + ' files uploaded');
     $('#tei-form').trigger("reset");
     enableSettings();
+    hideLoading();
 }
 
 
@@ -107,6 +115,7 @@ function showAlert(msg, type) {
 
 /** Clear local storage and refresh views. */
 $( "#clear-views" ).click(function() {
+    showLoading();
     localStorage.clear();
     refreshViews();
 });
@@ -142,7 +151,6 @@ function refreshXSLTProcessors() {
 
 /** Export the table to CSV. */
 $( "#csv-export" ).click(function() {
-
     // Return an escaped CSV string
     function formatCSV(str) {
         return escapedStr = '"' + str.replace(/"/g, '""') + '"';
@@ -207,6 +215,7 @@ $( "#default-settings" ).click(function() {
 
 /** Handle change of load table XSLT setting. */
 $( "#select-table-xslt" ).change(function() {
+    showLoading();
     var settings = Cookies.getJSON('settings');
     settings.xsl.selectedTable = $('#select-table-xslt').val();
     Cookies.set('settings', settings);
@@ -216,6 +225,7 @@ $( "#select-table-xslt" ).change(function() {
 
 /** Handle change of load list XSLT setting. */
 $( "#select-list-xslt" ).change(function() {
+    showLoading();
     var settings = Cookies.getJSON('settings');
     settings.xsl.selectedList = $('#select-list-xslt').val();
     Cookies.set('settings', settings);
@@ -272,6 +282,7 @@ function loadDefaultSettings() {
 
 
 $(function() {
+    showLoading();
 
     // Check for required HTML5 features
     if (typeof(localStorage) == 'undefined' ) {

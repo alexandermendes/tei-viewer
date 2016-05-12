@@ -43,6 +43,12 @@ main {
     display: initial;
 }
 
+.glyphicon-spin {
+    font-size: large;
+    -webkit-animation: spin 1000ms infinite linear;
+    animation: spin 1000ms infinite linear;
+}
+
 footer {
     margin-top: 60px;
     text-align: center;
@@ -59,6 +65,27 @@ footer a:focus,
 footer a:active {
     color: #888888;
     text-decoration: none;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
 }
 
 @media print {
