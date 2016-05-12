@@ -7,44 +7,42 @@ function populateTableMenus() {
         headings.push(h);
     });
 
-    if ($('table th:visible').length > 0) {
-        $( "#hide-menu" ).load( "_snippets.html #thead-li-template", function() {
-            var template = $('#thead-li-template').html();
-            function getCls() {
-                return (this.visible) ? "hide-column" : "hide-column hidden";
-            }
-            var rendered = Mustache.render(template, {cls: getCls,
-                                           headings: headings});
-            $('#thead-li-template').remove();
-            $("#hide-menu").append(rendered);
-        });
-    } else {
-        $( "#hide-menu" ).load( "_snippets.html #option-ph-template", function() {
+    function showPlaceholder(id) {
+        $("#" + id + "-menu").load( "_snippets.html #option-ph-template", function() {
             var template = $('#option-ph-template').html();
-            var rendered = Mustache.render(template, {label: "Nothing to hide"});
+            var rendered = Mustache.render(template, {label: "Nothing to " + id});
             $('#option-ph-template').remove();
-            $("#hide-menu").append(rendered);
+            $("#" + id + "-menu").append(rendered);
         });
     }
 
-    if ($('table th:hidden').length > 0) {
-        $( "#show-menu" ).load( "_snippets.html #thead-li-template", function() {
+    function showMenu(id, cls) {
+        $("#" + id + "-menu").load( "_snippets.html #thead-li-template", function() {
             var template = $('#thead-li-template').html();
-            function getCls() {
-                return (!this.visible) ? "show-column" : "show-column hidden";
-            }
-            var rendered = Mustache.render(template, {cls: getCls,
-                                           headings: headings});
-            $('#thead-li-template').remove();
-            $("#show-menu").append(rendered);
+            var rendered = Mustache.render(template, {cls: cls, headings: headings});
+            $("#thead-li-template").remove();
+            $("#" + id + "-menu").append(rendered);
         });
+    }
+
+    function getHideCls() {
+        return (this.visible) ? "hide-column" : "hide-column hidden";
+    }
+
+    function getShowCls() {
+        return (!this.visible) ? "show-column" : "show-column hidden";
+    }
+
+    if ($('table th:visible').length > 0) {
+        showMenu('hide', getHideCls)
     } else {
-        $( "#show-menu" ).load( "_snippets.html #option-ph-template", function() {
-            var template = $('#option-ph-template').html();
-            var rendered = Mustache.render(template, {label: "Nothing to show"});
-            $('#option-ph-template').remove();
-            $("#show-menu").append(rendered);
-        });
+        showPlaceholder('hide');
+    }
+
+    if ($('table th:hidden').length > 0) {
+        showMenu('show', getShowCls)
+    } else {
+        showPlaceholder('show');
     }
 }
 
