@@ -177,7 +177,6 @@ $( "#csv-export" ).click(function() {
     });
 
     var csvString = rows.join("\n");
-    console.log(csvString);
     var encodedUri = encodeURI('data:attachment/csv;charset=utf-8,' + csvString);
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -249,7 +248,6 @@ $( "#unique-fn" ).change(function() {
     var uniqueFn = $('#unique-fn').val() == 'True';
     settings.uniqueFilenames = uniqueFn;
     Cookies.set('settings', settings);
-    console.log(Cookies.get('settings'));
 });
 
 
