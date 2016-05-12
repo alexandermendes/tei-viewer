@@ -1,8 +1,7 @@
 # tei-viewer
 
-A single page HTML5 application to display and export TEI records. The viwer aims
-to provide a convenient way for researchers to view summaries of multiple TEI
-XML documents.
+A single page HTML5 application to display and export summaries of multiple
+TEI XML documents.
 
 
 ## Usage
@@ -10,7 +9,7 @@ XML documents.
 [Try it here](http://alexandermendes.github.io/tei-viewer/)
 
 Click the **Add Files** button to upload TEI XML documents and save them to local
-storage. These documents are merged and transformed via XSLT to be displayed
+storage. These documents are merged and transformed via XSLT, to be displayed
 in both table and list formats.
 
 The **Clear** button removes all uploaded documents, the **Export to CSV**
@@ -31,7 +30,7 @@ uploaded.
 
 - **Default settings:** Result to default settings.
 
-Note that certain settings are disabled while XML files are loaded.
+Note that certain settings can only be changed when no XML files are loaded.
 
 
 ## Running offline
