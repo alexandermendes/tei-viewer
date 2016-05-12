@@ -31,6 +31,7 @@ $( "#add-files" ).change(function(evt) {
                     var xmlStr = e.target.result.replace(/<\?xml.*?\?>/g, "");
                     localStorage.setItem(key, xmlStr);
                 } catch (e) {
+                    hideLoading();
                     showAlert("Upload failed, local storage quota \
                               exceeded. The currently loaded files must be \
                               cleared before more can be uploaded.", 'danger');
@@ -196,6 +197,7 @@ function loadXMLDoc(text) {
             return xmlDoc;
         };
     } else {
+        hideLoading();
         var msg = "No XML parser found";
         showAlert(msg, 'danger')
         throw new Error(msg);
