@@ -264,8 +264,9 @@ $(function() {
         showAlert('Your browser does not support HTML5 localStorage. \
                   Try upgrading.', 'danger');
     }
-    if (typeof(FileReader) == 'undefined' ) {
-        showAlert('Your browser does not support the HTML5 FileReader. \
+    if (typeof(FileReader) == 'undefined' || typeof(File) == 'undefined'
+        || typeof(FileList) == 'undefined' || typeof(Blob) == 'undefined') {
+        showAlert('Your browser does not support the HTML5 File APIs. \
                   Try upgrading.', 'danger');
     }
 
