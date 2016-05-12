@@ -1,17 +1,13 @@
 /** Populate the hide, show and sort menus. */
 function populateTableMenus() {
     var headings = []
-    var hiddenCols = 0;
     $('table th').each(function(i) {
         var h = {'label': $(this).html(), 'visible': $(this).is(':visible'),
                  'index': i}
         headings.push(h);
-        if ($(this).is(':hidden')) {
-            ++hiddenCols;
-        }
     });
 
-    if (headings.length - hiddenCols > 0) {
+    if ($('table th:visible').length > 0) {
         $( "#hide-menu" ).load( "_snippets.html #thead-li-template", function() {
             var template = $('#thead-li-template').html();
             function getCls() {
@@ -31,7 +27,7 @@ function populateTableMenus() {
         });
     }
 
-    if (hiddenCols > 0) {
+    if ($('table th:hidden').length > 0) {
         $( "#show-menu" ).load( "_snippets.html #thead-li-template", function() {
             var template = $('#thead-li-template').html();
             function getCls() {
