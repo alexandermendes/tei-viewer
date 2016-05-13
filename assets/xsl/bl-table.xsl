@@ -62,7 +62,7 @@
     </xsl:template>
 
     <xsl:template match="tei:msIdentifier">
-        <td>  <!-- Shelfmark -->
+        <td style="white-space:nowrap;">  <!-- Shelfmark -->
             <a href="https://www.bl.uk/manuscripts/FullDisplay.aspx?ref={translate(tei:idno, ' ', '_')}" target="_blank">
                 <xsl:value-of select='tei:idno'/>
             </a>
