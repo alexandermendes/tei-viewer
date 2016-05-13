@@ -113,12 +113,9 @@ function mergeUploadedDocs(){
 
 /** Display a Bootstrap alert. */
 function showAlert(msg, type) {
-    $( "#alerts" ).load( "_alerts.html #alert-template" ,function(){
-        var template = $('#alert-template').html();
-        var rendered = Mustache.render(template, {msg: msg, type: type});
-        $('#alert-template').remove();
+    var template = $("#alert-template").html();
+            rendered = Mustache.render(template, {msg: msg, type: type});
         $( "#alerts" ).append(rendered);
-    });
 }
 
 
@@ -256,16 +253,13 @@ function loadSettings(){
     var settings = Cookies.getJSON('settings');
 
     // XSLT files
-    $.each( settings.xsl.table, function( key, val ) {
-        var html = '<option value="' + val + '">' + key + '</option>';
-        $('#select-table-xslt').append(html);
-    });
-    $.each( settings.xsl.list, function( key, val ) {
-        var html = '<option value="' + val + '">' + key + '</option>';
-        $('#select-list-xslt').append(html);
-    });
-    $('#select-table-xslt').val(settings.xsl.selectedTable);
-    $('#select-list-xslt').val(settings.xsl.selectedList);
+    var template  = $("#xslt-options-template").html(),
+        tRendered = Mustache.render(template, {options: settings.xsl.table}),
+        lRendered = Mustache.render(template, {options: settings.xsl.list});
+        console.log(settings.xsl.table)
+        console.log(tRendered);
+    $('#select-table-xslt').html(tRendered);
+    $('#select-list-xslt').html(lRendered);
 
     // Unique filenames
     var uniqueFn = settings.uniqueFilenames.toCapsString()
