@@ -256,8 +256,6 @@ function loadSettings(){
     var template  = $("#xslt-options-template").html(),
         tRendered = Mustache.render(template, {options: settings.xsl.table}),
         lRendered = Mustache.render(template, {options: settings.xsl.list});
-        console.log(settings.xsl.table)
-        console.log(tRendered);
     $('#select-table-xslt').html(tRendered);
     $('#select-list-xslt').html(lRendered);
 
