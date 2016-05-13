@@ -1,13 +1,19 @@
 {
-    "xsl": {
-        "table": {
-            "Simplified": "simplified-table.xsl"
-        },
-        "list": {
-            "Simplified": "simplified-list.xsl"
-        },
-        "selectedTable" : "Simplified",
-        "selectedListXSL" : "Simplified"
-    },
-    "uniqueFilenames": false
+   "xsl":{
+      "table":[
+         {
+            "label":"Simplified",
+            "filename":"simplified-table.xsl",
+            "default":true
+         }
+      ],
+      "list":[
+         {
+            "label":"Simplified",
+            "filename":"simplified-list.xsl",
+            "default":true
+         }
+      ]
+   },
+   "uniqueFilenames":false
 }

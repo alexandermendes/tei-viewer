@@ -8,21 +8,15 @@ function populateTableMenus() {
     });
 
     function renderPlaceholder(id) {
-        $("#" + id + "-menu").load( "_snippets.html #option-ph-template", function() {
-            var template = $('#option-ph-template').html();
-            var rendered = Mustache.render(template, {label: "Nothing to " + id});
-            $('#option-ph-template').remove();
-            $("#" + id + "-menu").append(rendered);
-        });
+        var template = $("#table-menu-ph-template").html();
+            rendered = Mustache.render(template, {label: "Nothing to " + id});
+        $("#" + id + "-menu").html(rendered);
     }
 
     function renderMenu(id, cls) {
-        $("#" + id + "-menu").load( "_snippets.html #thead-li-template", function() {
-            var template = $('#thead-li-template').html();
-            var rendered = Mustache.render(template, {cls: cls, headings: headings});
-            $("#thead-li-template").remove();
-            $("#" + id + "-menu").append(rendered);
-        });
+        var template = $("#table-menu-template").html();
+            rendered = Mustache.render(template, {cls: cls, headings: headings});
+        $("#" + id + "-menu").html(rendered);
     }
 
     function getHideCls() {
