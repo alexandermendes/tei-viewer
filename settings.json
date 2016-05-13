@@ -2,15 +2,15 @@
    "xsl":{
       "table":[
          {
-            "label":"Simplified",
-            "filename":"simplified-table.xsl",
+            "label":"British Library",
+            "filename":"bl-table.xsl",
             "default":true
          }
       ],
       "list":[
          {
-            "label":"Simplified",
-            "filename":"simplified-list.xsl",
+            "label":"British Library",
+            "filename":"bl-list.xsl",
             "default":true
          }
       ]
