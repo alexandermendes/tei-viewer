@@ -7,7 +7,7 @@ function populateTableMenus() {
         headings.push(h);
     });
 
-    function showPlaceholder(id) {
+    function renderPlaceholder(id) {
         $("#" + id + "-menu").load( "_snippets.html #option-ph-template", function() {
             var template = $('#option-ph-template').html();
             var rendered = Mustache.render(template, {label: "Nothing to " + id});
@@ -16,7 +16,7 @@ function populateTableMenus() {
         });
     }
 
-    function showMenu(id, cls) {
+    function renderMenu(id, cls) {
         $("#" + id + "-menu").load( "_snippets.html #thead-li-template", function() {
             var template = $('#thead-li-template').html();
             var rendered = Mustache.render(template, {cls: cls, headings: headings});
@@ -34,15 +34,15 @@ function populateTableMenus() {
     }
 
     if ($('table th:visible').length > 0) {
-        showMenu('hide', getHideCls)
+        renderMenu('hide', getHideCls)
     } else {
-        showPlaceholder('hide');
+        renderPlaceholder('hide');
     }
 
     if ($('table th:hidden').length > 0) {
-        showMenu('show', getShowCls)
+        renderMenu('show', getShowCls)
     } else {
-        showPlaceholder('show');
+        renderPlaceholder('show');
     }
 }
 
