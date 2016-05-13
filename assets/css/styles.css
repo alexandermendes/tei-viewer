@@ -2,6 +2,12 @@ main {
     min-height: 100vh;
 }
 
+a:hover,
+a:active,
+a:focus {
+    text-decoration: none;
+}
+
 .tabcontent {
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
