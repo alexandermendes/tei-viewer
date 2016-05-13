@@ -289,6 +289,17 @@ function loadDefaultSettings() {
 }
 
 
+/** Load README.md into the help tab. */
+function loadHelp() {
+    $.get( "README.md", function( readme ) {
+        var converter = new showdown.Converter();
+        var text = readme.replace(/[\s\S]+?(?=#)/, "");
+        var html = converter.makeHtml(text);
+        $('#help').html(html);
+    });
+}
+
+
 $(function() {
     showLoading();
 
@@ -309,4 +320,6 @@ $(function() {
     } else {
         loadDefaultSettings();
     }
+
+    loadHelp();
 });

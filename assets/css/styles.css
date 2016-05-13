@@ -49,6 +49,19 @@ main {
     animation: spin 1000ms infinite linear;
 }
 
+#help h2:first-child {
+    padding: 0px 20px 0px 20px;
+}
+#help h2:not(:first-child) {
+    padding: 20px 20px 0px 20px;
+}
+#help p {
+    padding: 0px 20px 0px 20px;
+}
+#help pre {
+    margin: 0px 20px 10px 20px;
+}
+
 footer {
     margin-top: 60px;
     text-align: center;
