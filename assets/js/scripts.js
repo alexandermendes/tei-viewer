@@ -151,7 +151,7 @@ function refreshXSLTProcessors() {
                       'danger');
         });
     }, function() {
-        showAlert('The XSLT file ' + listXSLT + ' could not be loaded.',
+        showAlert('The XSLT file ' + tableXSLT + ' could not be loaded.',
                       'danger');
     });
 }
