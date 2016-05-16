@@ -38,12 +38,12 @@
 
             <td>  <!-- Related people -->
                 <xsl:for-each select=".//*/tei:name[@type='person']">
-                    <xsl:value-of select="."/>
+                    <xsl:value-of select="normalize-space(.)"/>
                     <xsl:if test="@role">
                         <xsl:value-of select="concat(' (', @role, ')')"/>
                     </xsl:if>
                     <xsl:if test="position() != last()">
-                        <xsl:text>,</xsl:text>
+                        <xsl:text>, </xsl:text>
                         <br />
                     </xsl:if>
                 </xsl:for-each>
@@ -51,9 +51,9 @@
 
             <td>  <!-- Related places -->
                 <xsl:for-each select=".//*/tei:name[@type='place']">
-                    <xsl:value-of select="."/>
+                    <xsl:value-of select="normalize-space(.)"/>
                     <xsl:if test="position() != last()">
-                        <xsl:text>,</xsl:text>
+                        <xsl:text>, </xsl:text>
                         <br />
                     </xsl:if>
                 </xsl:for-each>
@@ -89,9 +89,11 @@
         <td>  <!-- Dimensions -->
             <xsl:for-each select="tei:objectDesc/tei:supportDesc/tei:extent/tei:dimensions">
             <xsl:value-of select="concat(tei:height, @unit, ' x ', tei:width, @unit)"/>
-            <xsl:value-of select="concat(' (', @type, ')')"/>
+            <xsl:if test="@type">
+                <xsl:value-of select="concat(' (', @type, ')')"/>
+            </xsl:if>
                 <xsl:if test="position() != last()">
-                    <xsl:text>,</xsl:text>
+                    <xsl:text>, </xsl:text>
                     <br />
                 </xsl:if>
             </xsl:for-each>
