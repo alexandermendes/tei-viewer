@@ -9,6 +9,16 @@ in both list and table formats.
 [Try it here](http://alexandermendes.github.io/tei-viewer/)
 
 
+## Requirements
+
+The application requires a browser that supports HTML5 localStorage, Promises
+and the File APIs, for example:
+
+- Chrome 45
+- Firefox 45
+- Safari 9
+
+
 ## Toolbar
 
 The core functionality is provided via the following toolbar buttons:
