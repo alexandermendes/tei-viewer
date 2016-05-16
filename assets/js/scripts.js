@@ -302,6 +302,7 @@ $(function() {
         showAlert('Your browser does not support ' + feature + '. \
                    Try upgrading (Firefox 45, Chrome 45 or Safari 9 \
                    recommended).', 'danger');
+        hideLoading();
     }
     if (typeof(localStorage) == 'undefined' ) {
         unsupportedAlert('HTML5 localStorage.');
