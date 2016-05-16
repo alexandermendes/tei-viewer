@@ -147,10 +147,12 @@ function refreshXSLTProcessors() {
             listXSLTProcessor.importStylesheet(result);
             refreshViews();
         }, function() {
-            showAlert(listXSLT + ' could not be loaded', 'danger');
+            showAlert('The XSLT file ' + listXSLT + ' could not be loaded.',
+                      'danger');
         });
     }, function() {
-        showAlert(tableXSLT + ' could not be loaded', 'danger');
+        showAlert('The XSLT file ' + listXSLT + ' could not be loaded.',
+                      'danger');
     });
 }
 
