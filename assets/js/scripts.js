@@ -162,7 +162,7 @@ $( "#csv-export" ).click(function() {
 
     // Return an escaped CSV string
     function formatCSV(str) {
-        return escapedStr = '"' + str.replace(/"/g, '""') + '"';
+        return '"' + str.replace(/"/g, '""') + '"';
     }
 
     // Get table rows
@@ -170,14 +170,14 @@ $( "#csv-export" ).click(function() {
     $('table tr').each(function() {
         var row = [];
         $(this).find('th,td').each(function () {
-            var val = $(this)[0].innerHTML;
-            row.push(val)
+            var val = $(this)[0].innerText;
+            row.push(formatCSV(val));
         });
         rows.push(row.join(','));
     });
 
     var csvString = rows.join("\n");
-    var encodedUri = encodeURI('data:attachment/csv;charset=utf-8,\uFEFF,' + csvString);
+    var encodedUri = encodeURI('data:attachment/csv;charset=utf-8,\uFEFF' + csvString);
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", "tei_data.csv");
