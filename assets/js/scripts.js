@@ -296,14 +296,20 @@ $(function() {
     showLoading();
 
     // Check for required HTML5 features
-    if (typeof(localStorage) == 'undefined' ) {
-        showAlert('Your browser does not support HTML5 localStorage. \
-                  Try upgrading.', 'danger');
+    function unsupportedAlert(feature) {
+        showAlert('Your browser does not support ' + feature + '. \
+                   Try upgrading (Firefox 45, Chrome 45 or Safari 9 \
+                   recommended).', 'danger');
     }
-    if (typeof(FileReader) == 'undefined' || typeof(File) == 'undefined'
-        || typeof(FileList) == 'undefined' || typeof(Blob) == 'undefined') {
-        showAlert('Your browser does not support the HTML5 File APIs. \
-                  Try upgrading.', 'danger');
+    if (typeof(localStorage) == 'undefined' ) {
+        unsupportedAlert('HTML5 localStorage.');
+    }
+    if (typeof(FileReader) == 'undefined' || typeof(FileList) == 'undefined'
+        || typeof(Blob) == 'undefined') {
+        unsupportedAlert('the HTML5 File APIs');
+    }
+    if (typeof(Promise) == 'undefined') {
+        unsupportedAlert('HTML5 Promises');
     }
 
     // Initialise settings from cookie or defaults
