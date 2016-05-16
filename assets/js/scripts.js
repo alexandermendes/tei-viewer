@@ -295,6 +295,7 @@ function loadHelp() {
 
 $(function() {
     showLoading();
+    $.ajaxSetup({ cache: false });
 
     // Check for required HTML5 features
     function unsupportedAlert(feature) {
