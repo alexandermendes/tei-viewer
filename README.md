@@ -45,11 +45,11 @@ between uses:
 
 - **List XSLT:** The XSLT document used to transform for list display.
 
-- **Unique Filenames:** Allow more than one file with the same filename to be
-uploaded.
-
 - **Fixed Table:** Fit the table to the size of the screen and freeze the header
 row.
+
+- **Unique Filenames:** Allow more than one file with the same filename to be
+uploaded.
 
 - **Default Settings:** Return to default settings.
 
