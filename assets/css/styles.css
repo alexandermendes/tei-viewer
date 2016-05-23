@@ -13,7 +13,33 @@ a:focus {
     border-right: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     border-radius: 0px 0px 5px 5px;
+}
+
+.tabcontent .tab-pane:not(#table-view) {
     padding: 20px;
+}
+
+.table-scroll {
+    width:100%;
+    max-width:100%;
+    overflow-x:auto;
+    padding-top: 5px;
+    max-height: calc(100vh - 260px);
+}
+
+.table>tbody>tr>td:first-child,
+.table>tbody>tr>th:first-child,
+.table>tfoot>tr>td:first-child,
+.table>tfoot>tr>th:first-child,
+.table>thead>tr>td:first-child,
+.table>thead>tr>th:first-child,
+.table>tbody>tr>td:last-child,
+.table>tbody>tr>th:last-child,
+.table>tfoot>tr>td:last-child,
+.table>tfoot>tr>th:last-child,
+.table>thead>tr>td:last-child,
+.table>thead>tr>th:last-child {
+    padding: 8px 20px 8px 20px;
 }
 
 .btn-file {
@@ -34,12 +60,6 @@ a:focus {
     background: white;
     cursor: inherit;
     display: block;
-}
-
-.table-scroll {
-    width:100%;
-    max-width:100%;
-    overflow-x:auto;
 }
 
 .tab-pane {
@@ -69,7 +89,7 @@ a:focus {
 }
 
 footer {
-    margin-top: 60px;
+    margin-top: 40px;
     text-align: center;
     width: 100%;
     background-color: #EEEEEE;
