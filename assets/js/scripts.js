@@ -251,6 +251,16 @@ $( "#unique-fn" ).change(function() {
 });
 
 
+/** Handle change of fixed table setting. */
+$( "#fixed-table" ).change(function() {
+    toggleScrollingTableHeight();
+    var settings = Cookies.getJSON('settings');
+    var fixedTable = $('#fixed-table').val() == 'True';
+    settings.fixedTable = fixedTable;
+    Cookies.set('settings', settings);
+});
+
+
 /** Load settings from cookie. */
 function loadSettings(){
     var settings = Cookies.getJSON('settings');
@@ -269,6 +279,9 @@ function loadSettings(){
     // Fixed table
     var fixedTable = settings.fixedTable.toCapsString()
     $('#fixed-table').val(fixedTable);
+    if (!settings.fixedTable) {
+        toggleScrollingTableHeight();
+    }
 
     $('.selectpicker').selectpicker('refresh');
     refreshXSLTProcessors();

@@ -81,3 +81,14 @@ function getHiddenColumns(){
     });
     return hiddenCols;
 }
+
+
+function toggleScrollingTableHeight() {
+    $('.table-scroll').each(function() {
+        if ($(this).css('max-height') == '100%') {
+            $(this).css('max-height', 'calc(100vh - 260px)')
+        } else {
+            $(this).css('max-height', '100%')
+        }
+    });
+}
