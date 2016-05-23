@@ -1,5 +1,5 @@
 main {
-    min-height: 100vh;
+    min-height: calc(100vh - 60px);
 }
 
 a:hover,
@@ -39,7 +39,7 @@ a:focus {
 
 #table-scroll.fixed table tbody {
     display: block;
-    max-height: calc(100vh - 260px);
+    max-height: calc(100vh - 300px);
     overflow-x: auto;
 }
 
@@ -123,18 +123,9 @@ footer {
     margin-top: 20px;
     text-align: center;
     width: 100%;
-    background-color: #EEEEEE;
+    background-color: #FAFAFA;
     height: 40px;
-    padding-top: 20px
-}
-footer a {
-    color: #666666;
-}
-footer a:hover,
-footer a:focus,
-footer a:active {
-    color: #888888;
-    text-decoration: none;
+    padding-top: 10px
 }
 
 @-webkit-keyframes spin {
