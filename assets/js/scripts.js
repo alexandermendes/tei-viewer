@@ -73,8 +73,8 @@ function refreshViews() {
         var tableDoc = tableXSLTProcessor.transformToFragment(mergedDocs, document);
         var listDoc = listXSLTProcessor.transformToFragment(mergedDocs, document);
         var hiddenCols = getHiddenColumns();
-        $('#table-view').html(tableDoc);
-        $('#list-view').html(listDoc);
+        $('#table-data').html(tableDoc);
+        $('#list-data').html(listDoc);
         $(hiddenCols).each(function(k, v) {  // Hide previously hidden columns
             hideColumn(v);
         });
