@@ -86,8 +86,11 @@ function getHiddenColumns(){
 /** Set the table to fixed or otherwise. */
 function setTableAsFixed(bool) {
     if (bool) {
-        $('#table-scroll').css('max-height', 'calc(100vh - 260px)')
+        $('#table-scroll').addClass('fixed');
+        var tableWidth = $('#table-scroll .table th').length * 300;
+        $('#table-scroll .table').css('width', tableWidth);
+        $('#table-scroll .table').css('max-width', tableWidth);
     } else {
-        $('#table-scroll').css('max-height', '100%')
+        $('#table-scroll').removeClass('fixed');
     }
 }

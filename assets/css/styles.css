@@ -25,11 +25,37 @@ a:focus {
     max-width:100%;
     overflow-x:auto;
     padding-top: 5px;
-    max-height: calc(100vh - 260px);
 }
 
-thead {
+#table-scroll.fixed table  {
+    position: relative;
+    table-layout: fixed;
+    display: inline-block;
+}
+
+#table-scroll.fixed table thead {
+    position: absolute;
+}
+
+#table-scroll.fixed table tbody {
+    display: block;
+    max-height: calc(100vh - 260px);
+    overflow-x: auto;
+}
+
+#table-scroll.fixed table>tbody>tr:first-child>td,
+#table-scroll.fixed table>tbody>tr:first-child>th {
+    padding-top: calc(1em + 30px);
+}
+
+#table-scroll.fixed table>tbody>tr>td,
+#table-scroll.fixed table>tbody>tr>th,
+#table-scroll.fixed table>tfoot>tr>td,
+#table-scroll.fixed table>tfoot>tr>th,
+#table-scroll.fixed table>thead>tr>td,
+#table-scroll.fixed table>thead>tr>th {
     background-color: #fff;
+    width: 300px;
 }
 
 .table>tbody>tr>td:first-child,
@@ -94,11 +120,11 @@ thead {
 }
 
 footer {
-    margin-top: 40px;
+    margin-top: 20px;
     text-align: center;
     width: 100%;
     background-color: #EEEEEE;
-    height: 60px;
+    height: 40px;
     padding-top: 20px
 }
 footer a {

@@ -261,7 +261,7 @@ $( "#fixed-table" ).change(function() {
     var fixedTable = $('#fixed-table').val() == 'True';
     settings.fixedTable = fixedTable;
     Cookies.set('settings', settings);
-    setTableAsFixed(settings.fixedTable);
+    refreshViews();
 });
 
 
