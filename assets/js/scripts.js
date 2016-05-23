@@ -92,9 +92,11 @@ function enableSettings() {
     if (localStorage.length == 0){
         $('#unique-fn').attr('disabled', false);
         $('#default-settings').attr('disabled', false);
+        $('#disabled-settings-msg').hide();
     } else {
         $('#unique-fn').attr('disabled', true);
         $('#default-settings').attr('disabled', true);
+        $('#disabled-settings-msg').show();
     }
     $('#unique-fn').selectpicker('refresh');
 }
