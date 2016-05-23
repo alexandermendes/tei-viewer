@@ -1,4 +1,5 @@
 var tableXSLTProcessor, listXSLTProcessor;
+var teiTable = new TeiTable();
 
 /** Add XML files to local storage. */
 $( "#add-files" ).change(function(evt) {
@@ -63,6 +64,22 @@ function hideLoading() {
 }
 
 
+/** Hide column menu item clicked. */
+$( "#hide-menu" ).on('click', '.hide-column', function(e) {
+    var index = parseInt($(this).attr('data-index')) + 1;
+    teiTable.hideColumn(index);
+    e.preventDefault();
+});
+
+
+/** Show column menu item clicked. */
+$( "#show-menu" ).on('click', '.show-column', function(e) {
+    var index = parseInt($(this).attr('data-index')) + 1;
+    teiTable.showColumn(index);
+    e.preventDefault();
+});
+
+
 /** Refresh the table and list views. */
 function refreshViews() {
     var mergedDocs = mergeUploadedDocs();
@@ -72,19 +89,12 @@ function refreshViews() {
     } else {
         var tableDoc = tableXSLTProcessor.transformToFragment(mergedDocs, document);
         var listDoc = listXSLTProcessor.transformToFragment(mergedDocs, document);
-        var hiddenCols = getHiddenColumns();
-        $('#table-data').html(tableDoc);
+        teiTable.populate(tableDoc);
         $('#list-data').html(listDoc);
-        $(hiddenCols).each(function(k, v) {  // Hide previously hidden columns
-            hideColumn(v);
-        });
     }
     $('#files-uploaded').html(localStorage.length + ' files uploaded');
     $('#tei-form').trigger("reset");
     enableSettings();
-    populateTableMenus();
-    fixedTables = $('#fixed-table').val() == 'True';
-    setTableAsFixed(fixedTables);
     hideLoading();
 }
 
