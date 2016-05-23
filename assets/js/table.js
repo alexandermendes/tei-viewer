@@ -77,18 +77,17 @@ function getHiddenColumns(){
     $('table th').each(function(k, v) {
         if ($(this).is(':hidden')) {
             hiddenCols.push(k + 1);
-        }
+        }toggleScrollingTableHeight
     });
     return hiddenCols;
 }
 
 
-function toggleScrollingTableHeight() {
-    $('.table-scroll').each(function() {
-        if ($(this).css('max-height') == '100%') {
-            $(this).css('max-height', 'calc(100vh - 260px)')
-        } else {
-            $(this).css('max-height', '100%')
-        }
-    });
+/** Set the table to fixed or otherwise. */
+function setTableAsFixed(bool) {
+    if (bool) {
+        $('#table-scroll').css('max-height', 'calc(100vh - 260px)')
+    } else {
+        $('#table-scroll').css('max-height', '100%')
+    }
 }

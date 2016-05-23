@@ -3,7 +3,7 @@
 <xsl:output method="html" />
 
     <xsl:template match="MERGED-TEI">
-        <table class="table table-responsive" style="width:250%; max-width:250%;">
+        <table class="table" style="width:250%; max-width:250%;">
             <thead>
                 <tr>
                     <th>Shelfmark</th>

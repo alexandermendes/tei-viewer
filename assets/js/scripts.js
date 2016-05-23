@@ -83,6 +83,8 @@ function refreshViews() {
     $('#tei-form').trigger("reset");
     enableSettings();
     populateTableMenus();
+    fixedTables = $('#fixed-table').val() == 'True';
+    setTableAsFixed(fixedTables);
     hideLoading();
 }
 
@@ -255,11 +257,11 @@ $( "#unique-fn" ).change(function() {
 
 /** Handle change of fixed table setting. */
 $( "#fixed-table" ).change(function() {
-    toggleScrollingTableHeight();
     var settings = Cookies.getJSON('settings');
     var fixedTable = $('#fixed-table').val() == 'True';
     settings.fixedTable = fixedTable;
     Cookies.set('settings', settings);
+    setTableAsFixed(settings.fixedTable);
 });
 
 
@@ -281,9 +283,6 @@ function loadSettings(){
     // Fixed table
     var fixedTable = settings.fixedTable.toCapsString()
     $('#fixed-table').val(fixedTable);
-    if (!settings.fixedTable) {
-        toggleScrollingTableHeight();
-    }
 
     $('.selectpicker').selectpicker('refresh');
     refreshXSLTProcessors();

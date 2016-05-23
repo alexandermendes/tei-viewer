@@ -20,12 +20,16 @@ a:focus {
     padding: 20px;
 }
 
-.table-scroll {
+#table-scroll {
     width:100%;
     max-width:100%;
     overflow-x:auto;
     padding-top: 5px;
     max-height: calc(100vh - 260px);
+}
+
+thead {
+    background-color: #fff;
 }
 
 .table>tbody>tr>td:first-child,
