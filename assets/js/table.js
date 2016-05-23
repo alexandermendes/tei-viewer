@@ -77,7 +77,7 @@ function getHiddenColumns(){
     $('table th').each(function(k, v) {
         if ($(this).is(':hidden')) {
             hiddenCols.push(k + 1);
-        }toggleScrollingTableHeight
+        }
     });
     return hiddenCols;
 }
