@@ -15,7 +15,8 @@ a:focus {
     border-radius: 0px 0px 5px 5px;
 }
 
-.tabcontent .tab-pane:not(#table-view) {
+.tabcontent .tab-pane:not(#table-view),
+.tabcontent .tab-pane .row {
     padding: 20px;
 }
 
@@ -137,5 +138,27 @@ footer a:active {
     }
     .tab-pane.active {
         display: initial;
+    }
+}
+
+@media(max-width:767px){
+    #tei-form span.caret {
+        display: none;
+    }
+    #tei-form .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    #tei-form .btn-group {
+        width: 100%;
+    }
+    #tei-form .dropdown-menu {
+        position: relative;
+        width: 100%;
+        -webkit-box-shadow: none;
+        -box-shadow: none;
+    }
+    .table-responsive {
+        border: none;
     }
 }
