@@ -266,6 +266,10 @@ function loadSettings(){
     var uniqueFn = settings.uniqueFilenames.toCapsString()
     $('#unique-fn').val(uniqueFn);
 
+    // Fixed table
+    var fixedTable = settings.fixedTable.toCapsString()
+    $('#fixed-table').val(fixedTable);
+
     $('.selectpicker').selectpicker('refresh');
     refreshXSLTProcessors();
 }

@@ -38,16 +38,20 @@ The core functionality is provided via the following toolbar buttons:
 
 ## Settings
 
-The following settings are provided:
+The following settings are stored using cookies so that changes will persist
+between uses:
 
 - **Table XSLT:** The XSLT document used to transform for table display.
 
 - **List XSLT:** The XSLT document used to transform for list display.
 
-- **Unique filenames:** Allow more than one file with the same filename to be
+- **Unique Filenames:** Allow more than one file with the same filename to be
 uploaded.
 
-- **Default settings:** Return to default settings.
+- **Fixed Table:** Fit the table to the size of the screen and freeze the header
+row.
+
+- **Default Settings:** Return to default settings.
 
 Note that certain settings can only be changed when no XML files are loaded.
 
