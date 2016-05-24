@@ -1,9 +1,8 @@
-var tableXSLTProcessor, listXSLTProcessor;
+var teiTable;
 
 /** Add XML files to local storage. */
-$( "#add-files" ).change(function(evt) {
+function uploadFiles(files) {
     showLoading();
-    var files = evt.target.files;
     var uniqueFilenames = $('#unique-fn').val() == 'True';
     var pending = files.length;
 
@@ -40,13 +39,13 @@ $( "#add-files" ).change(function(evt) {
 
                 --pending
                 if (pending == 0) {
-                    refreshViews();
+                    refreshView();
                 }
             };
         })(f);
         reader.readAsText(f);
     }
-});
+}
 
 
 /** Show loading icon. */
@@ -63,26 +62,87 @@ function hideLoading() {
 }
 
 
-/** Refresh the table and list views. */
-function refreshViews() {
-    var mergedDocs = mergeUploadedDocs();
-    if (typeof tableXSLTProcessor == "undefined" ||
-        typeof listXSLTProcessor == "undefined") {
-        showAlert('XSLT processors not loaded yet, please try again.', 'warning');
+/** Hide column menu item clicked. */
+$( "#hide-menu" ).on('click', '.hide-column', function(e) {
+    var index = parseInt($(this).attr('data-index'));
+    teiTable.hideColumn(index);
+    refreshView();
+    e.preventDefault();
+});
+
+
+/** Show column menu item clicked. */
+$( "#show-menu" ).on('click', '.show-column', function(e) {
+    var index = parseInt($(this).attr('data-index'));
+    teiTable.showColumn(index);
+    refreshView();
+    e.preventDefault();
+});
+
+
+/** Hide borders menu item clicked. */
+$( "#hide-borders" ).on('click', function(e) {
+    teiTable.hideBorders();
+    var settings = Cookies.getJSON('settings');
+    settings.showBorders = false;
+    Cookies.set('settings', settings);
+    e.preventDefault();
+});
+
+
+/** Show borders menu item clicked. */
+$( "#show-borders" ).on('click', function(e) {
+    teiTable.showBorders();
+    var settings = Cookies.getJSON('settings');
+    settings.showBorders = true;
+    Cookies.set('settings', settings);
+    e.preventDefault();
+});
+
+
+/** Freeze header menu item clicked. */
+$("#freeze-header").on('click', function(e) {
+    $('#table-scroll').addClass('fixed');
+    var settings = Cookies.getJSON('settings');
+    settings.freezeHeader = true;
+    Cookies.set('settings', settings);
+    refreshView();
+});
+
+
+/** Unfreeze header menu item clicked. */
+$("#unfreeze-header").on('click', function(e) {
+    $('#table-scroll').removeClass('fixed');
+    var settings = Cookies.getJSON('settings');
+    settings.freezeHeader = false;
+    Cookies.set('settings', settings);
+    refreshView();
+});
+
+
+/** Refresh the main view. */
+function refreshView() {
+    showLoading();
+    if (!teiTable.XSLTProcLoaded()) {
+        showAlert('XSLT processor not loaded, please try again.', 'warning');
+    } else if(localStorage.length > 0) {
+        var mergedXML = mergeUploadedDocs();
+        $('.upload-box').hide();
+        $('#table-scroll').show();
+        teiTable.populate(mergedXML);
+        var settings = Cookies.getJSON('settings');
+        if (settings.showBorders) {
+            teiTable.showBorders();
+        } else {
+            teiTable.hideBorders();
+        }
     } else {
-        var tableDoc = tableXSLTProcessor.transformToFragment(mergedDocs, document);
-        var listDoc = listXSLTProcessor.transformToFragment(mergedDocs, document);
-        var hiddenCols = getHiddenColumns();
-        $('#table-view').html(tableDoc);
-        $('#list-view').html(listDoc);
-        $(hiddenCols).each(function(k, v) {  // Hide previously hidden columns
-            hideColumn(v);
-        });
+        $('.upload-box').show();
+        $('#table-scroll').hide();
     }
     $('#files-uploaded').html(localStorage.length + ' files uploaded');
-    $('#tei-form').trigger("reset");
+    $('.upload-form').trigger("reset");
     enableSettings();
-    populateTableMenus();
     hideLoading();
 }
 
@@ -91,10 +151,12 @@ function refreshViews() {
 function enableSettings() {
     if (localStorage.length == 0){
         $('#unique-fn').attr('disabled', false);
-        $('#default-settings').attr('disabled', false);
+        $('#reset-settings').attr('disabled', false);
+        $('#disabled-settings-msg').hide();
     } else {
         $('#unique-fn').attr('disabled', true);
-        $('#default-settings').attr('disabled', true);
+        $('#reset-settings').attr('disabled', true);
+        $('#disabled-settings-msg').show();
     }
     $('#unique-fn').selectpicker('refresh');
 }
@@ -114,8 +176,8 @@ function mergeUploadedDocs(){
 /** Display a Bootstrap alert. */
 function showAlert(msg, type) {
     var template = $("#alert-template").html();
-            rendered = Mustache.render(template, {msg: msg, type: type});
-        $( "#alerts" ).append(rendered);
+        rendered = Mustache.render(template, {msg: msg, type: type});
+    $( "#alerts" ).html(rendered);
 }
 
 
@@ -123,36 +185,27 @@ function showAlert(msg, type) {
 $( "#clear-views" ).click(function() {
     showLoading();
     localStorage.clear();
-    refreshViews();
+    refreshView();
 });
 
 
 /** Refresh the current XSLT processors. */
-function refreshXSLTProcessors() {
-    var tableXSLT = $('#select-table-xslt').val();
-    var listXSLT = $('#select-list-xslt').val();
-
-    // Load the table XSLT
+function refreshXSLTProcessor() {
+    showLoading();
+    var tableXSLT = $('#select-xslt').val();
     var tablePromise = Promise.resolve($.ajax({
-        url: "assets/xsl/" + tableXSLT
-    })).then(function(result) {
-        tableXSLTProcessor = new XSLTProcessor();
-        tableXSLTProcessor.importStylesheet(result);
-
-        //Then load the list XSLT
-        var listPromise = Promise.resolve($.ajax({
-            url: "assets/xsl/" + listXSLT
-        })).then(function(result) {
-            listXSLTProcessor = new XSLTProcessor();
-            listXSLTProcessor.importStylesheet(result);
-            refreshViews();
-        }, function() {
-            showAlert('The XSLT file ' + listXSLT + ' could not be loaded.',
-                      'danger');
-        });
-    }, function() {
-        showAlert('The XSLT file ' + tableXSLT + ' could not be loaded.',
-                      'danger');
+        url: "assets/xslt/" + tableXSLT
+    })).then(function(data) {
+        XSLTProc = new XSLTProcessor();
+        XSLTProc.importStylesheet(data);
+        teiTable = new TeiTable();
+        teiTable.updateXSLTProc(XSLTProc)
+    }).catch(function() {
+        showAlert('XSLT file ' + tableXSLT + ' could not be loaded.',
+                  'danger');
+    }).then(function() {
+        hideLoading();
+        refreshView();
     });
 }
 
@@ -217,28 +270,29 @@ Boolean.prototype.toCapsString = function () {
 
 
 /** Reset to default settings. */
-$( "#default-settings" ).click(function() {
+$( "#reset-settings" ).click(function() {
     loadDefaultSettings();
+    $('#settings-modal').modal('hide');
+    showAlert('All settings have been reset to their defaults.', 'info');
+    refreshView();
 });
 
 
-/** Handle change of load table XSLT setting. */
-$( "#select-table-xslt" ).change(function() {
+/** Handle change of XSLT setting. */
+$( "#select-xslt" ).change(function() {
     showLoading();
     var settings = Cookies.getJSON('settings');
-    settings.xsl.selectedTable = $('#select-table-xslt').val();
+    var defaultXSLT = $('#select-xslt').val();
+    $.each(settings.xslt, function(index, value) {
+        if (value.label == defaultXSLT) {
+            value.default = true;
+        } else {
+            value.default = false;
+        }
+    });
     Cookies.set('settings', settings);
-    refreshXSLTProcessors();
-});
-
-
-/** Handle change of load list XSLT setting. */
-$( "#select-list-xslt" ).change(function() {
-    showLoading();
-    var settings = Cookies.getJSON('settings');
-    settings.xsl.selectedList = $('#select-list-xslt').val();
-    Cookies.set('settings', settings);
-    refreshXSLTProcessors();
+    $('#settings-modal').modal('hide');
+    refreshXSLTProcessor();
 });
 
 
@@ -248,81 +302,145 @@ $( "#unique-fn" ).change(function() {
     var uniqueFn = $('#unique-fn').val() == 'True';
     settings.uniqueFilenames = uniqueFn;
     Cookies.set('settings', settings);
+    $('#settings-modal').modal('hide');
 });
 
 
-/** Load settings from cookie. */
+/** Load and validate settings from cookie. */
 function loadSettings(){
+    showLoading();
     var settings = Cookies.getJSON('settings');
 
-    // XSLT files
-    var template  = $("#xslt-options-template").html(),
-        tRendered = Mustache.render(template, {options: settings.xsl.table}),
-        lRendered = Mustache.render(template, {options: settings.xsl.list});
-    $('#select-table-xslt').html(tRendered);
-    $('#select-list-xslt').html(lRendered);
+    $.getJSON("settings.json", function(defaultSettings) {
+        var aKeys = Object.keys(defaultSettings).sort();
+        var bKeys = Object.keys(settings).sort();
+        if(JSON.stringify(aKeys) !== JSON.stringify(bKeys)) {
+            Cookies.set('settings', defaultSettings);
+            settings = defaultSettings;
+            showAlert('Custom settings no longer valid, reverting to \
+                      defaults.', 'info');
+        }
+    }).done(function() {
 
-    // Unique filenames
-    var uniqueFn = settings.uniqueFilenames.toCapsString()
-    $('#unique-fn').val(uniqueFn);
+        // XSLT
+        var template = $("#xslt-options-template").html(),
+            rendered = Mustache.render(template, {options: settings.xslt});
+        $('#select-xslt').html(rendered);
 
-    $('.selectpicker').selectpicker('refresh');
-    refreshXSLTProcessors();
-}
+        // Unique filenames
+        var uniqueFn = settings.uniqueFilenames.toCapsString()
+        $('#unique-fn').val(uniqueFn);
 
+        // Frozen table header
+        if (settings.freezeHeader) {
+            $('#table-scroll').addClass('fixed');
+        }
 
-/** Reset to default settings. */
-function loadDefaultSettings() {
-    $.getJSON( "settings.json", function( settings ) {
-        Cookies.set('settings', settings);
-        loadSettings();
-    }).then(function() {
-        refreshXSLTProcessors();
-    }, function() {
-        showAlert('A valid settings file could not be found', 'danger')
+        $('.selectpicker').selectpicker('refresh');
+        refreshXSLTProcessor();
+    }).fail(function(e) {
+        showAlert('settings.json could not be loaded.', 'danger');
+        throw e
+    }).always(function() {
+        hideLoading();
     });
 }
 
 
-/** Load README.md into the help tab. */
-function loadHelp() {
-    $.get( "README.md", function( readme ) {
+/** Load default settings. */
+function loadDefaultSettings() {
+    showLoading();
+    $.getJSON("settings.json", function( settings ) {
+        Cookies.set('settings', settings);
+        loadSettings();
+    }).done(function() {
+        refreshXSLTProcessor();
+    }).fail(function(e) {
+        showAlert('settings.json could not be loaded.', 'danger');
+        throw e
+    }).always(function() {
+        hideLoading();
+    });
+}
+
+
+/** Load README.md into the help modal. */
+$("#help-modal").on("show.bs.modal", function() {
+    var modalBody = $(this).find(".modal-body");
+    $.get("README.md", function( readme ) {
         var converter = new showdown.Converter();
         var text = readme.replace(/[\s\S]+?(?=#)/, "");
         var html = converter.makeHtml(text);
-        $('#help').html(html);
+        modalBody.html(html);
     });
-}
+});
 
 
-$(function() {
-    showLoading();
-    $.ajaxSetup({ cache: false });
-
-    // Check for required HTML5 features
-    function unsupportedAlert(feature) {
-        showAlert('Your browser does not support ' + feature + '. \
-                   Try upgrading (Firefox 45, Chrome 45 or Safari 9 \
-                   recommended).', 'danger');
-        hideLoading();
-    }
+/** Check for the required HTML5 features */
+function checkHTML5() {
+    var unsupportedFeatures = []
     if (typeof(localStorage) == 'undefined' ) {
-        unsupportedAlert('HTML5 localStorage.');
+        unsupportedFeatures.push('localStorage.');
     }
     if (typeof(FileReader) == 'undefined' || typeof(FileList) == 'undefined'
         || typeof(Blob) == 'undefined') {
-        unsupportedAlert('the HTML5 File APIs');
+        unsupportedFeatures.push('File APIs');
     }
     if (typeof(Promise) == 'undefined') {
-        unsupportedAlert('HTML5 Promises');
+        unsupportedFeatures.push('Promises');
     }
+    var div = document.createElement('div');
+    if (!('draggable' in div) || !('ondragstart' in div && 'ondrop' in div)) {
+        unsupportedFeatures.push('Drag and Drop');
+    }
+    if (unsupportedFeatures.length > 0) {
+        var uStr = unsupportedFeatures.pop();
+        if (unsupportedFeatures.length > 0) {
+            uStr = unsupportedFeatures.join(', ') + ' or ' + uStr;
+        }
+        showAlert('Your browser does not support HTML5 ' + uStr + '. \
+                   Try upgrading (Firefox 45, Chrome 45 or Safari 9 \
+                   recommended).', 'danger');
+        throw new Error("HTML5 " + uStr + " not supported.");
+    }
+}
 
-    // Initialise settings from cookie or defaults
+
+/** Handle add files event. */
+$( ".add-files" ).change(function(evt) {
+    var files = evt.target.files;
+    uploadFiles(files);
+});
+
+
+/** Handle upload box drag and drop event. */
+$('.upload-box').on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}).on('dragover dragenter', function() {
+    $('.upload-box').addClass('is-dragover');
+}).on('dragleave dragend drop', function() {
+    $('.upload-box').removeClass('is-dragover');
+}).on('drop', function(e) {
+    var files = e.originalEvent.dataTransfer.files;
+    uploadFiles(files);
+});
+
+
+$(function() {
+    $.ajaxSetup({ cache: false });
+    checkHTML5();
+
+    // Initialise settings
     if (typeof Cookies.get('settings') != "undefined") {
         loadSettings();
     } else {
         loadDefaultSettings();
     }
+});
 
-    loadHelp();
+$(window).resize(function() {
+    if (typeof(teiTable) !== 'undefined') {
+        teiTable.fixHeaderWidths();
+    }
 });

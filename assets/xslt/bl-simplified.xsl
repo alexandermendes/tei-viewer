@@ -3,30 +3,28 @@
 <xsl:output method="html" />
 
     <xsl:template match="MERGED-TEI">
-        <div class="table-scroll">
-            <table class="table table-responsive" style="width:250%; max-width:250%;">
-                <thead>
-                    <tr>
-                        <th>Shelfmark</th>
-                        <th>Title</th>
-                        <th>Contents</th>
-                        <th>Language</th>
-                        <th>Extent</th>
-                        <th>Dimensions</th>
-                        <th>Date</th>
-                        <th>Provenance</th>
-                        <th>Acqusition</th>
-                        <th>Related People</th>
-                        <th>Related Places</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <xsl:apply-templates select="tei:TEI">
-                        <xsl:sort select=".//tei:msDesc/tei:msIdentifier/tei:idno"/>
-                    </xsl:apply-templates>
-                </tbody>
-            </table>
-        </div>
+        <table class="table" style="width:250%; max-width:250%;">
+            <thead>
+                <tr>
+                    <th>Shelfmark</th>
+                    <th>Title</th>
+                    <th>Contents</th>
+                    <th>Language</th>
+                    <th>Extent</th>
+                    <th>Dimensions</th>
+                    <th>Date</th>
+                    <th>Provenance</th>
+                    <th>Acqusition</th>
+                    <th>Related People</th>
+                    <th>Related Places</th>
+                </tr>
+            </thead>
+            <tbody>
+                <xsl:apply-templates select="tei:TEI">
+                    <xsl:sort select=".//tei:msDesc/tei:msIdentifier/tei:idno"/>
+                </xsl:apply-templates>
+            </tbody>
+        </table>
     </xsl:template>
 
     <xsl:template match="tei:TEI">

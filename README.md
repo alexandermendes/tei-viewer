@@ -3,15 +3,15 @@
 A single page HTML5 application to display and export summaries of multiple
 TEI XML documents.
 
-Uploaded files are saved to local storage, transformed via XSLT, then displayed
-in both list and table formats.
+Uploaded files are saved to local storage and transformed via XSLT to be
+displayed in table form.
 
 [Try it here](http://alexandermendes.github.io/tei-viewer/)
 
 
 ## Requirements
 
-The application requires a browser that supports HTML5 localStorage, Promises
+This application requires a browser that supports HTML5 localStorage, Promises
 and the File APIs, for example:
 
 - Chrome 45
@@ -25,31 +25,35 @@ The core functionality is provided via the following toolbar buttons:
 
 - **Add Files:** Upload TEI XML documents.
 
-- **Clear:** Remove all uploaded documents.
-
-- **Print:** Print the current view.
-
 - **Hide:** Hide table columns.
 
 - **Show:** Show table columns.
 
-- **Export to CSV:** Export the table to a CSV file.
+- **Borders:** Show/hide table borders.
+
+- **Header:** Freeze/unfreeze the table's header row.
+
+- **Clear:** Remove all uploaded documents.
+
+- **Print:** Print the current view.
+
+- **Export:** Export the table to a CSV file.
+
+- **Settings:** View and modify the settings.
+
+- **Help:** View the README file.
 
 
 ## Settings
 
-The following settings are provided:
+The following general settings are provided:
 
-- **Table XSLT:** The XSLT document used to transform for table display.
+- **XSLT:** The XSLT script used to transform uploaded XML documents for table display.
 
-- **List XSLT:** The XSLT document used to transform for list display.
+- **Unique Filenames:** Don't allow more than one file with the same filename
+to be uploaded.
 
-- **Unique filenames:** Allow more than one file with the same filename to be
-uploaded.
-
-- **Default settings:** Return to default settings.
-
-Note that certain settings can only be changed when no XML files are loaded.
+- **Reset Settings:** Return to default settings.
 
 
 ## Running offline
@@ -72,9 +76,5 @@ Then visit [http://localhost:8000/](http://localhost:8000/)
 
 ## Contributing
 
-Bugs and improvements are tracked as [issues](https://github.com/alexandermendes/tei-viewer/issues).
-
-If you find that you want to display your TEI data in a particular way feel free to submit
-a pull request to add additonal XSLT scripts. Just add the script to the
-[xsl](https://github.com/alexandermendes/tei-viewer/tree/master/assets/xsl) directory
-and load it via [settings.json](settings.json).
+Bugs and suggested improvements are tracked as
+[GitHub Issues](https://github.com/alexandermendes/tei-viewer/issues).

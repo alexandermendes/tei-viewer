@@ -1,5 +1,19 @@
+/** General */
+
 main {
-    min-height: 100vh;
+    min-height: calc(100vh - 90px);
+    position: relative;
+}
+
+.navbar {
+    margin-bottom: 0px;
+}
+
+.alert {
+    position: fixed;
+    width: 100%;
+    z-index:999;
+    border-radius:0px;
 }
 
 a:hover,
@@ -8,83 +22,188 @@ a:focus {
     text-decoration: none;
 }
 
-.tabcontent {
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    border-radius: 0px 0px 5px 5px;
-    padding: 20px;
-}
-
-.btn-file {
-    position: relative;
-    overflow: hidden;
-}
-.btn-file input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
-    cursor: inherit;
-    display: block;
-}
-
-.table-scroll {
-    width:100%;
-    max-width:100%;
-    overflow-x:auto;
-}
-
-.tab-pane {
-    display: none;
-}
-.tab-pane.active {
-    display: initial;
-}
-
 .glyphicon-spin {
     font-size: large;
     -webkit-animation: spin 1000ms infinite linear;
     animation: spin 1000ms infinite linear;
 }
 
-#help h2:first-child {
-    padding: 0px 20px 0px 20px;
-}
-#help h2:not(:first-child) {
-    padding: 20px 20px 0px 20px;
-}
-#help p {
-    padding: 0px 20px 0px 20px;
-}
-#help pre {
-    margin: 0px 20px 10px 20px;
+
+/** Tables */
+
+#table-scroll {
+    width:100%;
+    max-width:100%;
+    overflow-x:auto;
+    height: 100%;
+    position: absolute;
 }
 
+#table-scroll .table {
+    margin-bottom: 0px;
+}
+
+#table-scroll.fixed table  {
+    position: relative;
+    table-layout: fixed;
+    display: inline-block;
+}
+
+#table-scroll.fixed table thead {
+    position: absolute;
+}
+
+#table-scroll.fixed table tbody {
+    display: block;
+    max-height: calc(100vh - 100px);
+    overflow-x: auto;
+}
+
+#table-scroll.fixed table>tbody>tr:first-child>td,
+#table-scroll.fixed table>tbody>tr:first-child>th {
+    padding-top: calc(1em + 30px);
+}
+
+#table-scroll.fixed table>tbody>tr>td,
+#table-scroll.fixed table>tbody>tr>th,
+#table-scroll.fixed table>tfoot>tr>td,
+#table-scroll.fixed table>tfoot>tr>th,
+#table-scroll.fixed table>thead>tr>td,
+#table-scroll.fixed table>thead>tr>th {
+    background-color: #fff;
+}
+
+.table>tbody>tr>td:first-child,
+.table>tbody>tr>th:first-child,
+.table>tfoot>tr>td:first-child,
+.table>tfoot>tr>th:first-child,
+.table>thead>tr>td:first-child,
+.table>thead>tr>th:first-child,
+.table>tbody>tr>td:last-child,
+.table>tbody>tr>th:last-child,
+.table>tfoot>tr>td:last-child,
+.table>tfoot>tr>th:last-child,
+.table>thead>tr>td:last-child,
+.table>thead>tr>th:last-child {
+    padding: 8px 20px 8px 20px;
+}
+
+#table-view {
+    height: 100%;
+    position: static;
+}
+
+.table-responsive,
+.table-bordered {
+    border: none;
+}
+
+.table thead th {
+    text-overflow: ellipsis;
+}
+
+
+
+/** Buttons */
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+}
+
+
+/** Modals */
+
+#help-modal h2:first-child {
+    padding: 0px 20px 0px 20px;
+}
+#help-modal h2:not(:first-child) {
+    padding: 20px 20px 0px 20px;
+}
+#help-modal p {
+    padding: 0px 20px 0px 20px;
+}
+#help-modal pre {
+    margin: 20px 20px 10px 20px;
+}
+
+.modal-body {
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
+
+/** Upload box */
+
+.upload-box {
+    text-align: center;
+    font-size: 1.5em;
+    color: #5E5E5E;
+    position: relative;
+    padding: calc((100vh - 100px - (1.5em + 3em)) / 2) 20px;
+    height: 100%;
+}
+
+.upload-box .btn-file:hover {
+    color: #449D44;
+    cursor: pointer;
+}
+
+.upload-box .btn-file .uploadbox-dragndrop {
+    color: #5E5E5E;
+}
+
+.upload-box-dragndrop,
+.upload-box-uploading,
+.upload-box-success,
+.upload-box-error {
+  display: none;
+}
+
+.upload-box.has-advanced-upload {
+    outline: 2px dashed #ADADAD;
+    outline-offset: -10px;
+    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear;
+}
+.upload-box.has-advanced-upload .upload-box-dragndrop {
+  display: inline;
+}
+
+.upload-box-input .glyphicon {
+    font-size: 2em;
+}
+
+.upload-box.is-dragover {
+  background-color: #E6E6E6;
+}
+
+/** Footer */
+
 footer {
-    margin-top: 60px;
     text-align: center;
     width: 100%;
-    background-color: #EEEEEE;
-    height: 60px;
-    padding-top: 20px
+    background-color: #F8F8F8;
+    height: 40px;
+    padding-top: 10px;
+    border-top: #e7e7e7 1px solid;
 }
-footer a {
-    color: #666666;
-}
-footer a:hover,
-footer a:focus,
-footer a:active {
-    color: #888888;
-    text-decoration: none;
-}
+
+
+/** At-rules */
 
 @-webkit-keyframes spin {
     0% {
@@ -96,6 +215,7 @@ footer a:active {
         transform: rotate(359deg);
     }
 }
+
 @keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);
@@ -117,5 +237,24 @@ footer a:active {
     }
     .tab-pane.active {
         display: initial;
+    }
+}
+
+@media(max-width:767px){
+    #tei-form span.caret {
+        display: none;
+    }
+    #tei-form .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    #tei-form .btn-group {
+        width: 100%;
+    }
+    #tei-form .dropdown-menu {
+        position: relative;
+        width: 100%;
+        -webkit-box-shadow: none;
+        -box-shadow: none;
     }
 }
