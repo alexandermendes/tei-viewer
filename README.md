@@ -3,8 +3,8 @@
 A single page HTML5 application to display and export summaries of multiple
 TEI XML documents.
 
-Uploaded files are saved to local storage, transformed via XSLT, then displayed
-in both list and table formats.
+Uploaded files are saved to local storage and transformed via XSLT to be
+displayed in table form.
 
 [Try it here](http://alexandermendes.github.io/tei-viewer/)
 
@@ -30,6 +30,8 @@ The core functionality is provided via the following toolbar buttons:
 - **Show:** Show table columns.
 
 - **Borders:** Show/hide table borders.
+
+- **Header:** Freeze/unfreeze the table's header row.
 
 - **Clear:** Remove all uploaded documents.
 
