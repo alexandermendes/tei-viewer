@@ -146,7 +146,7 @@ $( "#clear-views" ).click(function() {
 /** Refresh the current XSLT processors. */
 function refreshXSLTProcessor() {
     showLoading();
-    var tableXSLT = $('#select-table-xslt').val();
+    var tableXSLT = $('#select-xslt').val();
     var tablePromise = Promise.resolve($.ajax({
         url: "assets/xslt/" + tableXSLT
     })).then(function(data) {
@@ -233,10 +233,10 @@ $( "#reset-settings" ).click(function() {
 
 
 /** Handle change of XSLT setting. */
-$( "#select-table-xslt" ).change(function() {
+$( "#select-xslt" ).change(function() {
     showLoading();
     var settings = Cookies.getJSON('settings');
-    var defaultXSLT = $('#select-table-xslt').val();
+    var defaultXSLT = $('#select-xslt').val();
     $.each(settings.xslt, function(index, value) {
         if (value.label == defaultXSLT) {
             value.default = true;
@@ -287,7 +287,7 @@ function loadSettings(){
         // XSLT
         var template = $("#xslt-options-template").html(),
             rendered = Mustache.render(template, {options: settings.xslt});
-        $('#select-table-xslt').html(rendered);
+        $('#select-xslt').html(rendered);
 
         // Unique filenames
         var uniqueFn = settings.uniqueFilenames.toCapsString()
