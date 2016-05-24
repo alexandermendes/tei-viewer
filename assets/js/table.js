@@ -55,7 +55,6 @@ function TeiTable() {
 
     /** Show a table column. */
     this.showColumn = function(columnIndex) {
-        console.log(columnIndex);
         $('table tr > *:nth-child(' + (columnIndex + 1) + ')').show();
         hiddenCols = $.grep(hiddenCols, function(value) {
             return value != columnIndex;
