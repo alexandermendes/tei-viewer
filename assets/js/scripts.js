@@ -327,29 +327,37 @@ $("#help-modal").on("show.bs.modal", function() {
 });
 
 
-$(function() {
-    showLoading();
-    $.ajaxSetup({ cache: false });
-
-    // Check for required HTML5 features
-    function unsupportedAlert(feature) {
-        showAlert('Your browser does not support ' + feature + '. \
-                   Try upgrading (Firefox 45, Chrome 45 or Safari 9 \
-                   recommended).', 'danger');
-        hideLoading();
-    }
+/** Check for the required HTML5 features */
+function checkHTML5() {
+    var unsupportedFeatures = []
     if (typeof(localStorage) == 'undefined' ) {
-        unsupportedAlert('HTML5 localStorage.');
+        unsupportedFeatures.push('localStorage.');
     }
     if (typeof(FileReader) == 'undefined' || typeof(FileList) == 'undefined'
         || typeof(Blob) == 'undefined') {
-        unsupportedAlert('the HTML5 File APIs');
+        unsupportedFeatures.push('File APIs');
     }
     if (typeof(Promise) == 'undefined') {
-        unsupportedAlert('HTML5 Promises');
+        unsupportedFeatures.push('Promises');
     }
+    if (unsupportedFeatures.length > 0) {
+        var uStr = unsupportedFeatures.pop();
+        if (unsupportedFeatures.length > 0) {
+            uStr = unsupportedFeatures.join(', ') + ' or ' + uStr;
+        }
+        showAlert('Your browser does not support HTML5 ' + uStr + '. \
+                   Try upgrading (Firefox 45, Chrome 45 or Safari 9 \
+                   recommended).', 'danger');
+        throw new Error("HTML5 " + uStr + " not supported.");
+    }
+}
 
-    // Initialise settings from cookie or defaults
+
+$(function() {
+    $.ajaxSetup({ cache: false });
+    checkHTML5();
+
+    // Initialise settings
     if (typeof Cookies.get('settings') != "undefined") {
         loadSettings();
     } else {
