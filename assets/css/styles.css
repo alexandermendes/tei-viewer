@@ -1,6 +1,7 @@
+/** General */
+
 main {
-    height: calc(100vh - 100px);
-    max-height: calc(100vh - 100px);
+    min-height: calc(100vh - 100px);
 }
 
 .navbar {
@@ -20,23 +21,29 @@ a:focus {
     text-decoration: none;
 }
 
-.tabcontent {
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    border-radius: 0px 0px 5px 5px;
+.glyphicon-spin {
+    font-size: large;
+    -webkit-animation: spin 1000ms infinite linear;
+    animation: spin 1000ms infinite linear;
 }
 
-.tabcontent .tab-pane:not(#table-view),
-.tabcontent .tab-pane .row {
-    padding: 20px;
+#table-view {
+    height: 100%;
 }
+
+
+/** Tables */
 
 #table-scroll {
     width:100%;
     max-width:100%;
     overflow-x:auto;
     padding-top: 5px;
+    height: 100%;
+}
+
+#table-scroll .table {
+    margin-bottom: 0px;
 }
 
 #table-scroll.fixed table  {
@@ -51,7 +58,7 @@ a:focus {
 
 #table-scroll.fixed table tbody {
     display: block;
-    max-height: calc(100vh - 100px);
+    max-height: calc(100vh - 110px);
     overflow-x: auto;
 }
 
@@ -85,38 +92,29 @@ a:focus {
     padding: 8px 20px 8px 20px;
 }
 
+
+/** Buttons */
+
 .btn-file {
     position: relative;
     overflow: hidden;
 }
+
 .btn-file input[type=file] {
     position: absolute;
     top: 0;
     right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
+    height: 100%;
+    width: 100%;
     filter: alpha(opacity=0);
     opacity: 0;
     outline: none;
     background: white;
     cursor: inherit;
-    display: block;
 }
 
-.tab-pane {
-    display: none;
-}
-.tab-pane.active {
-    display: initial;
-}
 
-.glyphicon-spin {
-    font-size: large;
-    -webkit-animation: spin 1000ms infinite linear;
-    animation: spin 1000ms infinite linear;
-}
+/** Modals */
 
 #help-modal h2:first-child {
     padding: 0px 20px 0px 20px;
@@ -136,6 +134,54 @@ a:focus {
     overflow-y: auto;
 }
 
+
+/** Upload box */
+
+.upload-box {
+    text-align: center;
+    font-size: 1.5em;
+    color: #5E5E5E;
+    position: relative;
+    padding: calc((100vh - 100px - (1.5em + 3em)) / 2) 20px;
+    height: 100%;
+}
+
+.upload-box .btn-file:hover {
+    color: #449D44;
+    cursor: pointer;
+}
+
+.upload-box .btn-file .uploadbox-dragndrop {
+    color: #5E5E5E;
+}
+
+.upload-box-dragndrop,
+.upload-box-uploading,
+.upload-box-success,
+.upload-box-error {
+  display: none;
+}
+
+.upload-box.has-advanced-upload {
+    outline: 2px dashed #ADADAD;
+    outline-offset: -10px;
+    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear;
+}
+.upload-box.has-advanced-upload .upload-box-dragndrop {
+  display: inline;
+}
+
+.upload-box-input .glyphicon {
+    font-size: 2em;
+}
+
+.upload-box.is-dragover {
+  background-color: #E6E6E6;
+}
+
+/** Footer */
+
 footer {
     text-align: center;
     width: 100%;
@@ -143,6 +189,9 @@ footer {
     height: 50px;
     padding-top: 15px
 }
+
+
+/** At-rules */
 
 @-webkit-keyframes spin {
     0% {
@@ -154,6 +203,7 @@ footer {
         transform: rotate(359deg);
     }
 }
+
 @keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);

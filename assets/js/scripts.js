@@ -1,10 +1,8 @@
-var XSLTProcessor;
-var teiTable = new TeiTable();
+var teiTable;
 
 /** Add XML files to local storage. */
-$( "#add-files" ).change(function(evt) {
+function uploadFiles(files) {
     showLoading();
-    var files = evt.target.files;
     var uniqueFilenames = $('#unique-fn').val() == 'True';
     var pending = files.length;
 
@@ -47,7 +45,7 @@ $( "#add-files" ).change(function(evt) {
         })(f);
         reader.readAsText(f);
     }
-});
+}
 
 
 /** Show loading icon. */
@@ -66,31 +64,38 @@ function hideLoading() {
 
 /** Hide column menu item clicked. */
 $( "#hide-menu" ).on('click', '.hide-column', function(e) {
-    var index = parseInt($(this).attr('data-index')) + 1;
+    var index = parseInt($(this).attr('data-index'));
     teiTable.hideColumn(index);
+    refreshView();
     e.preventDefault();
 });
 
 
 /** Show column menu item clicked. */
 $( "#show-menu" ).on('click', '.show-column', function(e) {
-    var index = parseInt($(this).attr('data-index')) + 1;
+    var index = parseInt($(this).attr('data-index'));
     teiTable.showColumn(index);
+    refreshView();
     e.preventDefault();
 });
 
 
 /** Refresh the main view. */
 function refreshView() {
-    var mergedDocs = mergeUploadedDocs();
-    if (typeof XSLTProcessor == "undefined") {
+    showLoading();
+    if (!teiTable.XSLTProcLoaded()) {
         showAlert('XSLT processor not loaded, please try again.', 'warning');
+    } else if(localStorage.length > 0) {
+        var mergedXML = mergeUploadedDocs();
+        teiTable.populate(mergedXML);
+        $('.upload-box').hide();
+        $('#table-scroll').show();
     } else {
-        var tableDoc = XSLTProcessor.transformToFragment(mergedDocs, document);
-        teiTable.populate(tableDoc);
+        $('.upload-box').show();
+        $('#table-scroll').hide();
     }
     $('#files-uploaded').html(localStorage.length + ' files uploaded');
-    $('#upload-form').trigger("reset");
+    $('.upload-form').trigger("reset");
     enableSettings();
     hideLoading();
 }
@@ -142,17 +147,19 @@ $( "#clear-views" ).click(function() {
 function refreshXSLTProcessor() {
     showLoading();
     var tableXSLT = $('#select-table-xslt').val();
-    // Load the table XSLT
     var tablePromise = Promise.resolve($.ajax({
         url: "assets/xslt/" + tableXSLT
     })).then(function(data) {
-        XSLTProcessor = new XSLTProcessor();
-        XSLTProcessor.importStylesheet(data);
+        XSLTProc = new XSLTProcessor();
+        XSLTProc.importStylesheet(data);
+        teiTable = new TeiTable();
+        teiTable.updateXSLTProc(XSLTProc)
     }).catch(function() {
         showAlert('XSLT file ' + tableXSLT + ' could not be loaded.',
                   'danger');
     }).then(function() {
         hideLoading();
+        refreshView();
     });
 }
 
@@ -221,16 +228,17 @@ $( "#reset-settings" ).click(function() {
     loadDefaultSettings();
     $('settings-modal').modal('hide');
     showAlert('All settings have been reset to their defaults.', 'info');
+    refreshView();
 });
 
 
-/** Handle change of load table XSLT setting. */
+/** Handle change of XSLT setting. */
 $( "#select-table-xslt" ).change(function() {
     showLoading();
     var settings = Cookies.getJSON('settings');
-    var selectedXSLT = $('#select-table-xslt').val();
-    $.each(settings.xslt, function( index, value ) {
-        if (value.label == selectedXSLT) {
+    var defaultXSLT = $('#select-table-xslt').val();
+    $.each(settings.xslt, function(index, value) {
+        if (value.label == defaultXSLT) {
             value.default = true;
         } else {
             value.default = false;
@@ -342,6 +350,10 @@ function checkHTML5() {
     if (typeof(Promise) == 'undefined') {
         unsupportedFeatures.push('Promises');
     }
+    var div = document.createElement('div');
+    if (!('draggable' in div) || !('ondragstart' in div && 'ondrop' in div)) {
+        unsupportedFeatures.push('Drag and Drop');
+    }
     if (unsupportedFeatures.length > 0) {
         var uStr = unsupportedFeatures.pop();
         if (unsupportedFeatures.length > 0) {
@@ -353,6 +365,27 @@ function checkHTML5() {
         throw new Error("HTML5 " + uStr + " not supported.");
     }
 }
+
+
+/** Handle add files event. */
+$( ".add-files" ).change(function(evt) {
+    var files = evt.target.files;
+    uploadFiles(files);
+});
+
+
+/** Handle upload box drag and drop event. */
+$('.upload-box').on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}).on('dragover dragenter', function() {
+    $('.upload-box').addClass('is-dragover');
+}).on('dragleave dragend drop', function() {
+    $('.upload-box').removeClass('is-dragover');
+}).on('drop', function(e) {
+    var files = e.originalEvent.dataTransfer.files;
+    uploadFiles(files);
+});
 
 
 $(function() {

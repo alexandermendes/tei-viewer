@@ -1,10 +1,14 @@
 function TeiTable() {
 
+    var XSLTProc;
+    var hiddenCols = [];
+
     /** Populate the hide and show menus. */
     function _populateMenus() {
         var headings = []
         $('table th').each(function(i) {
-            var h = {'label': $(this).html(), 'visible': $(this).is(':visible'),
+            var h = {'label': $(this).html(),
+                     'visible': hiddenCols.indexOf(i) == -1,
                      'index': i}
             headings.push(h);
         });
@@ -29,13 +33,13 @@ function TeiTable() {
             return (!this.visible) ? "show-column" : "show-column hidden";
         }
 
-        if ($('table th:visible').length > 0) {
+        if (hiddenCols.length !== $('table th').length) {
             renderMenu('hide', getHideCls)
         } else {
             renderPlaceholder('hide');
         }
 
-        if ($('table th:hidden').length > 0) {
+        if (hiddenCols.length > 0) {
             renderMenu('show', getShowCls)
         } else {
             renderPlaceholder('show');
@@ -44,25 +48,19 @@ function TeiTable() {
 
     /** Hide a table column. */
     this.hideColumn = function(columnIndex) {
-        $('table tr > *:nth-child(' + columnIndex + ')').hide();
+        $('table tr > *:nth-child(' + (columnIndex + 1) + ')').hide();
+        hiddenCols.push(columnIndex);
         _populateMenus();
     }
 
     /** Show a table column. */
     this.showColumn = function(columnIndex) {
-        $('table tr > *:nth-child(' + columnIndex + ')').show();
-        _populateMenus();
-    }
-
-    /** Return an array of currently hidden column indexes. */
-    function _getHiddenColumns(){
-        var hiddenCols = [];
-        $('table th').each(function(k, v) {
-            if ($(this).is(':hidden')) {
-                hiddenCols.push(k + 1);
-            }
+        console.log(columnIndex);
+        $('table tr > *:nth-child(' + (columnIndex + 1) + ')').show();
+        hiddenCols = $.grep(hiddenCols, function(value) {
+            return value != columnIndex;
         });
-        return hiddenCols;
+        _populateMenus();
     }
 
     /** Set the table to fixed or otherwise. */
@@ -77,10 +75,10 @@ function TeiTable() {
         }
     }
 
-    /** Load HTML data into the table view. */
-    this.populate = function(html) {
+    /** Load TEI data into the table view. */
+    this.populate = function(xml) {
         teiTable = this;
-        var hiddenCols = _getHiddenColumns();
+        html = XSLTProc.transformToFragment(xml, document);
         $('#table-data').html(html);
         fixedTables = $('#fixed-table').val() == 'True';
         _setTableAsFixed(fixedTables);
@@ -88,5 +86,13 @@ function TeiTable() {
             teiTable.hideColumn(v);
         });
         _populateMenus();
+    }
+
+    this.updateXSLTProc = function(obj) {
+        XSLTProc = obj;
+    }
+
+    this.XSLTProcLoaded = function() {
+        return typeof(XSLTProc) !== 'undefined';
     }
 }

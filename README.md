@@ -45,9 +45,9 @@ The core functionality is provided via the following toolbar buttons:
 The following settings are stored using cookies so that changes will persist
 between uses:
 
-- **Table XSLT:** The XSLT document used to transform for table display.
+- **XSLT:** The XSLT script used to transform uploaded XML documents for table display.
 
-- **Freeze Header:** Freeze the table header.
+- **Fixed Table:** Freeze the table header and footer.
 
 - **Unique Filenames:** Don't allow more than one file with the same filename
 to be uploaded.
