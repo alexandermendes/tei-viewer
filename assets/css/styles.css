@@ -28,11 +28,6 @@ a:focus {
     animation: spin 1000ms infinite linear;
 }
 
-#table-view {
-    height: 100%;
-    position: static;
-}
-
 
 /** Tables */
 
@@ -40,7 +35,6 @@ a:focus {
     width:100%;
     max-width:100%;
     overflow-x:auto;
-    padding-top: 5px;
     height: 100%;
     position: absolute;
 }
@@ -93,6 +87,21 @@ a:focus {
 .table>thead>tr>th:last-child {
     padding: 8px 20px 8px 20px;
 }
+
+#table-view {
+    height: 100%;
+    position: static;
+}
+
+.table-responsive,
+.table-bordered {
+    border: none;
+}
+
+.table thead th {
+    text-overflow: ellipsis;
+}
+
 
 
 /** Buttons */
@@ -247,8 +256,5 @@ footer {
         width: 100%;
         -webkit-box-shadow: none;
         -box-shadow: none;
-    }
-    .table-responsive {
-        border: none;
     }
 }

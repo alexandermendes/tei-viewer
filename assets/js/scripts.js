@@ -80,6 +80,26 @@ $( "#show-menu" ).on('click', '.show-column', function(e) {
 });
 
 
+/** Hide borders menu item clicked. */
+$( "#hide-borders" ).on('click', function(e) {
+    teiTable.hideBorders();
+    var settings = Cookies.getJSON('settings');
+    settings.showBorders = false;
+    Cookies.set('settings', settings);
+    e.preventDefault();
+});
+
+
+/** Show borders menu item clicked. */
+$( "#show-borders" ).on('click', function(e) {
+    teiTable.showBorders();
+    var settings = Cookies.getJSON('settings');
+    settings.showBorders = true;
+    Cookies.set('settings', settings);
+    e.preventDefault();
+});
+
+
 /** Refresh the main view. */
 function refreshView() {
     showLoading();
@@ -90,6 +110,13 @@ function refreshView() {
         $('.upload-box').hide();
         $('#table-scroll').show();
         teiTable.populate(mergedXML);
+        var settings = Cookies.getJSON('settings');
+        if (settings.showBorders) {
+            teiTable.showBorders();
+        } else {
+            teiTable.hideBorders();
+        }
+        teiTable.showBorders(settings.showBorders);
     } else {
         $('.upload-box').show();
         $('#table-scroll').hide();

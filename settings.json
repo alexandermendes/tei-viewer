@@ -7,5 +7,6 @@
       }
    ],
    "uniqueFilenames":false,
-   "freezeHeader":true
+   "freezeHeader":true,
+   "showBorders":true
 }

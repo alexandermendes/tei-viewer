@@ -29,6 +29,8 @@ The core functionality is provided via the following toolbar buttons:
 
 - **Show:** Show table columns.
 
+- **Borders:** Show/hide table borders.
+
 - **Clear:** Remove all uploaded documents.
 
 - **Print:** Print the current view.
@@ -42,12 +44,9 @@ The core functionality is provided via the following toolbar buttons:
 
 ## Settings
 
-The following settings are stored using cookies so that changes will persist
-between uses:
+The following general settings are provided:
 
 - **XSLT:** The XSLT script used to transform uploaded XML documents for table display.
-
-- **Freeze Header:** Freeze the table's header row.
 
 - **Unique Filenames:** Don't allow more than one file with the same filename
 to be uploaded.

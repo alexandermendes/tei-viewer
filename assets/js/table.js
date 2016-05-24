@@ -83,11 +83,28 @@ function TeiTable() {
         _populateMenus();
     }
 
+    /** Update the XSLT processor. */
     this.updateXSLTProc = function(obj) {
         XSLTProc = obj;
     }
 
+
+    /** Check if the XSLT processor has been loaded. */
     this.XSLTProcLoaded = function() {
         return typeof(XSLTProc) !== 'undefined';
+    }
+
+
+    /** Show table borders. */
+    this.showBorders = function() {
+        $('table').addClass('table-bordered');
+        this.fixHeaderWidths();
+    }
+
+
+    /** Hide table borders. */
+    this.hideBorders = function() {
+        $('table').removeClass('table-bordered');
+        this.fixHeaderWidths();
     }
 }
