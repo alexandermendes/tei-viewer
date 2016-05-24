@@ -1,20 +1,11 @@
 {  
-   "xsl":{  
-      "table":[  
-         {  
-            "label":"British Library",
-            "filename":"bl-table.xsl",
-            "default":true
-         }
-      ],
-      "list":[  
-         {  
-            "label":"British Library",
-            "filename":"bl-list.xsl",
-            "default":true
-         }
-      ]
-   },
+   "xslt":[  
+      {  
+         "label":"British Library (simplified)",
+         "filename":"bl-simplified.xsl",
+         "default":true
+      }
+   ],
    "uniqueFilenames":false,
    "fixedTable":true
 }
