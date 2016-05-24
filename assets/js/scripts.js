@@ -136,7 +136,6 @@ function refreshView() {
         } else {
             teiTable.hideBorders();
         }
-        teiTable.showBorders(settings.showBorders);
     } else {
         $('.upload-box').show();
         $('#table-scroll').hide();
