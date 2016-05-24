@@ -62,8 +62,8 @@ function TeiTable() {
         _populateMenus();
     }
 
-    /** Set the table to fixed or otherwise. */
-    function _fixHeaderWidths() {
+    /** Fix width of cells in frozen table header. */
+    this.fixHeaderWidths = function() {
         var tableWidth = $('#table-scroll table').width();
         $('table tbody tr:first-child td').each(function(i) {
             var colWidth = $(this).width();
@@ -76,7 +76,7 @@ function TeiTable() {
         teiTable = this;
         html = XSLTProc.transformToFragment(xml, document);
         $('#table-data').html(html);
-        _fixHeaderWidths();
+        this.fixHeaderWidths();
         $(hiddenCols).each(function(k, v) {
             teiTable.hideColumn(v);
         });

@@ -406,3 +406,9 @@ $(function() {
         loadDefaultSettings();
     }
 });
+
+$(window).resize(function() {
+    if (typeof(teiTable) !== 'undefined') {
+        teiTable.fixHeaderWidths();
+    }
+});
