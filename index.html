@@ -15,20 +15,25 @@
         <![endif]-->
     </head>
     <body>
-        <main>
-            <div class="container">
-                <div class="hidden-print">
-                    <h1>TEI Viewer</h1>
-                    <div id="alerts">
-                        <!-- Alerts loaded here -->
-                    </div>
-                    <hr>
-                    <form id="tei-form">
+
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Tei Viewer</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <form class="navbar-form" id="upload-form">
                         <span class="btn btn-success btn-file">
                             Add Files <input type="file" id="add-files" name="files[]" accept=".xml" multiple>
                         </span>
-                        <button type="button" class="btn btn-default" id="clear-views">Clear</button>
-                        <button type="button" class="btn btn-default" onclick="window.print()">Print</button>
                         <div class="btn-group">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Hide
@@ -45,96 +50,102 @@
                                 <ul class="dropdown-menu" id="show-menu"></ul>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-danger pull-right" id="csv-export">Export to CSV</button>
+                        <button type="button" class="btn btn-default" id="clear-views">Clear</button>
+                        <button type="button" class="btn btn-default" onclick="window.print()">Print</button>
+                        <button type="button" class="btn btn-default" id="csv-export">Export</button>
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#settings-modal">Settings</button>
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#help-modal" data-remote="false">Help</button>
                     </form>
-                    <hr>
-
-                    <p class="pull-right">
-                        <span id="loading-icon" class="glyphicon glyphicon-refresh glyphicon-spin" style="display:none;"></span>
-                        <small><span id="files-uploaded"></span></small>
-                    </p>
-
-                    <ul class="nav nav-tabs">
-                        <li role="presentation" class="active"><a href="#table-view" data-toggle="tab">Table View</a></li>
-                        <li role="presentation"><a href="#list-view" data-toggle="tab">List View</a></li>
-                        <li role="presentation"><a href="#settings" data-toggle="tab">Settings</a></li>
-                        <li role="presentation"><a href="#help" data-toggle="tab">Help</a></li>
-                    </ul>
                 </div>
+            </div>
+        </nav>
 
-                <div class="tabcontent">
+        <main>
+            <div id="alerts">
+                <!-- Alerts loaded here -->
+            </div>
 
-                    <div id="table-view" class="tab-pane fade in active">
-                        <div id="table-scroll" class="fixed">
-                            <div id="table-data">
-                                <!-- TEI data loaded here -->
-                            </div>
-                        </div>
+            <div id="table-view">
+                <div id="table-scroll" class="fixed">
+                    <div id="table-data">
+                        <!-- TEI data loaded here -->
                     </div>
-
-                    <div id="list-view" class="tab-pane fade">
-                        <div id="list-data">
-                            <!-- TEI data loaded here -->
-                        </div>
-                    </div>
-
-                    <div id="settings" class="tab-pane fade">
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <form id="settings-form" class="form-horizontal">
-                                    <div class="form-group">
-                                        <label class="control-label col-xs-4" for="select-table-xslt">Table XSLT</label>
-                                        <select class="selectpicker select-xslt col-xs-8" id="select-table-xslt"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-xs-4" for="select-list-xslt">List XSLT</label>
-                                        <select class="selectpicker select-xslt col-xs-8" id="select-list-xslt"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-xs-4" for="fixed-table">Fixed Table</label>
-                                        <select class="selectpicker col-xs-8" id="fixed-table">
-                                            <option>True</option>
-                                            <option>False</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-xs-4" for="unique-fn">Unique Filenames</label>
-                                        <select class="selectpicker col-xs-8" id="unique-fn" disabled>
-                                            <option>True</option>
-                                            <option>False</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-xs-8 col-xs-offset-4">
-                                            <button type="button" class="btn btn-default pull-right" id="default-settings" disabled>Default Settings</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="col-sm-3">
-                                <div id="disabled-settings-msg" class="well well-sm">
-                                    <p>Note that certain settings are disabled while XML
-                                    files are loaded.</p>
-
-                                    <p>Click the clear button to remove any
-                                    currently loaded files.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="help" class="tab-pane fade">
-                        <!-- README.md loaded here -->
-                    </div>
-
                 </div>
             </div>
         </main>
 
         <footer class="hidden-print">
-            <a href="https://github.com/alexandermendes/tei-viewer">View on GitHub</a>
+            <div class="container-fluid">
+                <div class="col-sm-9">
+                </div>
+
+                <div class="col-sm-3 text-right">
+                    <span id="loading-icon" class="glyphicon glyphicon-refresh glyphicon-spin" style="display:none;"></span>
+                    <small><span id="files-uploaded"></span></small>
+                </div>
+            </div>
         </footer>
 
+        <!-- Settings modal -->
+        <div id="settings-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Settings</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="settings-form">
+                            <div class="form-group">
+                                <label class="control-label" for="select-table-xslt">XSLT:</label>
+                                <select class="selectpicker select-xslt form-control" id="select-table-xslt"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="fixed-table">Fixed Table</label>
+                                <select class="selectpicker form-control" id="fixed-table">
+                                    <option>True</option>
+                                    <option>False</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="unique-fn">Unique Filenames</label>
+                                <select class="selectpicker form-control" id="unique-fn" disabled>
+                                    <option>True</option>
+                                    <option>False</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="text-right">
+                                    <button type="button" class="btn btn-default" id="reset-settings" disabled>Reset Settings</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="disabled-settings-msg" class="modal-footer">
+                        <div class="text-center">
+                            <p><strong>Note:</strong> Some settings are disabled while XML files are loaded.</p>
+                        </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help modal -->
+        <div id="help-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Help</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- README.md loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Javascript -->
         <script src="assets/vendor/jquery-2.2.3.min.js"></script>
         <script src="assets/vendor/bootstrap-3.3.6/js/bootstrap.min.js"></script>
         <script src="assets/vendor/bootstrap-select-1.10.0/js/bootstrap-select.min.js"></script>

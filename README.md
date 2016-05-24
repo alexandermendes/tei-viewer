@@ -11,7 +11,7 @@ in both list and table formats.
 
 ## Requirements
 
-The application requires a browser that supports HTML5 localStorage, Promises
+This application requires a browser that supports HTML5 localStorage, Promises
 and the File APIs, for example:
 
 - Chrome 45
@@ -25,15 +25,19 @@ The core functionality is provided via the following toolbar buttons:
 
 - **Add Files:** Upload TEI XML documents.
 
-- **Clear:** Remove all uploaded documents.
-
-- **Print:** Print the current view.
-
 - **Hide:** Hide table columns.
 
 - **Show:** Show table columns.
 
-- **Export to CSV:** Export the table to a CSV file.
+- **Clear:** Remove all uploaded documents.
+
+- **Print:** Print the current view.
+
+- **Export:** Export the table to a CSV file.
+
+- **Settings:** View and modify the settings.
+
+- **Help:** View the README file.
 
 
 ## Settings
@@ -43,17 +47,12 @@ between uses:
 
 - **Table XSLT:** The XSLT document used to transform for table display.
 
-- **List XSLT:** The XSLT document used to transform for list display.
+- **Freeze Header:** Freeze the table header.
 
-- **Fixed Table:** Fit the table to the size of the screen and freeze the header
-row.
+- **Unique Filenames:** Don't allow more than one file with the same filename
+to be uploaded.
 
-- **Unique Filenames:** Allow more than one file with the same filename to be
-uploaded.
-
-- **Default Settings:** Return to default settings.
-
-Note that certain settings can only be changed when no XML files are loaded.
+- **Reset Settings:** Return to default settings.
 
 
 ## Running offline
@@ -76,9 +75,5 @@ Then visit [http://localhost:8000/](http://localhost:8000/)
 
 ## Contributing
 
-Bugs and improvements are tracked as [issues](https://github.com/alexandermendes/tei-viewer/issues).
-
-If you find that you want to display your TEI data in a particular way feel free to submit
-a pull request to add additonal XSLT scripts. Just add the script to the
-[xsl](https://github.com/alexandermendes/tei-viewer/tree/master/assets/xsl) directory
-and load it via [settings.json](settings.json).
+Bugs and suggested improvements are tracked as
+[GitHub Issues](https://github.com/alexandermendes/tei-viewer/issues).

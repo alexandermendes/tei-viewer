@@ -1,5 +1,10 @@
 main {
-    min-height: calc(100vh - 60px);
+    height: calc(100vh - 100px);
+    max-height: calc(100vh - 100px);
+}
+
+.navbar {
+    margin-bottom: 0px;
 }
 
 a:hover,
@@ -39,7 +44,7 @@ a:focus {
 
 #table-scroll.fixed table tbody {
     display: block;
-    max-height: calc(100vh - 300px);
+    max-height: calc(100vh - 100px);
     overflow-x: auto;
 }
 
@@ -106,26 +111,30 @@ a:focus {
     animation: spin 1000ms infinite linear;
 }
 
-#help h2:first-child {
+#help-modal h2:first-child {
     padding: 0px 20px 0px 20px;
 }
-#help h2:not(:first-child) {
+#help-modal h2:not(:first-child) {
     padding: 20px 20px 0px 20px;
 }
-#help p {
+#help-modal p {
     padding: 0px 20px 0px 20px;
 }
-#help pre {
-    margin: 0px 20px 10px 20px;
+#help-modal pre {
+    margin: 20px 20px 10px 20px;
+}
+
+.modal-body {
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
 }
 
 footer {
-    margin-top: 20px;
     text-align: center;
     width: 100%;
-    background-color: #FAFAFA;
-    height: 40px;
-    padding-top: 10px
+    background-color: #F8F8F8;
+    height: 50px;
+    padding-top: 15px
 }
 
 @-webkit-keyframes spin {

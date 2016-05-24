@@ -93,7 +93,7 @@ function refreshViews() {
         $('#list-data').html(listDoc);
     }
     $('#files-uploaded').html(localStorage.length + ' files uploaded');
-    $('#tei-form').trigger("reset");
+    $('#upload-form').trigger("reset");
     enableSettings();
     hideLoading();
 }
@@ -103,11 +103,11 @@ function refreshViews() {
 function enableSettings() {
     if (localStorage.length == 0){
         $('#unique-fn').attr('disabled', false);
-        $('#default-settings').attr('disabled', false);
+        $('#reset-settings').attr('disabled', false);
         $('#disabled-settings-msg').hide();
     } else {
         $('#unique-fn').attr('disabled', true);
-        $('#default-settings').attr('disabled', true);
+        $('#reset-settings').attr('disabled', true);
         $('#disabled-settings-msg').show();
     }
     $('#unique-fn').selectpicker('refresh');
@@ -231,7 +231,7 @@ Boolean.prototype.toCapsString = function () {
 
 
 /** Reset to default settings. */
-$( "#default-settings" ).click(function() {
+$( "#reset-settings" ).click(function() {
     loadDefaultSettings();
 });
 
@@ -312,15 +312,17 @@ function loadDefaultSettings() {
 }
 
 
-/** Load README.md into the help tab. */
-function loadHelp() {
-    $.get( "README.md", function( readme ) {
+/** Load README.md into the help modal. */
+$("#help-modal").on("show.bs.modal", function() {
+    var modalBody = $(this).find(".modal-body");
+    console.log(modalBody);
+    $.get("README.md", function( readme ) {
         var converter = new showdown.Converter();
         var text = readme.replace(/[\s\S]+?(?=#)/, "");
         var html = converter.makeHtml(text);
-        $('#help').html(html);
+        modalBody.html(html);
     });
-}
+});
 
 
 $(function() {
@@ -351,6 +353,4 @@ $(function() {
     } else {
         loadDefaultSettings();
     }
-
-    loadHelp();
 });
