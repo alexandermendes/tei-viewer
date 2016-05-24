@@ -128,8 +128,8 @@ function mergeUploadedDocs(){
 /** Display a Bootstrap alert. */
 function showAlert(msg, type) {
     var template = $("#alert-template").html();
-            rendered = Mustache.render(template, {msg: msg, type: type});
-        $( "#alerts" ).append(rendered);
+        rendered = Mustache.render(template, {msg: msg, type: type});
+    $( "#alerts" ).html(rendered);
 }
 
 
@@ -233,6 +233,8 @@ Boolean.prototype.toCapsString = function () {
 /** Reset to default settings. */
 $( "#reset-settings" ).click(function() {
     loadDefaultSettings();
+    $('settings-modal').modal('hide');
+    showAlert('All settings have been reset to their defaults.', 'info');
 });
 
 

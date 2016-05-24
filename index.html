@@ -9,6 +9,7 @@
         <meta name="author" content="Alexander Mendes">
         <link rel="stylesheet" href="assets/vendor/bootstrap-3.3.6/css/bootstrap.min.css" media="all">
         <link rel="stylesheet" href="assets/vendor/bootstrap-select-1.10.0/css/bootstrap-select.min.css" media="screen">
+        <link rel="stylesheet" href="assets/vendor/animate.min.css" media="screen">
         <link rel="stylesheet" href="assets/css/styles.css?v=1.3" media="all">
         <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -162,7 +163,7 @@
             {{ /options }}
         </script>
         <script id="alert-template" type="text/html">
-            <div class="alert alert-{{ type }}" role="alert">
+            <div class="alert alert-{{ type }} animated bounceInRight" role="alert">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 <strong class="text-capitalize">{{ type }}:</strong> {{ msg }}
             </div>
