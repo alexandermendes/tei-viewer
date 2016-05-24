@@ -63,15 +63,12 @@ function TeiTable() {
     }
 
     /** Set the table to fixed or otherwise. */
-    function _setTableAsFixed(bool) {
-        if (bool) {
-            $('#table-scroll').addClass('fixed');
-            var tableWidth = $('#table-scroll .table th').length * 300;
-            $('#table-scroll .table').css('width', tableWidth);
-            $('#table-scroll .table').css('max-width', tableWidth);
-        } else {
-            $('#table-scroll').removeClass('fixed');
-        }
+    function _fixHeaderWidths() {
+        var tableWidth = $('#table-scroll table').width();
+        $('table tbody tr:first-child td').each(function(i) {
+            var colWidth = $(this).width();
+            $('table thead tr th:nth-child(' + (i + 1) + ')').width(colWidth);
+        });
     }
 
     /** Load TEI data into the table view. */
@@ -79,8 +76,7 @@ function TeiTable() {
         teiTable = this;
         html = XSLTProc.transformToFragment(xml, document);
         $('#table-data').html(html);
-        fixedTables = $('#fixed-table').val() == 'True';
-        _setTableAsFixed(fixedTables);
+        _fixHeaderWidths();
         $(hiddenCols).each(function(k, v) {
             teiTable.hideColumn(v);
         });

@@ -77,7 +77,6 @@ a:focus {
 #table-scroll.fixed table>thead>tr>td,
 #table-scroll.fixed table>thead>tr>th {
     background-color: #fff;
-    width: 300px;
 }
 
 .table>tbody>tr>td:first-child,

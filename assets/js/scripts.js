@@ -87,9 +87,9 @@ function refreshView() {
         showAlert('XSLT processor not loaded, please try again.', 'warning');
     } else if(localStorage.length > 0) {
         var mergedXML = mergeUploadedDocs();
-        teiTable.populate(mergedXML);
         $('.upload-box').hide();
         $('#table-scroll').show();
+        teiTable.populate(mergedXML);
     } else {
         $('.upload-box').show();
         $('#table-scroll').hide();
@@ -263,6 +263,7 @@ $( "#fixed-table" ).change(function() {
     var settings = Cookies.getJSON('settings');
     var fixedTable = $('#fixed-table').val() == 'True';
     settings.fixedTable = fixedTable;
+    $('#table-scroll').toggleClass('fixed');
     Cookies.set('settings', settings);
     refreshView();
 });
@@ -296,6 +297,9 @@ function loadSettings(){
         // Fixed table
         var fixedTable = settings.fixedTable.toCapsString()
         $('#fixed-table').val(fixedTable);
+        if (settings.fixedTable) {
+            $('#table-scroll').addClass('fixed');
+        }
 
         $('.selectpicker').selectpicker('refresh');
         refreshXSLTProcessor();
