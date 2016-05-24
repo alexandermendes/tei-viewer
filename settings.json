@@ -1,11 +1,11 @@
-{  
-   "xslt":[  
-      {  
+{
+   "xslt":[
+      {
          "label":"British Library (simplified)",
          "filename":"bl-simplified.xsl",
          "default":true
       }
    ],
    "uniqueFilenames":false,
-   "fixedTable":true
+   "freezeHeader":true
 }

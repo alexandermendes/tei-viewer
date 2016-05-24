@@ -260,11 +260,11 @@ $( "#unique-fn" ).change(function() {
 });
 
 
-/** Handle change of fixed table setting. */
-$( "#fixed-table" ).change(function() {
+/** Handle change of frozen table header setting. */
+$( "#freeze-header" ).change(function() {
     var settings = Cookies.getJSON('settings');
-    var fixedTable = $('#fixed-table').val() == 'True';
-    settings.fixedTable = fixedTable;
+    var freezeHeader = $('#freeze-header').val() == 'True';
+    settings.freezeHeader = freezeHeader;
     $('#table-scroll').toggleClass('fixed');
     Cookies.set('settings', settings);
     $('#settings-modal').modal('hide');
@@ -297,10 +297,10 @@ function loadSettings(){
         var uniqueFn = settings.uniqueFilenames.toCapsString()
         $('#unique-fn').val(uniqueFn);
 
-        // Fixed table
-        var fixedTable = settings.fixedTable.toCapsString()
-        $('#fixed-table').val(fixedTable);
-        if (settings.fixedTable) {
+        // Frozen table header
+        var freezeHeader = settings.freezeHeader.toCapsString()
+        $('#freeze-header').val(freezeHeader);
+        if (settings.freezeHeader) {
             $('#table-scroll').addClass('fixed');
         }
 

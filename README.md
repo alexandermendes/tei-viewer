@@ -47,7 +47,7 @@ between uses:
 
 - **XSLT:** The XSLT script used to transform uploaded XML documents for table display.
 
-- **Fixed Table:** Freeze the table header and footer.
+- **Freeze Header:** Freeze the table's header row.
 
 - **Unique Filenames:** Don't allow more than one file with the same filename
 to be uploaded.

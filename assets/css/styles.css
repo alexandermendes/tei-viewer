@@ -1,7 +1,7 @@
 /** General */
 
 main {
-    min-height: calc(100vh - 100px);
+    min-height: calc(100vh - 90px);
     position: relative;
 }
 
@@ -61,7 +61,7 @@ a:focus {
 
 #table-scroll.fixed table tbody {
     display: block;
-    max-height: calc(100vh - 110px);
+    max-height: calc(100vh - 100px);
     overflow-x: auto;
 }
 
@@ -188,8 +188,9 @@ footer {
     text-align: center;
     width: 100%;
     background-color: #F8F8F8;
-    height: 50px;
-    padding-top: 15px
+    height: 40px;
+    padding-top: 10px;
+    border-top: #e7e7e7 1px solid;
 }
 
 
