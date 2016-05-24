@@ -2,6 +2,7 @@
 
 main {
     min-height: calc(100vh - 100px);
+    position: relative;
 }
 
 .navbar {
@@ -29,6 +30,7 @@ a:focus {
 
 #table-view {
     height: 100%;
+    position: static;
 }
 
 
@@ -40,6 +42,7 @@ a:focus {
     overflow-x:auto;
     padding-top: 5px;
     height: 100%;
+    position: absolute;
 }
 
 #table-scroll .table {
