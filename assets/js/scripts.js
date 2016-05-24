@@ -226,7 +226,7 @@ Boolean.prototype.toCapsString = function () {
 /** Reset to default settings. */
 $( "#reset-settings" ).click(function() {
     loadDefaultSettings();
-    $('settings-modal').modal('hide');
+    $('#settings-modal').modal('hide');
     showAlert('All settings have been reset to their defaults.', 'info');
     refreshView();
 });
@@ -245,6 +245,7 @@ $( "#select-xslt" ).change(function() {
         }
     });
     Cookies.set('settings', settings);
+    $('#settings-modal').modal('hide');
     refreshXSLTProcessor();
 });
 
@@ -255,6 +256,7 @@ $( "#unique-fn" ).change(function() {
     var uniqueFn = $('#unique-fn').val() == 'True';
     settings.uniqueFilenames = uniqueFn;
     Cookies.set('settings', settings);
+    $('#settings-modal').modal('hide');
 });
 
 
@@ -265,6 +267,7 @@ $( "#fixed-table" ).change(function() {
     settings.fixedTable = fixedTable;
     $('#table-scroll').toggleClass('fixed');
     Cookies.set('settings', settings);
+    $('#settings-modal').modal('hide');
     refreshView();
 });
 
