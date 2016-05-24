@@ -62,6 +62,17 @@
                                 </ul>
                             </div>
                         </div>
+                        <div class="btn-group">
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Header
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" id="header-menu">
+                                    <li><a href="#" id="freeze-header">Freeze</a></li>
+                                    <li><a href="#" id="unfreeze-header">Unfreeze</a></li>
+                                </ul>
+                            </div>
+                        </div>
                         <button type="button" class="btn btn-default" id="clear-views">Clear</button>
                         <button type="button" class="btn btn-default" onclick="window.print()">Print</button>
                         <button type="button" class="btn btn-default" id="csv-export">Export</button>
@@ -125,13 +136,6 @@
                             <div class="form-group">
                                 <label class="control-label" for="select-xslt">XSLT:</label>
                                 <select class="selectpicker select-xslt form-control" id="select-xslt"></select>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="freeze-header">Freeze Header</label>
-                                <select class="selectpicker form-control" id="freeze-header">
-                                    <option>True</option>
-                                    <option>False</option>
-                                </select>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="unique-fn">Unique Filenames</label>

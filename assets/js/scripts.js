@@ -100,6 +100,26 @@ $( "#show-borders" ).on('click', function(e) {
 });
 
 
+/** Freeze header menu item clicked. */
+$("#freeze-header").on('click', function(e) {
+    $('#table-scroll').addClass('fixed');
+    var settings = Cookies.getJSON('settings');
+    settings.freezeHeader = true;
+    Cookies.set('settings', settings);
+    refreshView();
+});
+
+
+/** Unfreeze header menu item clicked. */
+$("#unfreeze-header").on('click', function(e) {
+    $('#table-scroll').removeClass('fixed');
+    var settings = Cookies.getJSON('settings');
+    settings.freezeHeader = false;
+    Cookies.set('settings', settings);
+    refreshView();
+});
+
+
 /** Refresh the main view. */
 function refreshView() {
     showLoading();
@@ -287,18 +307,6 @@ $( "#unique-fn" ).change(function() {
 });
 
 
-/** Handle change of frozen table header setting. */
-$( "#freeze-header" ).change(function() {
-    var settings = Cookies.getJSON('settings');
-    var freezeHeader = $('#freeze-header').val() == 'True';
-    settings.freezeHeader = freezeHeader;
-    $('#table-scroll').toggleClass('fixed');
-    Cookies.set('settings', settings);
-    $('#settings-modal').modal('hide');
-    refreshView();
-});
-
-
 /** Load and validate settings from cookie. */
 function loadSettings(){
     showLoading();
@@ -325,8 +333,6 @@ function loadSettings(){
         $('#unique-fn').val(uniqueFn);
 
         // Frozen table header
-        var freezeHeader = settings.freezeHeader.toCapsString()
-        $('#freeze-header').val(freezeHeader);
         if (settings.freezeHeader) {
             $('#table-scroll').addClass('fixed');
         }
