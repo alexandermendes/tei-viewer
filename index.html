@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="assets/vendor/bootstrap-3.3.6/css/bootstrap.min.css" media="all">
         <link rel="stylesheet" href="assets/vendor/bootstrap-select-1.10.0/css/bootstrap-select.min.css" media="screen">
         <link rel="stylesheet" href="assets/vendor/animate.min.css" media="screen">
+        <link rel="stylesheet" href="assets/vendor/font-awesome.min.css" media="screen">
         <link rel="stylesheet" href="assets/css/styles.css?v=1.6" media="all">
         <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -79,7 +80,14 @@
                         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#settings-modal">Settings</button>
                         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#help-modal" data-remote="false">Help</button>
                     </form>
-                </div>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="https://github.com/alexandermendes/tei-viewer" id="gh-link">
+                            <span class="fa fa-github fa-2x"></span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </nav>
 
@@ -91,7 +99,7 @@
             <div id="table-view">
                 <form class="upload-box has-advanced-upload upload-form" method="post" action="" enctype="multipart/form-data">
                     <div class="upload-box-input">
-                        <span class="glyphicon glyphicon-download-alt"></span>
+                        <span class="fa fa-download fa-3x"></span>
                         <br>
                         <span class="btn-file">
                             <strong>Choose a file</strong>
@@ -110,14 +118,12 @@
         </main>
 
         <footer class="hidden-print">
-            <div class="container-fluid">
-                <div class="col-sm-9">
-                </div>
+            <div class="col-sm-9">
+            </div>
 
-                <div class="col-sm-3 text-right">
-                    <span id="loading-icon" class="glyphicon glyphicon-refresh glyphicon-spin"></span>
-                    <small><span id="files-uploaded"></span></small>
-                </div>
+            <div class="col-sm-3 text-right">
+                <span id="loading-icon" class="fa fa-refresh fa-spin"></span>
+                <small><span id="files-uploaded"></span></small>
             </div>
         </footer>
 
