@@ -66,15 +66,19 @@ function TeiTable() {
     this.fixFrozenTable = function() {
 
         // Resize header cells
-        $('table tbody tr:first-child td').each(function(i) {
+        $('#table-scroll.fixed tbody tr:first-child td').each(function(i) {
             var colWidth = $(this).width();
             $('table thead tr th:nth-child(' + (i + 1) + ')').width(colWidth);
         });
 
-        //Resize tbody to always show vertical scroll bar
+        // Resize tbody to always show vertical scroll bar
         var offset = $('#table-scroll').scrollLeft();
             width  = $('#table-scroll').width();
         $('#table-scroll.fixed tbody').css('width', offset + width);
+
+        // Add padding
+        var headerHeight = $('thead').height();
+        $('#table-scroll.fixed tbody').css('padding-top', headerHeight);
     }
 
     /** Load TEI data into the table view. */
