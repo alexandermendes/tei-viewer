@@ -2,21 +2,34 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0">
 <xsl:output method="html" />
 
+    <xsl:template name="commaSeperate">
+        <xsl:param name="values"/>
+        <xsl:for-each select="$values">
+            <xsl:if test="string-length(.) &gt; 0">
+                <xsl:value-of select="normalize-space(.)"/>
+                <xsl:if test="position() != last()">
+                    <xsl:text>, </xsl:text>
+                    <br />
+                </xsl:if>
+            </xsl:if>
+        </xsl:for-each>
+    </xsl:template>
+
     <xsl:template match="MERGED-TEI">
         <table class="table" style="width:250%; max-width:250%;">
             <thead>
                 <tr>
                     <th>Shelfmark</th>
                     <th>Title</th>
+                    <th>Author</th>
                     <th>Contents</th>
                     <th>Language</th>
+                    <th>Scribe</th>
+                    <th>Physical Description</th>
+                    <th>Description of Hands</th>
                     <th>Extent</th>
-                    <th>Dimensions</th>
                     <th>Date</th>
                     <th>Provenance</th>
-                    <th>Acqusition</th>
-                    <th>Related People</th>
-                    <th>Related Places</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,31 +44,9 @@
         <tr>
             <xsl:apply-templates select=".//tei:msDesc/tei:msIdentifier"/>
             <xsl:apply-templates select=".//tei:msDesc/tei:msContents"/>
+            <xsl:call-template name="scribes"/>
             <xsl:apply-templates select=".//tei:msDesc/tei:physDesc"/>
             <xsl:apply-templates select=".//tei:msDesc/tei:history"/>
-
-            <td>  <!-- Related people -->
-                <xsl:for-each select=".//*/tei:name[@type='person']">
-                    <xsl:value-of select="normalize-space(.)"/>
-                    <xsl:if test="@role">
-                        <xsl:value-of select="concat(' (', @role, ')')"/>
-                    </xsl:if>
-                    <xsl:if test="position() != last()">
-                        <xsl:text>, </xsl:text>
-                        <br />
-                    </xsl:if>
-                </xsl:for-each>
-            </td>
-
-            <td>  <!-- Related places -->
-                <xsl:for-each select=".//*/tei:name[@type='place']">
-                    <xsl:value-of select="normalize-space(.)"/>
-                    <xsl:if test="position() != last()">
-                        <xsl:text>, </xsl:text>
-                        <br />
-                    </xsl:if>
-                </xsl:for-each>
-            </td>
         </tr>
     </xsl:template>
 
@@ -69,32 +60,36 @@
 
     <xsl:template match="tei:msContents">
         <td width="300px">  <!-- Title -->
-            <xsl:for-each select="tei:msItem[1]/tei:title">
-                <xsl:value-of select="."/>
-                <xsl:if test="position() != last()">
-                    <xsl:text>, </xsl:text>
-                </xsl:if>
-            </xsl:for-each>
+            <xsl:call-template name="commaSeperate">
+                <xsl:with-param name="values" select="tei:msItem[1]/tei:title" />
+            </xsl:call-template>
+        </td>
+        <td>  <!-- Authors -->
+            <xsl:call-template name="commaSeperate">
+                <xsl:with-param name="values" select="tei:msItem[1]/tei:author/tei:persName" />
+            </xsl:call-template>
         </td>
         <td width="300px"><xsl:value-of select="tei:summary"/></td>  <!-- Contents -->
         <td><xsl:value-of select="tei:textLang"/></td>  <!-- Language -->
     </xsl:template>
 
+    <xsl:template name="scribes">
+        <td>  <!-- Scribes -->
+            <xsl:call-template name="commaSeperate">
+                <xsl:with-param name="values" select=".//*/tei:name[@type='person' and @role='scribe']" />
+            </xsl:call-template>
+        </td>
+    </xsl:template>
+
     <xsl:template match="tei:physDesc">
+        <td>  <!-- Physical Description -->
+            <xsl:value-of select="tei:p"/>
+        </td>
+        <td>  <!-- Description of Hands -->
+            <xsl:value-of select="tei:handDesc"/>
+        </td>
         <td>  <!-- Extent -->
             <xsl:value-of select="tei:objectDesc/tei:supportDesc/tei:extent/text()"/>
-        </td>
-        <td>  <!-- Dimensions -->
-            <xsl:for-each select="tei:objectDesc/tei:supportDesc/tei:extent/tei:dimensions">
-            <xsl:value-of select="concat(tei:height, @unit, ' x ', tei:width, @unit)"/>
-            <xsl:if test="@type">
-                <xsl:value-of select="concat(' (', @type, ')')"/>
-            </xsl:if>
-                <xsl:if test="position() != last()">
-                    <xsl:text>, </xsl:text>
-                    <br />
-                </xsl:if>
-            </xsl:for-each>
         </td>
     </xsl:template>
 
@@ -113,7 +108,6 @@
             </xsl:choose>
         </td>
         <td><xsl:value-of select="tei:provenance"/></td>  <!-- Provenance -->
-        <td width="500px"><xsl:value-of select="tei:acquisition"/></td>  <!-- Acquisition -->
     </xsl:template>
 
 </xsl:stylesheet>
