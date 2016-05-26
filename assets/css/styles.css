@@ -43,7 +43,6 @@ a:focus {
 #table-scroll {
     width: 100%;
     overflow-x: auto;
-    overflow-y: hidden;
     height: calc(100vh - 90px);
     position: relative;
 }
@@ -59,7 +58,8 @@ a:focus {
 #table-scroll.fixed table  {
     position: relative;
     table-layout: fixed;
-    width: auto;
+    width: auto!important;
+    min-width: 100%!important;
     height: 100%;
 }
 
