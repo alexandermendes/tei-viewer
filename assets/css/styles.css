@@ -18,6 +18,11 @@ main {
     height: 50px;
 }
 
+.navbar #gh-link {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .alert {
     position: fixed;
     width: 100%;
@@ -29,12 +34,6 @@ a:hover,
 a:active,
 a:focus {
     text-decoration: none;
-}
-
-.glyphicon-spin {
-    font-size: large;
-    -webkit-animation: spin 1000ms infinite linear;
-    animation: spin 1000ms infinite linear;
 }
 
 
@@ -184,10 +183,6 @@ a:focus {
   display: inline;
 }
 
-.upload-box-input .glyphicon {
-    font-size: 2em;
-}
-
 .upload-box.is-dragover {
   background-color: #E6E6E6;
 }
@@ -205,28 +200,6 @@ footer {
 
 
 /** At-rules */
-
-@-webkit-keyframes spin {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(359deg);
-        transform: rotate(359deg);
-    }
-}
-
-@keyframes spin {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(359deg);
-        transform: rotate(359deg);
-    }
-}
 
 @media print {
     .tabcontent {
