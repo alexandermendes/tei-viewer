@@ -4,6 +4,11 @@
          "label":"British Library (Hebrew, simplified)",
          "filename":"bl-hebrew-simplified.xsl",
          "default":true
+      },
+      {
+         "label":"British Library (Hebrew, full)",
+         "filename":"bl-hebrew-full.xsl",
+         "default":false
       }
    ],
    "uniqueFilenames":false,
