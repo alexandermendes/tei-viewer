@@ -41,42 +41,44 @@ a:focus {
 /** Tables */
 
 #table-scroll {
-    width:100%;
-    overflow-x:auto;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
     height: 100%;
     position: absolute;
 }
 
-#table-scroll>table {
+#table-scroll .table {
     margin-bottom: 0px;
-    table-layout: fixed;
 }
 
-#table-scroll.fixed>table thead {
+#table-scroll.fixed table  {
+    position: relative;
+    table-layout: fixed;
+    width: auto!important;
+}
+
+#table-scroll.fixed table thead {
     position: absolute;
 }
 
-#table-scroll.fixed>table tbody {
+#table-scroll.fixed table tbody {
     display: block;
     max-height: calc(100vh - 100px);
+    overflow-x: auto;
 }
 
-#table-scroll.fixed>table>tbody>tr:first-child>td,
-#table-scroll.fixed>table>tbody>tr:first-child>th {
+#table-scroll.fixed table>tbody>tr:first-child>td,
+#table-scroll.fixed table>tbody>tr:first-child>th {
     padding-top: calc(1em + 30px);
 }
 
-#table-scroll.fixed>table>thead>tr>td,
-#table-scroll.fixed>table>thead>tr>th {
-    white-space: nowrap;
-}
-
-#table-scroll.fixed>table>tbody>tr>td,
-#table-scroll.fixed>table>tbody>tr>th,
-#table-scroll.fixed>table>tfoot>tr>td,
-#table-scroll.fixed>table>tfoot>tr>th,
-#table-scroll.fixed>table>thead>tr>td,
-#table-scroll.fixed>table>thead>tr>th {
+#table-scroll.fixed table>tbody>tr>td,
+#table-scroll.fixed table>tbody>tr>th,
+#table-scroll.fixed table>tfoot>tr>td,
+#table-scroll.fixed table>tfoot>tr>th,
+#table-scroll.fixed table>thead>tr>td,
+#table-scroll.fixed table>thead>tr>th {
     background-color: #fff;
     min-width: 300px;
 }
