@@ -427,6 +427,22 @@ $('.upload-box').on('drag dragstart dragend dragover dragenter dragleave drop', 
 });
 
 
+/** Handle table scroll event. */
+$("#table-scroll").scroll(function() {
+    if (typeof(teiTable) !== 'undefined') {
+        teiTable.fixFrozenTable();
+    }
+});
+
+
+/** Handle window resize event. */
+$(window).resize(function() {
+    if (typeof(teiTable) !== 'undefined') {
+        teiTable.fixFrozenTable();
+    }
+});
+
+
 $(function() {
     $.ajaxSetup({ cache: false });
     checkHTML5();
@@ -436,11 +452,5 @@ $(function() {
         loadSettings();
     } else {
         loadDefaultSettings();
-    }
-});
-
-$(window).resize(function() {
-    if (typeof(teiTable) !== 'undefined') {
-        teiTable.fixHeaderWidths();
     }
 });
