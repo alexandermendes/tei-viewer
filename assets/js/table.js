@@ -46,6 +46,14 @@ function TeiTable() {
         }
     }
 
+    /** Get the width of a scroll bar. */
+    function _getScrollBarWidth () {
+        var $outer = $('<div>').css({visibility: 'hidden', width: 100, overflow: 'scroll'}).appendTo('body'),
+            widthWithScroll = $('<div>').css({width: '100%'}).appendTo($outer).outerWidth();
+        $outer.remove();
+        return 100 - widthWithScroll;
+    };
+
     /** Hide a table column. */
     this.hideColumn = function(columnIndex) {
         $('table tr > *:nth-child(' + (columnIndex + 1) + ')').hide();
@@ -76,9 +84,14 @@ function TeiTable() {
             width  = $('#table-scroll').width();
         $('#table-scroll.fixed tbody').css('width', offset + width);
 
-        // Add padding
-        var headerHeight = $('thead').height();
+        // Add margins
+        var headerHeight = $('#table-scroll thead').height();
+            scrollWidth  = _getScrollBarWidth();
+            footerHeight = $('footer').height();
+            offset = 100 + scrollWidth + footerHeight;
+            console.log(offset);
         $('#table-scroll.fixed tbody').css('margin-top', headerHeight);
+        $('#table-scroll.fixed tbody').css('max-height', 'calc(100vh - ' + offset + 'px)')
     }
 
     /** Load TEI data into the table view. */
