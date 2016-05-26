@@ -201,8 +201,8 @@ function refreshXSLTProcessor() {
         teiTable = new TeiTable();
         teiTable.updateXSLTProc(XSLTProc)
     }).catch(function() {
-        showAlert('XSLT file ' + tableXSLT + ' could not be loaded.',
-                  'danger');
+        showAlert('XSLT file ' + tableXSLT + ' could not be loaded, try \
+                  reverting to default settings.', 'danger');
     }).then(function() {
         hideLoading();
         refreshView();
