@@ -72,7 +72,6 @@ a:focus {
     display: block;
     max-height: calc(100vh - 90px);
     overflow-x: hidden;
-    margin-top: 38px;
 }
 
 #table-scroll.fixed table>tbody>tr>td,
