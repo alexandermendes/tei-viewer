@@ -78,7 +78,7 @@ function TeiTable() {
 
         // Add padding
         var headerHeight = $('thead').height();
-        $('#table-scroll.fixed tbody').css('padding-top', headerHeight);
+        $('#table-scroll.fixed tbody').css('margin-top', headerHeight);
     }
 
     /** Load TEI data into the table view. */
