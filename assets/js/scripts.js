@@ -123,7 +123,7 @@ $("#unfreeze-header").on('click', function(e) {
 /** Refresh the main view. */
 function refreshView() {
     showLoading();
-    if (!teiTable.XSLTProcLoaded()) {
+    if (typeof(teiTable) !== 'undefined' && !teiTable.XSLTProcLoaded()) {
         showAlert('XSLT processor not loaded, please try again.', 'warning');
     } else if(localStorage.length > 0) {
         var mergedXML = mergeUploadedDocs();
