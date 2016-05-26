@@ -1,5 +1,13 @@
 /** General */
 
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}
+
 main {
     min-height: calc(100vh - 90px);
     position: relative;
@@ -7,6 +15,7 @@ main {
 
 .navbar {
     margin-bottom: 0px;
+    height: 50px;
 }
 
 .alert {
@@ -32,11 +41,14 @@ a:focus {
 /** Tables */
 
 #table-scroll {
-    width:100%;
-    max-width:100%;
-    overflow-x:auto;
-    height: 100%;
-    position: absolute;
+    width: 100%;
+    overflow-x: auto;
+    height: calc(100vh - 90px);
+    position: relative;
+}
+
+#table-scroll.fixed {
+    overflow-y: hidden;
 }
 
 #table-scroll .table {
@@ -46,22 +58,21 @@ a:focus {
 #table-scroll.fixed table  {
     position: relative;
     table-layout: fixed;
-    display: inline-block;
+    width: auto!important;
+    min-width: 100%!important;
+    height: 100%;
 }
 
 #table-scroll.fixed table thead {
     position: absolute;
+    z-index: 10;
 }
 
 #table-scroll.fixed table tbody {
     display: block;
-    max-height: calc(100vh - 100px);
-    overflow-x: auto;
-}
-
-#table-scroll.fixed table>tbody>tr:first-child>td,
-#table-scroll.fixed table>tbody>tr:first-child>th {
-    padding-top: calc(1em + 30px);
+    max-height: calc(100vh - 90px);
+    overflow-x: hidden;
+    margin-top: 38px;
 }
 
 #table-scroll.fixed table>tbody>tr>td,
@@ -71,37 +82,28 @@ a:focus {
 #table-scroll.fixed table>thead>tr>td,
 #table-scroll.fixed table>thead>tr>th {
     background-color: #fff;
+    min-width: 300px;
 }
 
-.table>tbody>tr>td:first-child,
-.table>tbody>tr>th:first-child,
-.table>tfoot>tr>td:first-child,
-.table>tfoot>tr>th:first-child,
-.table>thead>tr>td:first-child,
-.table>thead>tr>th:first-child,
-.table>tbody>tr>td:last-child,
-.table>tbody>tr>th:last-child,
-.table>tfoot>tr>td:last-child,
-.table>tfoot>tr>th:last-child,
-.table>thead>tr>td:last-child,
-.table>thead>tr>th:last-child {
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
     padding: 8px 20px 8px 20px;
 }
 
 #table-view {
     height: 100%;
-    position: static;
+    width: 100%;
+    position: absolute;
 }
 
 .table-responsive,
 .table-bordered {
     border: none;
 }
-
-.table thead th {
-    text-overflow: ellipsis;
-}
-
 
 
 /** Buttons */
@@ -153,7 +155,7 @@ a:focus {
     font-size: 1.5em;
     color: #5E5E5E;
     position: relative;
-    padding: calc((100vh - 100px - (1.5em + 3em)) / 2) 20px;
+    padding: calc((100vh - 90px - (1.5em + 3em)) / 2) 20px;
     height: 100%;
 }
 

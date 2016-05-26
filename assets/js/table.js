@@ -75,7 +75,7 @@ function TeiTable() {
     this.populate = function(xml) {
         teiTable = this;
         html = XSLTProc.transformToFragment(xml, document);
-        $('#table-data').html(html);
+        $('#table-scroll').html(html);
         this.fixHeaderWidths();
         $(hiddenCols).each(function(k, v) {
             teiTable.hideColumn(v);
