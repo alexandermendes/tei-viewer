@@ -36,6 +36,10 @@ a:focus {
     text-decoration: none;
 }
 
+#files-uploaded {
+    padding: 0px 10px 0px 10px;
+}
+
 
 /** Tables */
 
