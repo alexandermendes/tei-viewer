@@ -284,10 +284,10 @@ $( "#select-xslt" ).change(function() {
     var settings = Cookies.getJSON('settings');
     var defaultXSLT = $('#select-xslt').val();
     $.each(settings.xslt, function(index, value) {
-        if (value.label == defaultXSLT) {
-            value.default = true;
+        if (value.filename == defaultXSLT) {
+            value['default'] = true;
         } else {
-            value.default = false;
+            value['default'] = false;
         }
     });
     Cookies.set('settings', settings);
