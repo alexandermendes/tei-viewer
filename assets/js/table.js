@@ -89,7 +89,6 @@ function TeiTable() {
             scrollWidth  = _getScrollBarWidth();
             footerHeight = $('footer').height();
             offset = 100 + scrollWidth + footerHeight;
-            console.log(offset);
         $('#table-scroll.fixed tbody').css('margin-top', headerHeight);
         $('#table-scroll.fixed tbody').css('max-height', 'calc(100vh - ' + offset + 'px)')
     }

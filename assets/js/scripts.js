@@ -123,7 +123,7 @@ $("#unfreeze-header").on('click', function(e) {
 /** Refresh the main view. */
 function refreshView() {
     showLoading();
-    if (!teiTable.XSLTProcLoaded()) {
+    if (typeof(teiTable) !== 'undefined' && !teiTable.XSLTProcLoaded()) {
         showAlert('XSLT processor not loaded, please try again.', 'warning');
     } else if(localStorage.length > 0) {
         var mergedXML = mergeUploadedDocs();
@@ -201,8 +201,8 @@ function refreshXSLTProcessor() {
         teiTable = new TeiTable();
         teiTable.updateXSLTProc(XSLTProc)
     }).catch(function() {
-        showAlert('XSLT file ' + tableXSLT + ' could not be loaded.',
-                  'danger');
+        showAlert('XSLT file ' + tableXSLT + ' could not be loaded, try \
+                  reverting to default settings.', 'danger');
     }).then(function() {
         hideLoading();
         refreshView();
@@ -284,10 +284,10 @@ $( "#select-xslt" ).change(function() {
     var settings = Cookies.getJSON('settings');
     var defaultXSLT = $('#select-xslt').val();
     $.each(settings.xslt, function(index, value) {
-        if (value.label == defaultXSLT) {
-            value.default = true;
+        if (value.filename == defaultXSLT) {
+            value['default'] = true;
         } else {
-            value.default = false;
+            value['default'] = false;
         }
     });
     Cookies.set('settings', settings);
@@ -321,7 +321,6 @@ function loadSettings(){
                       defaults.', 'info');
         }
     }).done(function() {
-
         // XSLT
         var template = $("#xslt-options-template").html(),
             rendered = Mustache.render(template, {options: settings.xslt});
@@ -352,9 +351,8 @@ function loadDefaultSettings() {
     showLoading();
     $.getJSON("settings.json", function( settings ) {
         Cookies.set('settings', settings);
-        loadSettings();
     }).done(function() {
-        refreshXSLTProcessor();
+        loadSettings();
     }).fail(function(e) {
         showAlert('settings.json could not be loaded.', 'danger');
         throw e
