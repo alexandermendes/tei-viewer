@@ -259,3 +259,27 @@ footer {
         -box-shadow: none;
     }
 }
+
+
+/** TEI */
+
+#table-scroll msItem,
+#table-scroll deconote,
+#table-scroll colophon,
+#table-scroll summary {
+    margin: 0 0 10px;
+    display: block;
+}
+
+#table-scroll dimensions {
+    display: block;
+}
+
+#table-scroll title {
+    display: inline;
+    font-weight: 600;
+}
+
+#table-scroll quote {
+    font-style: italic;
+}
