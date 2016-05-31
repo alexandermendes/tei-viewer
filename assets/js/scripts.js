@@ -321,7 +321,6 @@ function loadSettings(){
                       defaults.', 'info');
         }
     }).done(function() {
-
         // XSLT
         var template = $("#xslt-options-template").html(),
             rendered = Mustache.render(template, {options: settings.xslt});
@@ -352,9 +351,8 @@ function loadDefaultSettings() {
     showLoading();
     $.getJSON("settings.json", function( settings ) {
         Cookies.set('settings', settings);
-        loadSettings();
     }).done(function() {
-        refreshXSLTProcessor();
+        loadSettings();
     }).fail(function(e) {
         showAlert('settings.json could not be loaded.', 'danger');
         throw e
