@@ -30,7 +30,7 @@ $(function() {
     }
 
     /** Format rows. */
-    $('#table-scroll tr').each(function(i) {
+    $('#tei-table tr').each(function(i) {
         var sm;
 
         var shelfmarks = $(this).find('.shelfmark'),

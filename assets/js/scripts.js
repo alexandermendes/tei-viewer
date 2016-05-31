@@ -102,7 +102,7 @@ $( "#show-borders" ).on('click', function(e) {
 
 /** Freeze header menu item clicked. */
 $("#freeze-header").on('click', function(e) {
-    $('#table-scroll').addClass('fixed');
+    $('#tei-table').addClass('fixed');
     var settings = Cookies.getJSON('settings');
     settings.freezeHeader = true;
     Cookies.set('settings', settings);
@@ -112,7 +112,7 @@ $("#freeze-header").on('click', function(e) {
 
 /** Unfreeze header menu item clicked. */
 $("#unfreeze-header").on('click', function(e) {
-    $('#table-scroll').removeClass('fixed');
+    $('#tei-table').removeClass('fixed');
     var settings = Cookies.getJSON('settings');
     settings.freezeHeader = false;
     Cookies.set('settings', settings);
@@ -128,7 +128,7 @@ function refreshView() {
     } else if(localStorage.length > 0) {
         var mergedXML = mergeUploadedDocs();
         $('.upload-box').hide();
-        $('#table-scroll').show();
+        $('#tei-table').show();
         teiTable.populate(mergedXML);
         var settings = Cookies.getJSON('settings');
         if (settings.showBorders) {
@@ -138,7 +138,7 @@ function refreshView() {
         }
     } else {
         $('.upload-box').show();
-        $('#table-scroll').hide();
+        $('#tei-table').hide();
     }
     $('#files-uploaded').html(localStorage.length + ' files uploaded');
     $('.upload-form').trigger("reset");
@@ -332,7 +332,7 @@ function loadSettings(){
 
         // Frozen table header
         if (settings.freezeHeader) {
-            $('#table-scroll').addClass('fixed');
+            $('#tei-table').addClass('fixed');
         }
 
         $('.selectpicker').selectpicker('refresh');
@@ -426,7 +426,7 @@ $('.upload-box').on('drag dragstart dragend dragover dragenter dragleave drop', 
 
 
 /** Handle table scroll event. */
-$("#table-scroll").scroll(function() {
+$("#tei-table").scroll(function() {
     if (typeof(teiTable) !== 'undefined') {
         teiTable.fixFrozenTable();
     }
