@@ -51,7 +51,7 @@
 
         <script type="text/javascript">
             <xsl:text>
-                $.getScript( "/assets/js/bl.js" );
+                $.getScript( "assets/js/bl.js" );
             </xsl:text>
         </script>
     </xsl:template>
