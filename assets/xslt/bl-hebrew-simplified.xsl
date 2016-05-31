@@ -26,7 +26,7 @@
     </xsl:template>
 
     <xsl:template match="MERGED-TEI">
-        <table class="table" style="width:250%; max-width:250%;">
+        <table class="table">
             <thead>
                 <tr>
                     <th>Shelfmark</th>
