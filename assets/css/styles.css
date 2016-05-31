@@ -43,47 +43,24 @@ a:focus {
 
 /** Tables */
 
-#table-scroll {
+#tei-table {
     width: 100%;
     overflow-x: auto;
     height: calc(100vh - 90px);
     position: relative;
 }
 
-#table-scroll.fixed {
-    overflow-y: hidden;
-}
-
-#table-scroll .table {
+#tei-table .table {
     table-layout: auto;
     margin-bottom: 0px;
 }
 
-#table-scroll.fixed table  {
-    position: relative;
-    table-layout: fixed;
-    width: auto!important;
-    min-width: 100%!important;
-    height: 100%;
-}
-
-#table-scroll.fixed table thead {
-    position: absolute;
-    z-index: 10;
-}
-
-#table-scroll.fixed table tbody {
-    display: block;
-    max-height: calc(100vh - 90px);
-    overflow-x: hidden;
-}
-
-#table-scroll table>tbody>tr>td,
-#table-scroll table>tbody>tr>th,
-#table-scroll table>tfoot>tr>td,
-#table-scroll table>tfoot>tr>th,
-#table-scroll table>thead>tr>td,
-#table-scroll table>thead>tr>th {
+#tei-table table>tbody>tr>td,
+#tei-table table>tbody>tr>th,
+#tei-table table>tfoot>tr>td,
+#tei-table table>tfoot>tr>th,
+#tei-table table>thead>tr>td,
+#tei-table table>thead>tr>th {
     background-color: #fff;
     min-width: 300px;
 }
@@ -206,16 +183,45 @@ footer {
 
 /** At-rules */
 
+@media screen {
+
+    #tei-table.fixed {
+        overflow-y: hidden;
+    }
+
+    #tei-table.fixed table  {
+        position: relative;
+        table-layout: fixed;
+        height: 100%;
+    }
+
+    #tei-table.fixed table thead {
+        position: absolute;
+        z-index: 10;
+    }
+
+    #tei-table.fixed table tbody {
+        display: block;
+        overflow-x: hidden;
+    }
+
+}
+
 @media print {
-    .tabcontent {
-        border: none;
-        padding: none;
+    #tei-table {
+        overflow: visible;
     }
-    .tab-pane {
-        display: none;
+    #tei-table table>tbody>tr>td,
+    #tei-table table>tbody>tr>th,
+    #tei-table table>tfoot>tr>td,
+    #tei-table table>tfoot>tr>th,
+    #tei-table table>thead>tr>td,
+    #tei-table table>thead>tr>th {
+        min-width: 0;
+        width: auto!important;
     }
-    .tab-pane.active {
-        display: initial;
+    #tei-table a, a:after {
+        content: normal!important;
     }
 }
 
@@ -241,23 +247,23 @@ footer {
 
 /** TEI */
 
-#table-scroll msItem,
-#table-scroll deconote,
-#table-scroll colophon,
-#table-scroll summary {
+#tei-table msItem,
+#tei-table deconote,
+#tei-table colophon,
+#tei-table summary {
     margin: 0 0 10px;
     display: block;
 }
 
-#table-scroll dimensions {
+#tei-table dimensions {
     display: block;
 }
 
-#table-scroll title {
+#tei-table title {
     display: inline;
     font-weight: 600;
 }
 
-#table-scroll quote {
+#tei-table quote {
     font-style: italic;
 }

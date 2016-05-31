@@ -74,30 +74,30 @@ function TeiTable() {
     this.fixFrozenTable = function() {
 
         // Resize header cells
-        $('#table-scroll.fixed tbody tr:first-child td').each(function(i) {
+        $('#tei-table.fixed tbody tr:first-child td').each(function(i) {
             var colWidth = $(this).width();
             $('table thead tr th:nth-child(' + (i + 1) + ')').width(colWidth);
         });
 
         // Resize tbody to always show vertical scroll bar
-        var offset = $('#table-scroll').scrollLeft();
-            width  = $('#table-scroll').width();
-        $('#table-scroll.fixed tbody').css('width', offset + width);
+        var offset = $('#tei-table').scrollLeft();
+            width  = $('#tei-table').width();
+        $('#tei-table.fixed tbody').css('width', offset + width);
 
         // Add margins
-        var headerHeight = $('#table-scroll thead').height();
+        var headerHeight = $('#tei-table thead').height();
             scrollWidth  = _getScrollBarWidth();
             footerHeight = $('footer').height();
             offset = 100 + scrollWidth + footerHeight;
-        $('#table-scroll.fixed tbody').css('margin-top', headerHeight);
-        $('#table-scroll.fixed tbody').css('max-height', 'calc(100vh - ' + offset + 'px)')
+        $('#tei-table.fixed tbody').css('margin-top', headerHeight);
+        $('#tei-table.fixed tbody').css('max-height', 'calc(100vh - ' + offset + 'px)')
     }
 
     /** Load TEI data into the table view. */
     this.populate = function(xml) {
         teiTable = this;
         html = XSLTProc.transformToFragment(xml, document);
-        $('#table-scroll').html(html);
+        $('#tei-table').html(html);
         this.fixFrozenTable();
         $(hiddenCols).each(function(k, v) {
             teiTable.hideColumn(v);
