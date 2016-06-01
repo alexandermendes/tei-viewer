@@ -40,7 +40,7 @@
                     <th>Decorations - Paratext</th>
                     <th>Decorations - Borders</th>
                     <th>Decorations - Other</th>
-                    <th>Colphon</th>
+                    <th>Colophon</th>
                     <th>Comments</th>
                     <th>Detailed Contents</th>
                     <th>Scribes</th>
@@ -55,6 +55,9 @@
                     <th>Binding</th>
                     <th>Date</th>
                     <th>Provenance</th>
+                    <th>Acquisition</th>
+                    <th>Related People</th>
+                    <th>Related Places</th>
                     <th>Record History</th>
                     <th>Margoliouth ID</th>
                 </tr>
@@ -80,6 +83,8 @@
             <xsl:call-template name="scribes"/>
             <xsl:apply-templates select=".//tei:msDesc/tei:physDesc"/>
             <xsl:apply-templates select=".//tei:msDesc/tei:history"/>
+            <xsl:call-template name="people"/>
+            <xsl:call-template name="places"/>
             <xsl:apply-templates select=".//tei:msDesc/tei:additional"/>
         </tr>
     </xsl:template>
@@ -235,15 +240,36 @@
                 <xsl:with-param name="root" select="tei:provenance" />
             </xsl:call-template>
         </td>
+        <td>  <!-- 27: Acquisition -->
+            <xsl:call-template name="recursiveCopy">
+                <xsl:with-param name="root" select="tei:acquisition" />
+            </xsl:call-template>
+        </td>
+    </xsl:template>
+
+    <xsl:template name="people">
+        <td>  <!-- 28: Related People -->
+            <xsl:call-template name="multiValue">
+                <xsl:with-param name="values" select=".//*/tei:name[@type='person' and not(@role='scribe') and not(@role='author')]" />
+            </xsl:call-template>
+        </td>
+    </xsl:template>
+
+    <xsl:template name="places">
+        <td>  <!-- 29: Related Places -->
+            <xsl:call-template name="multiValue">
+                <xsl:with-param name="values" select=".//*/tei:name[@type='place']" />
+            </xsl:call-template>
+        </td>
     </xsl:template>
 
     <xsl:template match="tei:additional">
-        <td>  <!-- 27: Record History -->
+        <td>  <!-- 30: Record History -->
             <xsl:call-template name="recursiveCopy">
                 <xsl:with-param name="root" select="tei:adminInfo/tei:recordHist" />
             </xsl:call-template>
         </td>
-        <td>  <!-- 28: Margoliouth ID -->
+        <td>  <!-- 31: Margoliouth ID -->
             <xsl:call-template name="recursiveCopy">
                 <xsl:with-param name="root" select="tei:listBibl/tei:bibl/tei:ref[@target='Margoliouth_1965']" />
             </xsl:call-template>
