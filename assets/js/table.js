@@ -46,6 +46,16 @@ function TeiTable() {
         }
     }
 
+
+    /** Number table rows. */
+    function _numberRows() {
+        $('table').find('tr').each(function(i){
+            $(this).find('th').eq(0).before('<th>#</th>');
+            $(this).find('td').eq(0).before('<td>' + i + '</td>');
+        });
+    }
+
+
     /** Get the width of a scroll bar. */
     function _getScrollBarWidth () {
         var $outer = $('<div>').css({visibility: 'hidden', width: 100, overflow: 'scroll'}).appendTo('body'),
@@ -103,6 +113,7 @@ function TeiTable() {
             teiTable.hideColumn(v);
         });
         _populateMenus();
+        _numberRows();
     }
 
     /** Update the XSLT processor. */
