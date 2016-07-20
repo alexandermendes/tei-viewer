@@ -3,10 +3,14 @@
 <xsl:output method="html" />
 
     <xsl:template name="multiValue">
-        <xsl:param name="values"/>
+        <xsl:param name="values" />
+        <xsl:param name="include-role" />
         <xsl:for-each select="$values">
             <xsl:if test="string-length(.) &gt; 0">
-                <xsl:value-of select="normalize-space(.)"/>
+                <xsl:value-of select="normalize-space(.)" />
+                <xsl:if test="$include-role = true() and @role">
+                    <xsl:value-of select="concat(' (', @role, ')')" />
+                </xsl:if>
                 <xsl:if test="position() != last()">
                     <br />
                 </xsl:if>
@@ -251,6 +255,7 @@
         <td>  <!-- 28: Related People -->
             <xsl:call-template name="multiValue">
                 <xsl:with-param name="values" select=".//*/tei:name[@type='person' and not(@role='scribe') and not(@role='author')]" />
+                <xsl:with-param name="include-role" select="true()" />
             </xsl:call-template>
         </td>
     </xsl:template>
