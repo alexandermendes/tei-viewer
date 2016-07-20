@@ -15,7 +15,6 @@ main {
 
 .navbar {
     margin-bottom: 0px;
-    height: 50px;
 }
 
 .navbar #gh-link {
@@ -24,7 +23,6 @@ main {
 }
 
 .alert {
-    position: fixed;
     width: 100%;
     z-index:999;
     border-radius:0px;
@@ -241,6 +239,59 @@ footer {
         width: 100%;
         -webkit-box-shadow: none;
         -box-shadow: none;
+    }
+}
+
+@media (max-width: 991px) {
+    .navbar-header {
+        float: none;
+        margin-right: -15px !important;
+        margin-left: -15px !important;
+    }
+    .navbar-brand {
+        margin-left: 0px !important;
+    }
+    .navbar-left,.navbar-right {
+        float: none !important;
+    }
+    .navbar-toggle {
+        display: block;
+        padding: 6px 10px;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+        margin-right: -15px !important;
+        margin-left: -15px !important;
+    }
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+    .navbar-collapse.collapse {
+        display: none !important;
+    }
+    .navbar-nav {
+        float: none !important;
+        margin-top: 7.5px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .collapse.in{
+        display: block !important;
+    }
+    .navbar-form {
+        border: none;
+        margin: 0px;
+        padding: 10px 15px;
+    }
+    .navbar-right {
+        margin-bottom: 10px !important;
     }
 }
 
