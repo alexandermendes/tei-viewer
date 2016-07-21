@@ -75,6 +75,18 @@ a:focus {
     min-width: 300px;
 }
 
+#tei-table table>tbody>tr>td:first-child,
+#tei-table table>tbody>tr>th:first-child,
+#tei-table table>tfoot>tr>td:first-child,
+#tei-table table>tfoot>tr>th:first-child,
+#tei-table table>thead>tr>td:first-child,
+#tei-table table>thead>tr>th:first-child {
+    background-color: #F8F8F8;
+    padding: 8px 10px 8px 10px;
+    text-align: center;
+    min-width: 60px;
+}
+
 .table>tbody>tr>td,
 .table>tbody>tr>th,
 .table>tfoot>tr>td,

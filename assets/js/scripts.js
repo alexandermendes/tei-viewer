@@ -365,6 +365,9 @@ function countRecords() {
     count.onerror = function(e) {
         showAlert(e.target.error, 'danger');
     }
+    transaction.oncomplete  = function() {
+        teiTable.fixFrozenTable();
+    }
 }
 
 /** Load records from the DB and transform. */

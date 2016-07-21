@@ -51,8 +51,8 @@ function TeiTable() {
 
     /** Number table rows. */
     function _numberRows() {
-        $('table').find('tr').each(function(i){
-            $(this).find('th').eq(0).before('<th>#</th>');
+        $('table thead tr th').eq(0).before('<th>#</th>');
+        $('table tbody').find('tr').each(function(i){
             $(this).find('td').eq(0).before('<td>' + i + '</td>');
         });
     }
@@ -108,6 +108,7 @@ function TeiTable() {
         $('#tei-table.fixed tbody tr:first-child td').each(function(i) {
             var colWidth = $(this).width();
             $('table thead tr th:nth-child(' + (i + 1) + ')').width(colWidth);
+            console.log(colWidth);
         });
 
         // Resize tbody to always show vertical scroll bar
@@ -121,7 +122,7 @@ function TeiTable() {
             footerHeight = $('footer').height();
             offset = 100 + scrollWidth + footerHeight;
         $('#tei-table.fixed tbody').css('margin-top', headerHeight);
-        $('#tei-table.fixed tbody').css('max-height', 'calc(100vh - ' + offset + 'px)')
+        $('#tei-table.fixed tbody').css('max-height', 'calc(100vh - ' + offset + 'px)');
     }
 
 
@@ -130,13 +131,12 @@ function TeiTable() {
         teiTable = this;
         html = XSLTProc.transformToFragment(xml, document);
         $('#tei-table').html(html);
-        this.fixFrozenTable();
         $(hiddenCols).each(function(k, v) {
             teiTable.hideColumn(v);
         });
         _populateMenus();
-        _numberRows();
         _populateTooltips();
+        _numberRows();
     }
 
 
@@ -155,14 +155,12 @@ function TeiTable() {
     /** Show table borders. */
     this.showBorders = function() {
         $('table').addClass('table-bordered');
-        this.fixFrozenTable();
     }
 
 
     /** Hide table borders. */
     this.hideBorders = function() {
         $('table').removeClass('table-bordered');
-        this.fixFrozenTable();
     }
 
 
@@ -181,13 +179,11 @@ function TeiTable() {
     /** Freeze header. */
     this.freezeHeader = function() {
         $('#tei-table').addClass('fixed');
-        this.fixFrozenTable();
     }
 
 
     /** Unfreeze header. */
     this.unfreezeHeader = function() {
         $('#tei-table').removeClass('fixed');
-        this.fixFrozenTable();
     }
 }
