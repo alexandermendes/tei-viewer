@@ -294,27 +294,3 @@ footer {
         margin-bottom: 10px !important;
     }
 }
-
-
-/** TEI */
-
-#tei-table msItem,
-#tei-table deconote,
-#tei-table colophon,
-#tei-table summary {
-    margin: 0 0 10px;
-    display: block;
-}
-
-#tei-table dimensions {
-    display: block;
-}
-
-#tei-table title {
-    display: inline;
-    font-weight: 600;
-}
-
-#tei-table quote {
-    font-style: italic;
-}

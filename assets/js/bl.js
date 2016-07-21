@@ -1,5 +1,9 @@
 $(function() {
 
+    // Add custom CSS
+    $.get("assets/css/bl.css", function(data){
+        $("<style type=\"text/css\">" + data + "</style>").appendTo(document.head);
+    });
 
     /** Pad the left of a string. */
     function pad(pad, str) {
@@ -9,7 +13,6 @@ $(function() {
         return (pad + str).slice(-pad.length);
     }
 
-
     /** Return a link to the Digitised Manuscripts full display. */
     function renderDMLink(sm) {
         var escStr = sm.replace(/\s+/g, '_'),
@@ -18,7 +21,6 @@ $(function() {
             rend   = Mustache.render(templ, {url: url, text: sm});
         return rend;
     }
-
 
     /** Return a link to the Digitised Manuscripts viewer.  */
     function renderFolioLink(sm, folio) {
