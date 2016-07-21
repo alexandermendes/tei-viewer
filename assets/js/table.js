@@ -164,4 +164,16 @@ function TeiTable() {
         $('table').removeClass('table-bordered');
         this.fixFrozenTable();
     }
+
+
+    /** Show tooltips. */
+    this.showTooltips = function() {
+        _populateTooltips();
+    }
+
+
+    /** Hide tooltips. */
+    this.hideTooltips = function() {
+        $('[data-toggle="tooltip"]').removeAttr('data-toggle');
+    }
 }

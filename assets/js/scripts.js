@@ -100,6 +100,26 @@ $( "#show-borders" ).on('click', function(e) {
 });
 
 
+/** Hide tooltips menu item clicked. */
+$( "#hide-tooltips" ).on('click', function(e) {
+    teiTable.hideTooltips();
+    var settings = Cookies.getJSON('settings');
+    settings.showTooltips = false;
+    Cookies.set('settings', settings);
+    e.preventDefault();
+});
+
+
+/** Show borders menu item clicked. */
+$( "#show-tooltips" ).on('click', function(e) {
+    teiTable.showTooltips();
+    var settings = Cookies.getJSON('settings');
+    settings.showTooltips = true;
+    Cookies.set('settings', settings);
+    e.preventDefault();
+});
+
+
 /** Freeze header menu item clicked. */
 $("#freeze-header").on('click', function(e) {
     $('#tei-table').addClass('fixed');
@@ -135,6 +155,11 @@ function refreshView() {
             teiTable.showBorders();
         } else {
             teiTable.hideBorders();
+        }
+        if (settings.showTooltips) {
+            teiTable.showTooltips();
+        } else {
+            teiTable.hideTooltips();
         }
     } else {
         $('.upload-box').show();
@@ -281,8 +306,8 @@ $( "#reset-settings" ).click(function() {
 /** Handle change of XSLT setting. */
 $( "#select-xslt" ).change(function() {
     showLoading();
-    var settings = Cookies.getJSON('settings');
-    var defaultXSLT = $('#select-xslt').val();
+    var settings    = Cookies.getJSON('settings'),
+        defaultXSLT = $('#select-xslt').val();
     $.each(settings.xslt, function(index, value) {
         if (value.filename == defaultXSLT) {
             value['default'] = true;
@@ -298,8 +323,8 @@ $( "#select-xslt" ).change(function() {
 
 /** Handle change of unique filenames setting. */
 $( "#unique-fn" ).change(function() {
-    var settings = Cookies.getJSON('settings');
-    var uniqueFn = $('#unique-fn').val() == 'True';
+    var settings = Cookies.getJSON('settings'),
+        uniqueFn = $('#unique-fn').val() == 'True';
     settings.uniqueFilenames = uniqueFn;
     Cookies.set('settings', settings);
     $('#settings-modal').modal('hide');
@@ -455,5 +480,5 @@ $(function() {
     // Initialise tooltips
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
-    })
+    });
 });

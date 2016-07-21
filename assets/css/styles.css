@@ -302,12 +302,11 @@ footer {
     font-style: italic;
 }
 
-#tei-table name[role],
-#tei-table date[calendar]{
+#tei-table [data-toggle=tooltip] {
     border-bottom: 1px dashed #999;
     display: inline;
 }
 
-#tei-table name:hover {
+#tei-table [data-toggle=tooltip]:hover {
     border-bottom-color: #cdcdcd;
 }

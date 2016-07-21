@@ -33,6 +33,8 @@ The core functionality is provided via the following toolbar buttons:
 
 - **Header:** Freeze/unfreeze the table's header row.
 
+- **Show Tooltips:** Show/hide tooltips.
+
 - **Clear:** Remove all uploaded documents.
 
 - **Print:** Print the current view.
