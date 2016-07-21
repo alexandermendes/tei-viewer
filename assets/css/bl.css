@@ -19,7 +19,3 @@
 #tei-table msitem>title {
     font-weight: 600;
 }
-
-#tei-table quote {
-    font-style: italic;
-}

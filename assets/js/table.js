@@ -58,6 +58,22 @@ function TeiTable() {
     }
 
 
+    /** Populate tooltips. */
+    function _populateTooltips() {
+        $('name[role]').each(function() {
+            $(this).attr('data-toggle', 'tooltip');
+            $(this).attr('title', $(this).attr('role'));
+        });
+        $('date[calendar]').each(function() {
+            $(this).attr('data-toggle', 'tooltip');
+            $(this).attr('title', $(this).attr('calendar'));
+        });
+        $("body").tooltip({
+            selector: '[data-toggle="tooltip"]'
+        });
+    }
+
+
     /** Get the width of a scroll bar. */
     function _getScrollBarWidth () {
         var $outer = $('<div>').css({visibility: 'hidden', width: 100, overflow: 'scroll'}).appendTo('body'),
@@ -120,6 +136,7 @@ function TeiTable() {
         });
         _populateMenus();
         _numberRows();
+        _populateTooltips();
     }
 
 

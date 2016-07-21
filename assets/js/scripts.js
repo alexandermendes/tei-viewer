@@ -451,4 +451,9 @@ $(function() {
     } else {
         loadDefaultSettings();
     }
+
+    // Initialise tooltips
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    })
 });

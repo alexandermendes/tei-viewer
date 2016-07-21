@@ -294,3 +294,20 @@ footer {
         margin-bottom: 10px !important;
     }
 }
+
+
+/** TEI */
+
+#tei-table quote {
+    font-style: italic;
+}
+
+#tei-table name[role],
+#tei-table date[calendar]{
+    border-bottom: 1px dashed #999;
+    display: inline;
+}
+
+#tei-table name:hover {
+    border-bottom-color: #cdcdcd;
+}
