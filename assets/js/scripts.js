@@ -154,11 +154,9 @@ function showAlert(msg, type) {
 }
 
 
-/** Clear local storage and refresh views. */
-$( "#clear-views" ).click(function() {
-    showLoading();
-    localStorage.clear();
-    refreshView();
+/** Clear selected rows. */
+$( "#clear-rows" ).click(function() {
+    $('#tei-table tr[selected]').remove();
 });
 
 
@@ -432,6 +430,18 @@ $('.upload-box').on('drag dragstart dragend dragover dragenter dragleave drop', 
 }).on('drop', function(e) {
     var files = e.originalEvent.dataTransfer.files;
     uploadFiles(files);
+});
+
+
+/** Handle row clicked event. */
+$("#tei-table").on('click', 'tr:not(a)', function(e) {
+    if (e.target.nodeName != "A" && typeof($(this).attr('selected')) === 'undefined') {
+        $(this).find('td').css('background-color', '#eee');
+        $(this).attr('selected', 'true');
+    } else {
+        $(this).find('td').css('background-color', '#fff');
+        $(this).removeAttr('selected');
+    }
 });
 
 
