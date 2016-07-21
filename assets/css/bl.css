@@ -14,6 +14,9 @@
 
 #tei-table title {
     display: inline;
+}
+
+#tei-table msitem>title {
     font-weight: 600;
 }
 

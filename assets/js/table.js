@@ -1,3 +1,5 @@
+// TEI table js
+
 function TeiTable() {
 
     var XSLTProc;
@@ -64,12 +66,14 @@ function TeiTable() {
         return 100 - widthWithScroll;
     };
 
+
     /** Hide a table column. */
     this.hideColumn = function(columnIndex) {
         $('table tr > *:nth-child(' + (columnIndex + 1) + ')').hide();
         hiddenCols.push(columnIndex);
         _populateMenus();
     }
+
 
     /** Show a table column. */
     this.showColumn = function(columnIndex) {
@@ -79,6 +83,7 @@ function TeiTable() {
         });
         _populateMenus();
     }
+
 
     /** Fixes for frozen table header. */
     this.fixFrozenTable = function() {
@@ -103,6 +108,7 @@ function TeiTable() {
         $('#tei-table.fixed tbody').css('max-height', 'calc(100vh - ' + offset + 'px)')
     }
 
+
     /** Load TEI data into the table view. */
     this.populate = function(xml) {
         teiTable = this;
@@ -115,6 +121,7 @@ function TeiTable() {
         _populateMenus();
         _numberRows();
     }
+
 
     /** Update the XSLT processor. */
     this.updateXSLTProc = function(obj) {

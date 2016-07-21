@@ -1,3 +1,5 @@
+// Custom British Library js
+
 $(function() {
 
     // Add custom CSS
@@ -39,8 +41,10 @@ $(function() {
             loci       = $(this).find('locus'),
             refs       = $(this).find('ref'),
             dimensions = $(this).find('dimensions'),
-            layout     = $(this).find('layout');
-            hands      = $(this).find('handDesc');
+            layout     = $(this).find('layout'),
+            hands      = $(this).find('handDesc'),
+            extent     = $(this).find('extent'),
+            addons     = $(this).find('[data-addon]');
 
         // Add shelfmark links
         $(shelfmarks).each(function() {
@@ -72,12 +76,20 @@ $(function() {
 
         // Format refs
         $(refs).each(function() {
-            var type   = $(this).attr('type') || "",
-                text   = $(this).text() || "",
-                str    = (type + " " + text).trim();
+            var type = $(this).attr('type') || "",
+                text = $(this).text() || "",
+                str  = (type + " " + text).trim();
             if (text.length > 0) {
                 $(this).html(str);
             }
+        });
+
+        // Format extent
+        $(extent).each(function() {
+            var node = $(this).contents().filter(function() {
+                    return this.nodeType == 3;
+            })[0];
+            node.nodeValue = $.trim(node.nodeValue) + "; ";
         });
 
         // Format dimensions
@@ -88,7 +100,7 @@ $(function() {
                 width  = $(this).find('width').text() || "",
                 str    = height + unit + " x " + width + unit;
             if (type.length > 0) {
-                str = str + ' (' + type + ')';
+                str = str + ' (' + type + '); ';
             }
             $(this).html(str);
         });
@@ -112,6 +124,19 @@ $(function() {
             var n = $(this).attr('hands') || "";
             $(this).append('Hands: ' + n + '<br/><br/>');
         });
-    });
 
+        // Format addons
+        $(addons).each(function() {
+            var attr     = $(this).data('addon'),
+                children = $(this).find('[' + attr + ']');
+            $(children).each(function() {
+                var text  = $(this).text() || "",
+                    addon = $(this).attr(attr) || "",
+                    str   = (text + " (" + addon + ")");
+                if (addon.length > 0) {
+                    $(this).html(str);
+                }
+            });
+        });
+    });
 });
