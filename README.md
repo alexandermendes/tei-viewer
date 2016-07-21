@@ -29,12 +29,6 @@ The core functionality is provided via the following toolbar buttons:
 
 - **Show:** Show table columns.
 
-- **Borders:** Show/hide table borders.
-
-- **Header:** Freeze/unfreeze the table's header row.
-
-- **Show Tooltips:** Show/hide tooltips.
-
 - **Clear:** Remove all uploaded documents.
 
 - **Print:** Print the current view.
@@ -55,7 +49,15 @@ The following general settings are provided:
 - **Unique Filenames:** Don't allow more than one file with the same filename
 to be uploaded.
 
+- **Show Borders:** Show/hide table borders.
+
+- **Freeze Header:** Freeze/unfreeze the header row.
+
+- **Show Tooltips:** Show/hide tooltips.
+
 - **Reset Settings:** Return to default settings.
+
+**Note:** A cookie is used to store the above settings between uses.
 
 
 ## Running offline

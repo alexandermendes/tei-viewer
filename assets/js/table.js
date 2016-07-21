@@ -176,4 +176,18 @@ function TeiTable() {
     this.hideTooltips = function() {
         $('[data-toggle="tooltip"]').removeAttr('data-toggle');
     }
+
+
+    /** Freeze header. */
+    this.freezeHeader = function() {
+        $('#tei-table').addClass('fixed');
+        this.fixFrozenTable();
+    }
+
+
+    /** Unfreeze header. */
+    this.unfreezeHeader = function() {
+        $('#tei-table').removeClass('fixed');
+        this.fixFrozenTable();
+    }
 }

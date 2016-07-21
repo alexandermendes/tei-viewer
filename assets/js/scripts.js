@@ -80,66 +80,6 @@ $( "#show-menu" ).on('click', '.show-column', function(e) {
 });
 
 
-/** Hide borders menu item clicked. */
-$( "#hide-borders" ).on('click', function(e) {
-    teiTable.hideBorders();
-    var settings = Cookies.getJSON('settings');
-    settings.showBorders = false;
-    Cookies.set('settings', settings);
-    e.preventDefault();
-});
-
-
-/** Show borders menu item clicked. */
-$( "#show-borders" ).on('click', function(e) {
-    teiTable.showBorders();
-    var settings = Cookies.getJSON('settings');
-    settings.showBorders = true;
-    Cookies.set('settings', settings);
-    e.preventDefault();
-});
-
-
-/** Hide tooltips menu item clicked. */
-$( "#hide-tooltips" ).on('click', function(e) {
-    teiTable.hideTooltips();
-    var settings = Cookies.getJSON('settings');
-    settings.showTooltips = false;
-    Cookies.set('settings', settings);
-    e.preventDefault();
-});
-
-
-/** Show borders menu item clicked. */
-$( "#show-tooltips" ).on('click', function(e) {
-    teiTable.showTooltips();
-    var settings = Cookies.getJSON('settings');
-    settings.showTooltips = true;
-    Cookies.set('settings', settings);
-    e.preventDefault();
-});
-
-
-/** Freeze header menu item clicked. */
-$("#freeze-header").on('click', function(e) {
-    $('#tei-table').addClass('fixed');
-    var settings = Cookies.getJSON('settings');
-    settings.freezeHeader = true;
-    Cookies.set('settings', settings);
-    refreshView();
-});
-
-
-/** Unfreeze header menu item clicked. */
-$("#unfreeze-header").on('click', function(e) {
-    $('#tei-table').removeClass('fixed');
-    var settings = Cookies.getJSON('settings');
-    settings.freezeHeader = false;
-    Cookies.set('settings', settings);
-    refreshView();
-});
-
-
 /** Refresh the main view. */
 function refreshView() {
     showLoading();
@@ -150,6 +90,8 @@ function refreshView() {
         $('.upload-box').hide();
         $('#tei-table').show();
         teiTable.populate(mergedXML);
+
+        // Apply settings
         var settings = Cookies.getJSON('settings');
         if (settings.showBorders) {
             teiTable.showBorders();
@@ -161,6 +103,12 @@ function refreshView() {
         } else {
             teiTable.hideTooltips();
         }
+        if (settings.freezeHeader) {
+            teiTable.freezeHeader();
+        } else {
+            teiTable.unfreezeHeader();
+        }
+
     } else {
         $('.upload-box').show();
         $('#tei-table').hide();
@@ -331,6 +279,48 @@ $( "#unique-fn" ).change(function() {
 });
 
 
+/** Handle change of show tooltips setting. */
+$( "#show-tooltips" ).change('click', function() {
+    var settings = Cookies.getJSON('settings'),
+        showTips = $('#show-tooltips').val() == 'True';
+    settings.showTooltips = showTips;
+    Cookies.set('settings', settings);
+    if (showTips) {
+        teiTable.showTooltips();
+    } else {
+        teiTable.hideTooltips();
+    }
+    $('#settings-modal').modal('hide');
+});
+
+
+/** Handle change of show borders setting. */
+$( "#show-borders" ).change('click', function() {
+    var settings    = Cookies.getJSON('settings'),
+        showBorders = $('#show-borders').val() == 'True';
+    settings.showBorders = showBorders;
+    Cookies.set('settings', settings);
+    if (showBorders) {
+        teiTable.showBorders();
+    } else {
+        teiTable.hideBorders();
+    }
+    $('#settings-modal').modal('hide');
+});
+
+
+/** Handle change of freeze header setting. */
+$( "#freeze-header" ).change('click', function() {
+    var settings     = Cookies.getJSON('settings'),
+        freezeHeader = $('#freeze-header').val() == 'True';
+    settings.freezeHeader = freezeHeader;
+    console.log(freezeHeader);
+    Cookies.set('settings', settings);
+    $('#settings-modal').modal('hide');
+    refreshView();
+});
+
+
 /** Load and validate settings from cookie. */
 function loadSettings(){
     showLoading();
@@ -354,11 +344,6 @@ function loadSettings(){
         // Unique filenames
         var uniqueFn = settings.uniqueFilenames.toCapsString()
         $('#unique-fn').val(uniqueFn);
-
-        // Frozen table header
-        if (settings.freezeHeader) {
-            $('#tei-table').addClass('fixed');
-        }
 
         $('.selectpicker').selectpicker('refresh');
         refreshXSLTProcessor();
