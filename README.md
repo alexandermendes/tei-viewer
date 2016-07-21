@@ -46,9 +46,6 @@ The following general settings are provided:
 
 - **XSLT:** The XSLT script used to transform uploaded XML documents for table display.
 
-- **Unique Filenames:** Don't allow more than one file with the same filename
-to be uploaded.
-
 - **Show Borders:** Show/hide table borders.
 
 - **Freeze Header:** Freeze/unfreeze the header row.

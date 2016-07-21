@@ -3,7 +3,6 @@ var teiTable, db;
 /** Upload XML files. */
 function uploadFiles(files) {
     showLoading();
-    var uniqueFilenames = $('#unique-fn').val() == 'True';
     var pending = files.length;
 
     for (var i = 0, f; f = files[i]; i++) {
@@ -79,7 +78,6 @@ function refreshView() {
         loadRecords();
     }
     $('.upload-form').trigger("reset");
-    enableSettings();
 }
 
 
@@ -101,21 +99,6 @@ function applySettings() {
     } else {
         teiTable.unfreezeHeader();
     }
-}
-
-
-/** Enable or disable settings certain settings if local storage is empty. */
-function enableSettings() {
-    if (localStorage.length == 0){
-        $('#unique-fn').attr('disabled', false);
-        $('#reset-settings').attr('disabled', false);
-        $('#disabled-settings-msg').hide();
-    } else {
-        $('#unique-fn').attr('disabled', true);
-        $('#reset-settings').attr('disabled', true);
-        $('#disabled-settings-msg').show();
-    }
-    $('#unique-fn').selectpicker('refresh');
 }
 
 
@@ -239,16 +222,6 @@ $( "#select-xslt" ).change(function() {
 });
 
 
-/** Handle change of unique filenames setting. */
-$( "#unique-fn" ).change(function() {
-    var settings = Cookies.getJSON('settings'),
-        uniqueFn = $('#unique-fn').val() == 'True';
-    settings.uniqueFilenames = uniqueFn;
-    Cookies.set('settings', settings);
-    $('#settings-modal').modal('hide');
-});
-
-
 /** Handle change of show tooltips setting. */
 $( "#show-tooltips" ).change('click', function() {
     var settings = Cookies.getJSON('settings'),
@@ -310,10 +283,6 @@ function loadSettings(){
         var template = $("#xslt-options-template").html(),
             rendered = Mustache.render(template, {options: settings.xslt});
         $('#select-xslt').html(rendered);
-
-        // Unique filenames
-        var uniqueFn = settings.uniqueFilenames.toCapsString()
-        $('#unique-fn').val(uniqueFn);
 
         $('.selectpicker').selectpicker('refresh');
         refreshXSLTProcessor();
