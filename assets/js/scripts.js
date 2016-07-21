@@ -1,6 +1,6 @@
-var teiTable;
+var teiTable, db;
 
-/** Add XML files to local storage. */
+/** Upload XML files. */
 function uploadFiles(files) {
     showLoading();
     var uniqueFilenames = $('#unique-fn').val() == 'True';
@@ -16,25 +16,16 @@ function uploadFiles(files) {
             reader.onload = (function(theFile) {
                 return function(e) {
 
-                // Check for uniqueness
-                var key = theFile.name;
-                if (localStorage.getItem(theFile.name) && uniqueFilenames) {
-                    showAlert('A file with the name ' + theFile.name + ' has \
-                              already been uploaded.', 'warning');
-                } else if (!uniqueFilenames) {
-                    key += Date.now();
-                }
+                var key = theFile.name += Date.now();
 
-                try {
-                    //Remove XML declaration (for merging) and store
-                    var xmlStr = e.target.result.replace(/<\?xml.*?\?>/g, "");
-                    localStorage.setItem(key, xmlStr);
-                } catch (e) {
-                    hideLoading();
-                    showAlert("Upload failed, local storage quota \
-                              exceeded. The currently loaded files must be \
-                              cleared before more can be uploaded.", 'danger');
-                    throw new Error(e)
+                //Remove XML declaration (for merging) and store
+                var xmlStr      = e.target.result.replace(/<\?xml.*?\?>/g, ""),
+                    transaction = db.transaction("TeiStore", "readwrite"),
+                    store       = transaction.objectStore("TeiStore"),
+                    request     = store.put({id: key, xml: xmlStr});
+
+                request.onerror = function(e) {
+                    showAlert(e.target.error, 'danger');
                 }
 
                 --pending
@@ -82,41 +73,34 @@ $( "#show-menu" ).on('click', '.show-column', function(e) {
 
 /** Refresh the main view. */
 function refreshView() {
-    showLoading();
     if (typeof(teiTable) !== 'undefined' && !teiTable.XSLTProcLoaded()) {
         showAlert('XSLT processor not loaded, please try again.', 'warning');
-    } else if(localStorage.length > 0) {
-        var mergedXML = mergeUploadedDocs();
-        $('.upload-box').hide();
-        $('#tei-table').show();
-        teiTable.populate(mergedXML);
-
-        // Apply settings
-        var settings = Cookies.getJSON('settings');
-        if (settings.showBorders) {
-            teiTable.showBorders();
-        } else {
-            teiTable.hideBorders();
-        }
-        if (settings.showTooltips) {
-            teiTable.showTooltips();
-        } else {
-            teiTable.hideTooltips();
-        }
-        if (settings.freezeHeader) {
-            teiTable.freezeHeader();
-        } else {
-            teiTable.unfreezeHeader();
-        }
-
     } else {
-        $('.upload-box').show();
-        $('#tei-table').hide();
+        loadRecords();
     }
-    $('#files-uploaded').html(localStorage.length + ' files uploaded');
     $('.upload-form').trigger("reset");
     enableSettings();
-    hideLoading();
+}
+
+
+/** Apply settings. */
+function applySettings() {
+    var settings = Cookies.getJSON('settings');
+    if (settings.showBorders) {
+        teiTable.showBorders();
+    } else {
+        teiTable.hideBorders();
+    }
+    if (settings.showTooltips) {
+        teiTable.showTooltips();
+    } else {
+        teiTable.hideTooltips();
+    }
+    if (settings.freezeHeader) {
+        teiTable.freezeHeader();
+    } else {
+        teiTable.unfreezeHeader();
+    }
 }
 
 
@@ -132,17 +116,6 @@ function enableSettings() {
         $('#disabled-settings-msg').show();
     }
     $('#unique-fn').selectpicker('refresh');
-}
-
-
-/** Return all uploaded files merged into single XML document. */
-function mergeUploadedDocs(){
-    var xmlStr, values = [], keys = Object.keys(localStorage), i = keys.length;
-    while ( i-- ) {
-        values.push(localStorage.getItem(keys[i]));
-    }
-    xmlStr = '<MERGED-TEI>' + values.join("") + '</MERGED-TEI>';
-    return loadXMLDoc(xmlStr);
 }
 
 
@@ -225,7 +198,6 @@ function loadXMLDoc(text) {
             return xmlDoc;
         };
     } else {
-        hideLoading();
         var msg = "No XML parser found";
         showAlert(msg, 'danger')
         throw new Error(msg);
@@ -382,18 +354,92 @@ $("#help-modal").on("show.bs.modal", function() {
 });
 
 
+/** Setup the database. */
+function setupDB() {
+    var indexedDB = window.indexedDB || window.mozIndexedDB ||
+                    window.webkitIndexedDB || window.msIndexedDB ||
+                    window.shimIndexedDB;
+    var dbVersion = 2;
+    var open = indexedDB.open("TeiViewerDB", dbVersion);
+
+    open.onupgradeneeded = function(e) {
+        var thisDB = e.target.result,
+            store  = thisDB.createObjectStore("TeiStore", {keyPath: "id"});
+    }
+
+    open.onsuccess = function(e) {
+        db = e.target.result;
+    }
+
+    open.onerror = function(e) {
+        $('.upload-form').hide();
+        showAlert('Database could not be initialised.', 'danger');
+    }
+}
+
+
+/** Update the status bar with the number of records in the DB. */
+function countRecords() {
+    var transaction = db.transaction("TeiStore", "readonly"),
+        store       = transaction.objectStore("TeiStore"),
+        count       = store.count();
+    count.onsuccess = function() {
+        $('#files-uploaded').html(count.result + ' files uploaded');
+        if (count.result > 0) {
+            $('.upload-box').hide();
+            $('#tei-table').show();
+        } else {
+            $('.upload-box').show();
+            $('#tei-table').hide();
+        }
+    }
+    count.onerror = function(e) {
+        showAlert(e.target.error, 'danger');
+    }
+}
+
+/** Load records from the DB and transform. */
+function loadRecords(){
+    showLoading();
+    var transaction = db.transaction("TeiStore", "readonly"),
+        store       = transaction.objectStore("TeiStore"),
+        cursor      = store.openCursor();
+        records     = [];
+
+    cursor.onsuccess = function(e) {
+        var res = e.target.result;
+        if(res) {
+            records.push(res.value.xml);
+            res.continue();
+        }
+    }
+    cursor.onerror = function(e) {
+        showAlert(e.target.error, 'danger');
+    }
+
+    transaction.oncomplete = function(e) {
+        var xmlStr = '<MERGED-TEI>' + records.join("") + '</MERGED-TEI>',
+            xmlDoc = loadXMLDoc(xmlStr);
+        teiTable.populate(xmlDoc);
+        countRecords();
+        applySettings();
+        hideLoading();
+    }
+}
+
+
 /** Check for the required HTML5 features */
 function checkHTML5() {
     var unsupportedFeatures = []
-    if (typeof(localStorage) == 'undefined' ) {
-        unsupportedFeatures.push('localStorage.');
-    }
     if (typeof(FileReader) == 'undefined' || typeof(FileList) == 'undefined'
         || typeof(Blob) == 'undefined') {
         unsupportedFeatures.push('File APIs');
     }
     if (typeof(Promise) == 'undefined') {
         unsupportedFeatures.push('Promises');
+    }
+    if (typeof(indexedDB) == 'undefined') {
+        unsupportedFeatures.push('indexedDB');
     }
     var div = document.createElement('div');
     if (!('draggable' in div) || !('ondragstart' in div && 'ondrop' in div)) {
@@ -464,6 +510,7 @@ $(window).resize(function() {
 $(function() {
     $.ajaxSetup({ cache: false });
     checkHTML5();
+    setupDB();
 
     // Initialise settings
     if (typeof Cookies.get('settings') != "undefined") {
