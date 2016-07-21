@@ -8,6 +8,7 @@
             <xsl:if test="string-length(.) &gt; 0">
                 <xsl:value-of select="normalize-space(.)"/>
                 <xsl:if test="position() != last()">
+                    <xsl:text>; </xsl:text>
                     <br />
                 </xsl:if>
             </xsl:if>

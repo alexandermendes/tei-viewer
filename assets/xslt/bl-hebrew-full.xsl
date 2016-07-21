@@ -12,6 +12,7 @@
                     <xsl:value-of select="concat(' (', @role, ')')" />
                 </xsl:if>
                 <xsl:if test="position() != last()">
+                    <xsl:text>; </xsl:text>
                     <br />
                 </xsl:if>
             </xsl:if>
