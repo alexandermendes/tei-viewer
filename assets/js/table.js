@@ -7,42 +7,51 @@ function TeiTable() {
 
     /** Populate the hide and show menus. */
     function _populateMenus() {
-        var headings = []
-        $('table th').each(function(i) {
-            var h = {'label': $(this).html(),
+
+        // Get heading, index and visibility for each column
+        var columns = []
+        $('table thead th').each(function(i) {
+            var h = {'heading': $(this).html(),
                      'visible': hiddenCols.indexOf(i) == -1,
                      'index': i}
-            headings.push(h);
+            columns.push(h);
         });
 
+        /** Render menu with placeholder. */
         function renderPlaceholder(id) {
             var template = $("#table-menu-ph-template").html();
                 rendered = Mustache.render(template,
-                                           {label: "Nothing to " + id});
+                                           {heading: "Nothing to " + id});
             $("#" + id + "-menu").html(rendered);
         }
 
+        /** Render menu. */
         function renderMenu(id, cls) {
             var template = $("#table-menu-template").html();
                 rendered = Mustache.render(template,
-                                           {cls: cls, headings: headings});
+                                           {cls: cls, columns: columns});
             $("#" + id + "-menu").html(rendered);
         }
 
+        /** Determine whether or not to display a hide menu item. */
         function getHideCls() {
+            console.log(this, this.visible);
             return (this.visible) ? "hide-column" : "hide-column hidden";
         }
 
+        /** Determine whether or not to display a show menu item. */
         function getShowCls() {
             return (!this.visible) ? "show-column" : "show-column hidden";
         }
 
+        // Render the hide menu or a placeholder
         if (hiddenCols.length !== $('table th').length) {
             renderMenu('hide', getHideCls)
         } else {
             renderPlaceholder('hide');
         }
 
+        // Render the show menu or a placeholder
         if (hiddenCols.length > 0) {
             renderMenu('show', getShowCls)
         } else {
@@ -51,46 +60,36 @@ function TeiTable() {
     }
 
 
-    /** Number table rows. */
-    function _numberRows() {
+    /**
+     *  Number the table rows.
+     *  @param {number} firstIndex - The index from which to start numbering rows.
+     */
+    function _numberRows(firstIndex) {
         $('table thead tr th').eq(0).before('<th>#</th>');
         $('table tbody').find('tr').each(function(i){
-            $(this).find('td').eq(0).before('<td>' + (i + 1) + '</td>');
+            var index = firstIndex + i + 1;
+            $(this).find('td').eq(0).before('<td>' + index + '</td>');
         });
     }
 
 
     /** Populate tooltips. */
     function _populateTooltips() {
-        $('name[role]').each(function() {
-            $(this).attr('data-toggle', 'tooltip');
-            var title = 'Role: ' + $(this).attr('role');
-            $(this).attr('title', title);
+        var tooltips = [{'tag': 'name', 'attr': 'role'},
+                        {'tag': 'date', 'attr': 'calendar'}]
+
+        $(tooltips).each(function(i, tooltip){
+            var attr = tooltip.attr;
+            $(tooltip.tag + '[' + attr + ']').each(function() {
+                var title = attr.capitalise()  + ': ' + $(this).attr(attr);
+                $(this).attr('data-toggle', 'tooltip');
+                $(this).attr('title', title);
+            });
         });
-        $('date[calendar]').each(function() {
-            $(this).attr('data-toggle', 'tooltip');
-            var title = 'Calendar: ' + $(this).attr('calendar');
-            $(this).attr('title', title);
-        });
-        $("body").tooltip({
-            selector: '[data-toggle="tooltip"]'
-        });
+
+        // Initialise
+        $("body").tooltip({selector: '[data-toggle="tooltip"]'});
     }
-
-
-    /** Get the width of a scroll bar. */
-    function _getScrollBarWidth () {
-        var $outer = $('<div>').css({
-            visibility: 'hidden',
-            width: 100,
-            overflow: 'scroll'
-        }).appendTo('body');
-        var widthWithScroll = $('<div>').css({
-            width: '100%'
-        }).appendTo($outer).outerWidth();
-        $outer.remove();
-        return 100 - widthWithScroll;
-    };
 
 
     /** Hide a table column. */
@@ -125,19 +124,34 @@ function TeiTable() {
             width  = $('#tei-view').width();
         $('#tei-view.fixed tbody').css('width', offset + width);
 
-        // Add margins
-        var headerHeight = $('#tei-view thead').height();
-            scrollWidth  = _getScrollBarWidth();
-            footerHeight = $('footer').height();
-            offset = 100 + scrollWidth + footerHeight;
+        // Get the width of a scroll bar.
+        var $outer = $('<div>').css({
+            visibility: 'hidden',
+            width: 100,
+            overflow: 'scroll'
+        }).appendTo('body');
+        var widthWithScroll = $('<div>').css({
+            width: '100%'
+        }).appendTo($outer).outerWidth();
+        $outer.remove();
+        var scrollBarWidth = 100 - widthWithScroll;
+
+        // Update height and margins of table body
+        var headerHeight = $('#tei-view thead').height(),
+            footerHeight = $('footer').height(),
+            offset       = 100 + scrollBarWidth + footerHeight;
         $('#tei-view.fixed tbody').css('margin-top', headerHeight);
         $('#tei-view.fixed tbody').css('max-height',
                                        'calc(100vh - ' + offset + 'px)');
     }
 
 
-    /** Load TEI data into the table view. */
-    this.populate = function(xml) {
+    /**
+     * Load TEI data into the table view.
+     * @param {string} xml - The XML files to load.
+     * @param {number} firstIndex - The index from which to start numbering rows.
+     */
+    this.populate = function(xml, firstIndex) {
         teiTable = this;
         html = XSLTProc.transformToFragment(xml, document);
         $('#tei-view').html(html);
@@ -145,8 +159,9 @@ function TeiTable() {
             teiTable.hideColumn(v);
         });
         _populateMenus();
-        _populateTooltips();
-        _numberRows();
+
+        // Number rows after show/hide menus populated
+        _numberRows(firstIndex);
     }
 
 
@@ -195,5 +210,10 @@ function TeiTable() {
     /** Unfreeze header. */
     this.unfreezeHeader = function() {
         $('#tei-view').removeClass('fixed');
+    }
+
+    // String function to capitalise first letter
+    String.prototype.capitalise = function() {
+        return this.charAt(0).toUpperCase() + this.slice(1);
     }
 }
