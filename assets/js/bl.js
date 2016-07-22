@@ -4,7 +4,8 @@ $(function() {
 
     // Add custom CSS
     $.get("assets/css/bl.css", function(data){
-        $("<style type=\"text/css\">" + data + "</style>").appendTo(document.head);
+        var cssStr = "<style type=\"text/css\">" + data + "</style>";
+        $(cssStr).appendTo(document.head);
     });
 
     /** Pad the left of a string. */
@@ -17,7 +18,7 @@ $(function() {
 
     /** Return a link to the Digitised Manuscripts full display. */
     function renderDMLink(sm) {
-        var escStr = sm.replace(/\s+/g, '_'),
+        var escStr = sm.replace(/\s+/g, '_').toLowerCase(),
             url    = 'http://www.bl.uk/manuscripts/FullDisplay.aspx?ref=' + escStr,
             templ  = $("#link-template").html(),
             rend   = Mustache.render(templ, {url: url, text: sm});
@@ -34,7 +35,7 @@ $(function() {
     }
 
     /** Format rows. */
-    $('#tei-table tr').each(function(i) {
+    $('#tei-view table tr').each(function(i) {
         var sm;
 
         var shelfmarks = $(this).find('.shelfmark'),

@@ -11,7 +11,7 @@ var dbOptions = {
 
 /** Upload XML files. */
 function uploadFiles(files) {
-    showLoading();
+    showView('loading');
     var pending = files.length;
 
     for (var i = 0, f; f = files[i]; i++) {
@@ -25,7 +25,7 @@ function uploadFiles(files) {
                 return function(e) {
 
                 //Remove XML declaration (for merging) and store
-                var xmlStr      = e.target.result.replace(/<\?xml.*?\?>/g, "");
+                var xmlStr = e.target.result.replace(/<\?xml.*?\?>/g, "");
                 server.tei.add({
                     xml: xmlStr
                 }).then(function (item) {
@@ -46,17 +46,14 @@ function uploadFiles(files) {
 }
 
 
-/** Show loading icon. */
-function showLoading() {
-    $('#files-uploaded').hide();
-    $('#loading-icon').show();
-}
-
-
-/** Hide loading icon. */
-function hideLoading() {
-    $('#loading-icon').hide();
-    $('#files-uploaded').show();
+/** Show a view. */
+function showView(view) {
+    var views   = ['upload', 'loading', 'tei'],
+        visible = views.pop(view);
+    $('#' + view + '-view').show();
+    $.each(views, function(i, v){
+        $('#' + v + '-view').hide();
+    });
 }
 
 
@@ -120,13 +117,13 @@ function showAlert(msg, type) {
 
 /** Clear selected rows. */
 $( "#clear-rows" ).click(function() {
-    $('#tei-table tr[selected]').remove();
+    $('#tei-view table tr[selected]').remove();
 });
 
 
 /** Refresh the current XSLT processors. */
 function refreshXSLTProcessor() {
-    showLoading();
+    showView('loading');
     var tableXSLT = $('#select-xslt').val();
     return Promise.resolve($.ajax({
         url: "assets/xslt/" + tableXSLT
@@ -139,7 +136,7 @@ function refreshXSLTProcessor() {
         showAlert('XSLT file ' + tableXSLT + ' could not be loaded, try \
                   reverting to default settings.', 'danger');
     }).then(function() {
-        hideLoading();
+        showView('tei');
         refreshView();
     });
 }
@@ -197,12 +194,6 @@ function loadXMLDoc(text) {
 }
 
 
-//Function to convert boolean to capitalized string
-Boolean.prototype.toCapsString = function () {
-    return this.toString().charAt(0).toUpperCase() + this.toString().slice(1);
-}
-
-
 /** Reset to default settings. */
 $( "#reset-settings" ).click(function() {
     loadDefaultSettings();
@@ -214,7 +205,7 @@ $( "#reset-settings" ).click(function() {
 
 /** Handle change of XSLT setting. */
 $( "#select-xslt" ).change(function() {
-    showLoading();
+    showView('loading');
     var settings    = Cookies.getJSON('settings'),
         defaultXSLT = $('#select-xslt').val();
     $.each(settings.xslt, function(index, value) {
@@ -276,7 +267,7 @@ $( "#freeze-header" ).change('click', function() {
 
 /** Load and validate settings from cookie. */
 function loadSettings(){
-    showLoading();
+    showView('loading');
     var settings = Cookies.getJSON('settings');
 
     $.getJSON("settings.json", function(defaultSettings) {
@@ -293,20 +284,22 @@ function loadSettings(){
             rendered = Mustache.render(template, {options: settings.xslt});
         $('#select-xslt').html(rendered);
 
+        $('#show-borders').val(settings.showBorders.toCapsString());
+        $('#show-tooltips').val(settings.showTooltips.toCapsString());
+        $('#freeze-header').val(settings.freezeHeader.toCapsString());
+        $('#n-records').val(settings.recordsPerPage);
         $('.selectpicker').selectpicker('refresh');
         refreshXSLTProcessor();
     }).fail(function(e) {
         showAlert('settings.json could not be loaded.', 'danger');
         throw e
-    }).always(function() {
-        hideLoading();
     });
 }
 
 
 /** Load default settings. */
 function loadDefaultSettings() {
-    showLoading();
+    showView('loading');
     $.getJSON("settings.json", function( settings ) {
         Cookies.set('settings', settings);
     }).done(function() {
@@ -315,7 +308,7 @@ function loadDefaultSettings() {
         showAlert('settings.json could not be loaded.', 'danger');
         throw e
     }).always(function() {
-        hideLoading();
+        showView('tei');
     });
 }
 
@@ -337,11 +330,9 @@ function countRecords() {
     server.tei.count().then(function (n) {
         $('#files-uploaded').html(n + ' files uploaded');
         if (n > 0) {
-            $('.upload-box').hide();
-            $('#tei-table').show();
+            showView('tei');
         } else {
-            $('.upload-box').show();
-            $('#tei-table').hide();
+            showView('upload');
         }
         teiTable.fixFrozenTable();
     }).catch(function (err) {
@@ -350,13 +341,15 @@ function countRecords() {
     });
 }
 
+
 /** Load records from the DB and transform. */
 function loadRecords(page, nDisplayed){
-    showLoading();
+    showView('loading');
+    var nRecords = Cookies.getJSON('settings').recordsPerPage;
     server.tei
         .query()
         .all()
-        .limit(page, 5)
+        .limit(page, nRecords)
         .execute()
         .then(function (data) {
             var records = [];
@@ -368,7 +361,7 @@ function loadRecords(page, nDisplayed){
             teiTable.populate(xmlDoc);
             countRecords();
             applySettings();
-            hideLoading();
+            showView('tei');
         }).catch(function (err) {
             showAlert(err, 'danger');
             throw err
@@ -414,13 +407,13 @@ $( ".add-files" ).change(function(evt) {
 
 
 /** Handle upload box drag and drop event. */
-$('.upload-box').on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+$('#upload-view').on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
     e.preventDefault();
     e.stopPropagation();
 }).on('dragover dragenter', function() {
-    $('.upload-box').addClass('is-dragover');
+    $('#upload-view').addClass('is-dragover');
 }).on('dragleave dragend drop', function() {
-    $('.upload-box').removeClass('is-dragover');
+    $('#upload-view').removeClass('is-dragover');
 }).on('drop', function(e) {
     var files = e.originalEvent.dataTransfer.files;
     uploadFiles(files);
@@ -428,7 +421,7 @@ $('.upload-box').on('drag dragstart dragend dragover dragenter dragleave drop', 
 
 
 /** Handle row clicked event. */
-$("#tei-table").on('click', 'tr:not(a)', function(e) {
+$("#tei-view").on('click', 'tr:not(a)', function(e) {
     if (e.target.nodeName != "A" && typeof($(this).attr('selected')) === 'undefined') {
         $(this).find('td').css('background-color', '#eee');
         $(this).attr('selected', 'true');
@@ -440,7 +433,7 @@ $("#tei-table").on('click', 'tr:not(a)', function(e) {
 
 
 /** Handle table scroll event. */
-$("#tei-table").scroll(function() {
+$("#tei-view").scroll(function() {
     if (typeof(teiTable) !== 'undefined') {
         teiTable.fixFrozenTable();
     }
@@ -453,6 +446,12 @@ $(window).resize(function() {
         teiTable.fixFrozenTable();
     }
 });
+
+
+//Function to convert boolean to capitalized string
+Boolean.prototype.toCapsString = function () {
+    return this.toString().charAt(0).toUpperCase() + this.toString().slice(1);
+}
 
 
 $(function() {

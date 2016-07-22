@@ -52,6 +52,8 @@ The following general settings are provided:
 
 - **Show Tooltips:** Show/hide tooltips.
 
+- **Records Per Page:** The maximum number of records to display on each page.
+
 - **Reset Settings:** Return to default settings.
 
 **Note:** A cookie is used to store the above settings between uses.

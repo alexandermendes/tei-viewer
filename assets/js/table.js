@@ -17,13 +17,15 @@ function TeiTable() {
 
         function renderPlaceholder(id) {
             var template = $("#table-menu-ph-template").html();
-                rendered = Mustache.render(template, {label: "Nothing to " + id});
+                rendered = Mustache.render(template,
+                                           {label: "Nothing to " + id});
             $("#" + id + "-menu").html(rendered);
         }
 
         function renderMenu(id, cls) {
             var template = $("#table-menu-template").html();
-                rendered = Mustache.render(template, {cls: cls, headings: headings});
+                rendered = Mustache.render(template,
+                                           {cls: cls, headings: headings});
             $("#" + id + "-menu").html(rendered);
         }
 
@@ -62,11 +64,13 @@ function TeiTable() {
     function _populateTooltips() {
         $('name[role]').each(function() {
             $(this).attr('data-toggle', 'tooltip');
-            $(this).attr('title', $(this).attr('role'));
+            var title = 'Role: ' + $(this).attr('role');
+            $(this).attr('title', title);
         });
         $('date[calendar]').each(function() {
             $(this).attr('data-toggle', 'tooltip');
-            $(this).attr('title', $(this).attr('calendar'));
+            var title = 'Calendar: ' + $(this).attr('calendar');
+            $(this).attr('title', title);
         });
         $("body").tooltip({
             selector: '[data-toggle="tooltip"]'
@@ -76,8 +80,14 @@ function TeiTable() {
 
     /** Get the width of a scroll bar. */
     function _getScrollBarWidth () {
-        var $outer = $('<div>').css({visibility: 'hidden', width: 100, overflow: 'scroll'}).appendTo('body'),
-            widthWithScroll = $('<div>').css({width: '100%'}).appendTo($outer).outerWidth();
+        var $outer = $('<div>').css({
+            visibility: 'hidden',
+            width: 100,
+            overflow: 'scroll'
+        }).appendTo('body');
+        var widthWithScroll = $('<div>').css({
+            width: '100%'
+        }).appendTo($outer).outerWidth();
         $outer.remove();
         return 100 - widthWithScroll;
     };
@@ -105,23 +115,24 @@ function TeiTable() {
     this.fixFrozenTable = function() {
 
         // Resize header cells
-        $('#tei-table.fixed tbody tr:first-child td').each(function(i) {
+        $('#tei-view.fixed tbody tr:first-child td').each(function(i) {
             var colWidth = $(this).width();
             $('table thead tr th:nth-child(' + (i + 1) + ')').width(colWidth);
         });
 
         // Resize tbody to always show vertical scroll bar
-        var offset = $('#tei-table').scrollLeft();
-            width  = $('#tei-table').width();
-        $('#tei-table.fixed tbody').css('width', offset + width);
+        var offset = $('#tei-view').scrollLeft();
+            width  = $('#tei-view').width();
+        $('#tei-view.fixed tbody').css('width', offset + width);
 
         // Add margins
-        var headerHeight = $('#tei-table thead').height();
+        var headerHeight = $('#tei-view thead').height();
             scrollWidth  = _getScrollBarWidth();
             footerHeight = $('footer').height();
             offset = 100 + scrollWidth + footerHeight;
-        $('#tei-table.fixed tbody').css('margin-top', headerHeight);
-        $('#tei-table.fixed tbody').css('max-height', 'calc(100vh - ' + offset + 'px)');
+        $('#tei-view.fixed tbody').css('margin-top', headerHeight);
+        $('#tei-view.fixed tbody').css('max-height',
+                                       'calc(100vh - ' + offset + 'px)');
     }
 
 
@@ -129,7 +140,7 @@ function TeiTable() {
     this.populate = function(xml) {
         teiTable = this;
         html = XSLTProc.transformToFragment(xml, document);
-        $('#tei-table').html(html);
+        $('#tei-view').html(html);
         $(hiddenCols).each(function(k, v) {
             teiTable.hideColumn(v);
         });
@@ -177,12 +188,12 @@ function TeiTable() {
 
     /** Freeze header. */
     this.freezeHeader = function() {
-        $('#tei-table').addClass('fixed');
+        $('#tei-view').addClass('fixed');
     }
 
 
     /** Unfreeze header. */
     this.unfreezeHeader = function() {
-        $('#tei-table').removeClass('fixed');
+        $('#tei-view').removeClass('fixed');
     }
 }
