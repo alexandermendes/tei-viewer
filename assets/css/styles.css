@@ -84,7 +84,7 @@ a:focus {
     background-color: #F8F8F8;
     padding: 8px 10px 8px 10px;
     text-align: center;
-    min-width: 60px;
+    min-width: 50px;
 }
 
 #tei-view table>tbody>tr>td,
