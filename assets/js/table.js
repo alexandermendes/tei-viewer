@@ -2,8 +2,8 @@
 
 function TeiTable() {
 
-    var XSLTProc;
-    var hiddenCols = [];
+    var XSLTProc    = {},
+        hiddenCols  = [];
 
     /** Populate the hide and show menus. */
     function _populateMenus() {
@@ -35,7 +35,6 @@ function TeiTable() {
 
         /** Determine whether or not to display a hide menu item. */
         function getHideCls() {
-            console.log(this, this.visible);
             return (this.visible) ? "hide-column" : "hide-column hidden";
         }
 
@@ -61,15 +60,22 @@ function TeiTable() {
 
 
     /**
-     *  Number the table rows.
-     *  @param {number} firstIndex - The index from which to start numbering rows.
+     * Add an index column to the table.
+     * @param {number} firstIndex - Index from which to start row numbering.
      */
-    function _numberRows(firstIndex) {
-        $('table thead tr th').eq(0).before('<th>#</th>');
+    function _addIndexColumn(firstIndex) {
+        $('table thead tr th').eq(0).before('<th class="index-column">#</th>');
         $('table tbody').find('tr').each(function(i){
             var index = firstIndex + i + 1;
-            $(this).find('td').eq(0).before('<td>' + index + '</td>');
+            $(this).find('td').eq(0).before('<td class="index-column">' +
+                                            index + '</td>');
         });
+    }
+
+
+    /** Remove the index column from the table. */
+    function _removeIndexColumn() {
+        $('table .index-column').remove();
     }
 
 
@@ -86,27 +92,37 @@ function TeiTable() {
                 $(this).attr('title', title);
             });
         });
-
-        // Initialise
         $("body").tooltip({selector: '[data-toggle="tooltip"]'});
     }
 
 
-    /** Hide a table column. */
-    this.hideColumn = function(columnIndex) {
+    /**
+     * Hide a table column.
+     * @param {number} columnIndex - The index of the column to hide.
+     * @param {number} firstIndex - Index from which to start row numbering.
+     */
+    this.hideColumn = function(columnIndex, firstIndex) {
         $('table tr > *:nth-child(' + (columnIndex + 1) + ')').hide();
         hiddenCols.push(columnIndex);
+        _removeIndexColumn();
         _populateMenus();
+        _addIndexColumn(firstIndex);
     }
 
 
-    /** Show a table column. */
-    this.showColumn = function(columnIndex) {
+    /**
+     * Show a table column.
+     * @param {number} columnIndex - The index of the column to show.
+     * @param {number} firstIndex - Index from which to start row numbering.
+     */
+    this.showColumn = function(columnIndex, firstIndex) {
         $('table tr > *:nth-child(' + (columnIndex + 1) + ')').show();
         hiddenCols = $.grep(hiddenCols, function(value) {
             return value != columnIndex;
         });
+        _removeIndexColumn();
         _populateMenus();
+        _addIndexColumn(firstIndex);
     }
 
 
@@ -149,7 +165,7 @@ function TeiTable() {
     /**
      * Load TEI data into the table view.
      * @param {string} xml - The XML files to load.
-     * @param {number} firstIndex - The index from which to start numbering rows.
+     * @param {number} firstIndex - Index from which to start row numbering.
      */
     this.populate = function(xml, firstIndex) {
         teiTable = this;
@@ -158,58 +174,63 @@ function TeiTable() {
         $(hiddenCols).each(function(k, v) {
             teiTable.hideColumn(v);
         });
+        _removeIndexColumn();
         _populateMenus();
-
-        // Number rows after show/hide menus populated
-        _numberRows(firstIndex);
+        _addIndexColumn(firstIndex);
     }
 
 
-    /** Update the XSLT processor. */
-    this.updateXSLTProc = function(obj) {
-        XSLTProc = obj;
+    /**
+     * Update the XSLT processor.
+     * @param {Object} xsltProc - The XSLT processor.
+     */
+    this.updateXSLTProc = function(xsltProc) {
+        XSLTProc = xsltProc;
     }
 
 
-    /** Check if the XSLT processor has been loaded. */
+    /** Check if an XSLT processor has been loaded. */
     this.XSLTProcLoaded = function() {
         return typeof(XSLTProc) !== 'undefined';
     }
 
 
-    /** Show table borders. */
-    this.showBorders = function() {
-        $('table').addClass('table-bordered');
+    /**
+     * Show or hide table borders.
+     * @param {boolean} bool - True to display borders, false otherwise.
+     */
+    this.showBorders = function(bool) {
+        if (bool) {
+            $('table').addClass('table-bordered');
+        } else {
+            $('table').removeClass('table-bordered');
+        }
     }
 
 
-    /** Hide table borders. */
-    this.hideBorders = function() {
-        $('table').removeClass('table-bordered');
+    /**
+     * Show or hide tooltips.
+     * @param {boolean} bool - True to display tooltips, false otherwise.
+     */
+    this.showTooltips = function(bool) {
+        if (bool) {
+            _populateTooltips();
+        } else {
+            $('[data-toggle="tooltip"]').removeAttr('data-toggle');
+        }
     }
 
 
-    /** Show tooltips. */
-    this.showTooltips = function() {
-        _populateTooltips();
-    }
-
-
-    /** Hide tooltips. */
-    this.hideTooltips = function() {
-        $('[data-toggle="tooltip"]').removeAttr('data-toggle');
-    }
-
-
-    /** Freeze header. */
-    this.freezeHeader = function() {
-        $('#tei-view').addClass('fixed');
-    }
-
-
-    /** Unfreeze header. */
-    this.unfreezeHeader = function() {
-        $('#tei-view').removeClass('fixed');
+    /**
+     * Freeze or unfreeze table header.
+     * @param {boolean} bool - True to freeze header, false otherwise.
+     */
+    this.freezeHeader = function(bool) {
+        if (bool) {
+            $('#tei-view').addClass('fixed');
+        } else {
+            $('#tei-view').removeClass('fixed');
+        }
     }
 
     // String function to capitalise first letter

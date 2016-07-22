@@ -1,4 +1,8 @@
-var teiTable, server;
+var teiTable = {};
+var server = "";
+var page = 0;
+
+// Database options
 var dbOptions = {
     server: 'tei-viewer',
     version: 3,
@@ -9,27 +13,26 @@ var dbOptions = {
     }
 }
 
-/** Upload XML files. */
+/**
+ *  Upload XML files.
+ *  @param {FileList} files - The files to upload.
+ */
 function uploadFiles(files) {
     showView('loading');
-    var pending = files.length;
+    var pending = files.length,
+        reader  = {};
 
     for (var i = 0, f; f = files[i]; i++) {
         if (f.type !== 'text/xml') {
             showAlert(f.name + ' is not a valid XML file', 'warning');
             continue;
         }
+        reader = new FileReader();
+        reader.onload = (function(theFile) {
+            return function(evt) {
 
-        var reader = new FileReader();
-            reader.onload = (function(theFile) {
-                return function(e) {
-
-                //Remove XML declaration (for merging) and store
-                var xmlStr = e.target.result.replace(/<\?xml.*?\?>/g, "");
                 server.tei.add({
-                    xml: xmlStr
-                }).then(function (item) {
-                    // item stored
+                    xml: evt.target.result
                 }).catch(function (err) {
                     showAlert(err, 'danger');
                     throw err
@@ -37,6 +40,7 @@ function uploadFiles(files) {
 
                 --pending
                 if (pending == 0) {
+                    $('.upload-form').trigger("reset");
                     refreshView();
                 }
             };
@@ -48,62 +52,60 @@ function uploadFiles(files) {
 
 /** Show a view. */
 function showView(view) {
-    var views   = ['upload', 'loading', 'tei'],
-        visible = views.pop(view);
+    $('.view').hide();
     $('#' + view + '-view').show();
-    $.each(views, function(i, v){
-        $('#' + v + '-view').hide();
-    });
 }
 
 
-/** Hide column menu item clicked. */
-$( "#hide-menu" ).on('click', '.hide-column', function(e) {
-    var index = parseInt($(this).attr('data-index'));
-    teiTable.hideColumn(index);
-    refreshView();
-    e.preventDefault();
-});
+/**
+ * Return a merged XML document.
+ * @param {Array} docs - The data to merge.
+ */
+function mergeXMLDocs(data) {
+    var xmlStr  = "<MERGED-TEI>";
+    $.each(data, function(i, value){
+        xmlStr = xmlStr.concat(value.xml.replace(/<\?xml.*?\?>/g, ""));
+    });
+    xmlStr = xmlStr.concat('</MERGED-TEI>');
+    return loadXMLDoc(xmlStr);
+}
 
 
-/** Show column menu item clicked. */
-$( "#show-menu" ).on('click', '.show-column', function(e) {
-    var index = parseInt($(this).attr('data-index'));
-    teiTable.showColumn(index);
-    refreshView();
-    e.preventDefault();
-});
-
-
-/** Refresh the main view. */
+/** Refresh the view. */
 function refreshView() {
+    var nRecords = Cookies.getJSON('settings').recordsPerPage;
+        xmlDoc   = {};
+    showView('loading');
     if (typeof(teiTable) !== 'undefined' && !teiTable.XSLTProcLoaded()) {
         showAlert('XSLT processor not loaded, please try again.', 'warning');
     } else {
-        loadRecords(1);
+        server.tei
+            .query()
+            .all()
+            .limit(page * nRecords, nRecords)
+            .execute()
+            .then(function (data) {
+                xmlDoc = mergeXMLDocs(data);
+                teiTable.populate(xmlDoc, page * nRecords);
+                countRecords();
+                applySettings();
+                showView('tei');
+            }).catch(function (err) {
+                showView('upload');
+                showAlert(err, 'danger');
+                throw err
+            });
     }
-    $('.upload-form').trigger("reset");
 }
 
 
 /** Apply settings. */
 function applySettings() {
     var settings = Cookies.getJSON('settings');
-    if (settings.showBorders) {
-        teiTable.showBorders();
-    } else {
-        teiTable.hideBorders();
-    }
-    if (settings.showTooltips) {
-        teiTable.showTooltips();
-    } else {
-        teiTable.hideTooltips();
-    }
-    if (settings.freezeHeader) {
-        teiTable.freezeHeader();
-    } else {
-        teiTable.unfreezeHeader();
-    }
+    teiTable.showBorders(settings.showBorders);
+    teiTable.showTooltips(settings.showTooltips);
+    teiTable.freezeHeader(settings.freezeHeader);
+    teiTable.fixFrozenTable();
 }
 
 
@@ -111,18 +113,28 @@ function applySettings() {
 function showAlert(msg, type) {
     var template = $("#alert-template").html();
         rendered = Mustache.render(template, {msg: msg, type: type});
-    $( "#alerts" ).html(rendered);
+    $("#alerts").html(rendered);
 }
 
 
 /** Clear selected rows. */
-$( "#clear-rows" ).click(function() {
+$( "#clear-selected" ).click(function(evt) {
+    evt.preventDefault();
     $('#tei-view table tr[selected]').remove();
+    refreshView();
+});
+
+
+/** Clear all rows. */
+$( "#clear-all" ).click(function(evt) {
+    evt.preventDefault();
+    server.tei.clear();
+    refreshView();
 });
 
 
 /** Refresh the current XSLT processors. */
-function refreshXSLTProcessor() {
+function setupXSLTProcessor() {
     showView('loading');
     var tableXSLT = $('#select-xslt').val();
     return Promise.resolve($.ajax({
@@ -171,32 +183,32 @@ $( "#csv-export" ).click(function() {
 
 
 /** Load and return an XML document. */
-function loadXMLDoc(text) {
-    var parseXml;
+function loadXMLDoc(xmlStr) {
+    var xmlDoc = {};
     if (typeof window.DOMParser != "undefined") {
-        parseXml = function(xmlStr) {
+        return function(xmlStr) {
             return (new window.DOMParser()).parseFromString(xmlStr, "text/xml");
-        };
+        }(xmlStr);
     } else if (typeof window.ActiveXObject != "undefined" &&
         new window.ActiveXObject("Microsoft.XMLDOM")) {
-        parseXml = function(xmlStr) {
-            var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
-            xmlDoc.async = "false";
-            xmlDoc.loadXML(xmlStr);
-            return xmlDoc;
-        };
+            return function(xmlStr) {
+                xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
+                xmlDoc.async = "false";
+                xmlDoc.loadXML(xmlStr);
+                return xmlDoc;
+            }(xmlStr);
     } else {
-        var msg = "No XML parser found";
-        showAlert(msg, 'danger')
-        throw new Error(msg);
+        showAlert("No XML parser found", 'danger');
+        throw new Error("No XML parser found");
     }
-    return parseXml(text);
 }
 
 
 /** Reset to default settings. */
 $( "#reset-settings" ).click(function() {
-    loadDefaultSettings();
+    var settings = Cookies.getJSON('settings');
+    settings.
+    loadSettings();
     $('#settings-modal').modal('hide');
     showAlert('All settings have been reset to their defaults.', 'info');
     refreshView();
@@ -217,7 +229,7 @@ $( "#select-xslt" ).change(function() {
     });
     Cookies.set('settings', settings);
     $('#settings-modal').modal('hide');
-    refreshXSLTProcessor();
+    setupXSLTProcessor();
 });
 
 
@@ -227,8 +239,8 @@ $( "#show-tooltips" ).change('click', function() {
         showTips = $('#show-tooltips').val() == 'True';
     settings.showTooltips = showTips;
     Cookies.set('settings', settings);
-    refreshView();
     $('#settings-modal').modal('hide');
+    applySettings();
 });
 
 
@@ -238,19 +250,8 @@ $( "#show-borders" ).change('click', function() {
         showBorders = $('#show-borders').val() == 'True';
     settings.showBorders = showBorders;
     Cookies.set('settings', settings);
-    refreshView();
     $('#settings-modal').modal('hide');
-});
-
-
-/** Handle change of records per page setting. */
-$( "#n-records" ).change('click', function() {
-    var settings       = Cookies.getJSON('settings'),
-        recordsPerPage = parseInt($('#n-records').val());
-    settings.recordsPerPage = recordsPerPage;
-    Cookies.set('settings', settings);
-    refreshView();
-    $('#settings-modal').modal('hide');
+    applySettings();
 });
 
 
@@ -261,66 +262,73 @@ $( "#freeze-header" ).change('click', function() {
     settings.freezeHeader = freezeHeader;
     Cookies.set('settings', settings);
     $('#settings-modal').modal('hide');
+    applySettings();
+});
+
+
+/** Handle change of records per page setting. */
+$( "#n-records" ).change('click', function() {
+    var settings       = Cookies.getJSON('settings'),
+        recordsPerPage = parseInt($('#n-records').val());
+    settings.recordsPerPage = recordsPerPage;
+    Cookies.set('settings', settings);
+    $('#settings-modal').modal('hide');
     refreshView();
 });
 
 
-/** Load and validate settings from cookie. */
+/** Return true if both JSON files contain the same keys, false otherwise.
+ *  @param {Object} a - A JSON file.
+ *  @param {Object} b - A JSON file.
+ */
+function compareJSON(a, b) {
+    var aKeys = Object.keys(a).sort();
+    var bKeys = Object.keys(b).sort();
+    return JSON.stringify(aKeys) == JSON.stringify(bKeys);
+}
+
+
+/** Load settings. */
 function loadSettings(){
-    showView('loading');
     var settings = Cookies.getJSON('settings');
 
-    $.getJSON("settings.json", function(defaultSettings) {
-        var aKeys = Object.keys(defaultSettings).sort();
-        var bKeys = Object.keys(settings).sort();
-        if(JSON.stringify(aKeys) !== JSON.stringify(bKeys)) {
-            Cookies.set('settings', defaultSettings);
-            settings = defaultSettings;
+    $.getJSON("settings.json", function(defaults) {
+        if (settings === 'undefined') {
+            settings = defaults;
+            showAlert('Default settings loaded.', 'info');
+        } else if (!compareJSON(settings, defaults)) {
+            settings = defaults;
             showAlert('Custom settings no longer valid, reverting to \
                       defaults.', 'info');
         }
+        Cookies.set('settings', settings);
+
     }).done(function() {
         var template = $("#xslt-options-template").html(),
             rendered = Mustache.render(template, {options: settings.xslt});
         $('#select-xslt').html(rendered);
-
         $('#show-borders').val(settings.showBorders.toCapsString());
         $('#show-tooltips').val(settings.showTooltips.toCapsString());
         $('#freeze-header').val(settings.freezeHeader.toCapsString());
         $('#n-records').val(settings.recordsPerPage);
         $('.selectpicker').selectpicker('refresh');
-        refreshXSLTProcessor();
-    }).fail(function(e) {
-        showAlert('settings.json could not be loaded.', 'danger');
-        throw e
-    });
-}
-
-
-/** Load default settings. */
-function loadDefaultSettings() {
-    showView('loading');
-    $.getJSON("settings.json", function( settings ) {
-        Cookies.set('settings', settings);
-    }).done(function() {
-        loadSettings();
-    }).fail(function(e) {
-        showAlert('settings.json could not be loaded.', 'danger');
-        throw e
-    }).always(function() {
-        showView('tei');
+        setupXSLTProcessor();
+    }).fail(function(err) {
+        showAlert(err, 'danger');
+        throw err
     });
 }
 
 
 /** Load README.md into the help modal. */
 $("#help-modal").on("show.bs.modal", function() {
-    var modalBody = $(this).find(".modal-body");
-    $.get("README.md", function( readme ) {
-        var converter = new showdown.Converter();
-        var text = readme.replace(/[\s\S]+?(?=#)/, "");
-        var html = converter.makeHtml(text);
-        modalBody.html(html);
+    var converter = new showdown.Converter(),
+        str       = "",
+        html      = "";
+    $.get("README.md", function(readme) {
+        str  = readme.replace(/[\s\S]+?(?=#)/, "");
+        html = converter.makeHtml(text);
+        $(this).find(".modal-body").html(html);
     });
 });
 
@@ -342,61 +350,55 @@ function countRecords() {
 }
 
 
-/** Load records from the DB and transform. */
-function loadRecords(page, nDisplayed){
-    showView('loading');
-    var nRecords = Cookies.getJSON('settings').recordsPerPage;
-    server.tei
-        .query()
-        .all()
-        .limit(page, nRecords)
-        .execute()
-        .then(function (data) {
-            var records = [];
-            $.each(data, function(i, v){
-                records.push(v.xml);
-            });
-            var xmlStr = '<MERGED-TEI>' + records.join("") + '</MERGED-TEI>',
-            xmlDoc = loadXMLDoc(xmlStr);
-            teiTable.populate(xmlDoc);
-            countRecords();
-            applySettings();
-            showView('tei');
-        }).catch(function (err) {
-            showAlert(err, 'danger');
-            throw err
-        });
-}
-
-
 /** Check for the required HTML5 features */
-function checkHTML5() {
-    var unsupportedFeatures = []
+function checkHTML5Features() {
+    var unsupported = [],
+        msg         = "",
+        div         = document.createElement('div');
+
     if (typeof(FileReader) == 'undefined' || typeof(FileList) == 'undefined'
         || typeof(Blob) == 'undefined') {
-        unsupportedFeatures.push('File APIs');
+        unsupported.push('File APIs');
     }
     if (typeof(Promise) == 'undefined') {
-        unsupportedFeatures.push('Promises');
+        unsupported.push('Promises');
     }
     if (typeof(indexedDB) == 'undefined') {
-        unsupportedFeatures.push('indexedDB');
+        unsupported.push('indexedDB');
     }
-    var div = document.createElement('div');
     if (!('draggable' in div) || !('ondragstart' in div && 'ondrop' in div)) {
-        unsupportedFeatures.push('Drag and Drop');
+        unsupported.push('Drag and Drop');
     }
-    if (unsupportedFeatures.length > 0) {
-        var uStr = unsupportedFeatures.pop();
-        if (unsupportedFeatures.length > 0) {
-            uStr = unsupportedFeatures.join(', ') + ' or ' + uStr;
+
+    if (unsupported.length > 0) {
+        msg = unsupported.pop();
+        if (unsupported.length > 0) {
+            msg = unsupported.join(', ') + ' or ' + unsupported;
         }
-        showAlert('Your browser does not support HTML5 ' + uStr + '. \
+        showAlert('Your browser does not support HTML5 ' + msg + '. \
                    Try upgrading (Firefox 45, Chrome 45 or Safari 9 \
                    recommended).', 'danger');
-        throw new Error("HTML5 " + uStr + " not supported.");
+        throw new Error("HTML5 " + msg + " not supported.");
     }
 }
+
+
+/** Handle click event for hide column menu item. */
+$( "#hide-menu" ).on('click', '.hide-column', function(evt) {
+    var index = parseInt($(this).attr('data-index'));
+    evt.preventDefault();
+    teiTable.hideColumn(index);
+    applySettings();
+});
+
+
+/** Handle click event for show column menu item. */
+$( "#show-menu" ).on('click', '.show-column', function(evt) {
+    var index = parseInt($(this).attr('data-index'));
+    evt.preventDefault();
+    teiTable.showColumn(index);
+    applySettings();
+});
 
 
 /** Handle add files event. */
@@ -407,24 +409,27 @@ $( ".add-files" ).change(function(evt) {
 
 
 /** Handle upload box drag and drop event. */
-$('#upload-view').on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
+$('#upload-view').on('drag dragstart dragend \
+                     dragover dragenter dragleave drop', function(evt) {
+    var files = {};
+    evt.preventDefault();
+    evt.stopPropagation();
 }).on('dragover dragenter', function() {
     $('#upload-view').addClass('is-dragover');
 }).on('dragleave dragend drop', function() {
     $('#upload-view').removeClass('is-dragover');
 }).on('drop', function(e) {
-    var files = e.originalEvent.dataTransfer.files;
+    files = evt.originalEvent.dataTransfer.files;
     uploadFiles(files);
 });
 
 
-/** Handle row clicked event. */
-$("#tei-view").on('click', 'tr:not(a)', function(e) {
-    if (e.target.nodeName != "A" && typeof($(this).attr('selected')) === 'undefined') {
-        $(this).find('td').css('background-color', '#eee');
-        $(this).attr('selected', 'true');
+/** Select or deselect table row on click event. */
+$("#tei-view").on('click', 'tr:not(a)', function(evt) {
+    if (evt.target.nodeName != "A" &&
+        typeof($(this).attr('selected')) === 'undefined') {
+            $(this).find('td').css('background-color', '#eee');
+            $(this).attr('selected', 'true');
     } else {
         $(this).find('td').css('background-color', '#fff');
         $(this).removeAttr('selected');
@@ -432,7 +437,7 @@ $("#tei-view").on('click', 'tr:not(a)', function(e) {
 });
 
 
-/** Handle table scroll event. */
+/** Apply frozen table header fixes on scroll event. */
 $("#tei-view").scroll(function() {
     if (typeof(teiTable) !== 'undefined') {
         teiTable.fixFrozenTable();
@@ -440,7 +445,7 @@ $("#tei-view").scroll(function() {
 });
 
 
-/** Handle window resize event. */
+/** Apply frozen table header fixes on window resize event. */
 $(window).resize(function() {
     if (typeof(teiTable) !== 'undefined') {
         teiTable.fixFrozenTable();
@@ -448,27 +453,24 @@ $(window).resize(function() {
 });
 
 
-//Function to convert boolean to capitalized string
+// Boolean function to convert value to capitalized string
 Boolean.prototype.toCapsString = function () {
     return this.toString().charAt(0).toUpperCase() + this.toString().slice(1);
 }
 
 
+// Initialise
 $(function() {
+    showView('loading');
     $.ajaxSetup({ cache: false });
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
+    $('[data-toggle="tooltip"]').tooltip();
 
-    checkHTML5();
+    checkHTML5Features();
 
-    db.open(dbOptions).then(function (s) {
+    // Configure DB and load settings
+    db.open(dbOptions).then(function(s) {
         server = s;
-        if (typeof Cookies.get('settings') != "undefined") {
-            loadSettings();
-        } else {
-            loadDefaultSettings();
-        }
+        loadSettings();
     }).catch(function (err) {
         showAlert(err, 'danger');
         throw err

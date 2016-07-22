@@ -29,7 +29,7 @@ The core functionality is provided via the following toolbar buttons:
 
 - **Show:** Show table columns.
 
-- **Clear:** Remove all uploaded documents.
+- **Clear:** Remove all or selected rows.
 
 - **Print:** Print the current view.
 
