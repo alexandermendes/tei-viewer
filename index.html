@@ -148,6 +148,16 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label class="control-label" for="n-records">Records Per Page:</label>
+                                <select class="selectpicker form-control" id="n-records">
+                                    <option>10</option>
+                                    <option>25</option>
+                                    <option>50</option>
+                                    <option>100</option>
+                                    <option>250</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <div class="text-right">
                                     <button type="button" class="btn btn-default" id="reset-settings" disabled>Reset Settings</button>
                                 </div>
@@ -185,8 +195,9 @@
         <script src="assets/vendor/mustache.min.js"></script>
         <script src="assets/vendor/js.cookie-2.1.1.min.js"></script>
         <script src="assets/vendor/showdown.min.js"></script>
-        <script src="assets/js/table.js"></script>
-        <script src="assets/js/scripts.js"></script>
+        <script src='assets/vendor/db.js'></script>
+        <script src="assets/js/table.js?v=1.0.0"></script>
+        <script src="assets/js/scripts.js?v=1.0.0"></script>
 
         <!-- Mustache templates -->
         <script id="xslt-options-template" type="text/html">

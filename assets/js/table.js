@@ -53,7 +53,7 @@ function TeiTable() {
     function _numberRows() {
         $('table thead tr th').eq(0).before('<th>#</th>');
         $('table tbody').find('tr').each(function(i){
-            $(this).find('td').eq(0).before('<td>' + i + '</td>');
+            $(this).find('td').eq(0).before('<td>' + (i + 1) + '</td>');
         });
     }
 
@@ -108,7 +108,6 @@ function TeiTable() {
         $('#tei-table.fixed tbody tr:first-child td').each(function(i) {
             var colWidth = $(this).width();
             $('table thead tr th:nth-child(' + (i + 1) + ')').width(colWidth);
-            console.log(colWidth);
         });
 
         // Resize tbody to always show vertical scroll bar

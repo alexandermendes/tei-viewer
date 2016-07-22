@@ -13,5 +13,6 @@
    ],
    "freezeHeader":true,
    "showBorders":true,
-   "showTooltips": true
+   "showTooltips": true,
+   "recordsPerPage": 50
 }

@@ -1,4 +1,13 @@
-var teiTable, db;
+var teiTable, server;
+var dbOptions = {
+    server: 'tei-viewer',
+    version: 3,
+    schema: {
+        tei: {
+            key: {keyPath: 'id', autoIncrement: true}
+        }
+    }
+}
 
 /** Upload XML files. */
 function uploadFiles(files) {
@@ -15,17 +24,16 @@ function uploadFiles(files) {
             reader.onload = (function(theFile) {
                 return function(e) {
 
-                var key = theFile.name += Date.now();
-
                 //Remove XML declaration (for merging) and store
-                var xmlStr      = e.target.result.replace(/<\?xml.*?\?>/g, ""),
-                    transaction = db.transaction("TeiStore", "readwrite"),
-                    store       = transaction.objectStore("TeiStore"),
-                    request     = store.put({id: key, xml: xmlStr});
-
-                request.onerror = function(e) {
-                    showAlert(e.target.error, 'danger');
-                }
+                var xmlStr      = e.target.result.replace(/<\?xml.*?\?>/g, "");
+                server.tei.add({
+                    xml: xmlStr
+                }).then(function (item) {
+                    // item stored
+                }).catch(function (err) {
+                    showAlert(err, 'danger');
+                    throw err
+                });
 
                 --pending
                 if (pending == 0) {
@@ -75,7 +83,7 @@ function refreshView() {
     if (typeof(teiTable) !== 'undefined' && !teiTable.XSLTProcLoaded()) {
         showAlert('XSLT processor not loaded, please try again.', 'warning');
     } else {
-        loadRecords();
+        loadRecords(1);
     }
     $('.upload-form').trigger("reset");
 }
@@ -120,7 +128,7 @@ $( "#clear-rows" ).click(function() {
 function refreshXSLTProcessor() {
     showLoading();
     var tableXSLT = $('#select-xslt').val();
-    var tablePromise = Promise.resolve($.ajax({
+    return Promise.resolve($.ajax({
         url: "assets/xslt/" + tableXSLT
     })).then(function(data) {
         XSLTProc = new XSLTProcessor();
@@ -228,11 +236,7 @@ $( "#show-tooltips" ).change('click', function() {
         showTips = $('#show-tooltips').val() == 'True';
     settings.showTooltips = showTips;
     Cookies.set('settings', settings);
-    if (showTips) {
-        teiTable.showTooltips();
-    } else {
-        teiTable.hideTooltips();
-    }
+    refreshView();
     $('#settings-modal').modal('hide');
 });
 
@@ -243,11 +247,18 @@ $( "#show-borders" ).change('click', function() {
         showBorders = $('#show-borders').val() == 'True';
     settings.showBorders = showBorders;
     Cookies.set('settings', settings);
-    if (showBorders) {
-        teiTable.showBorders();
-    } else {
-        teiTable.hideBorders();
-    }
+    refreshView();
+    $('#settings-modal').modal('hide');
+});
+
+
+/** Handle change of records per page setting. */
+$( "#n-records" ).change('click', function() {
+    var settings       = Cookies.getJSON('settings'),
+        recordsPerPage = parseInt($('#n-records').val());
+    settings.recordsPerPage = recordsPerPage;
+    Cookies.set('settings', settings);
+    refreshView();
     $('#settings-modal').modal('hide');
 });
 
@@ -257,7 +268,6 @@ $( "#freeze-header" ).change('click', function() {
     var settings     = Cookies.getJSON('settings'),
         freezeHeader = $('#freeze-header').val() == 'True';
     settings.freezeHeader = freezeHeader;
-    console.log(freezeHeader);
     Cookies.set('settings', settings);
     $('#settings-modal').modal('hide');
     refreshView();
@@ -279,7 +289,6 @@ function loadSettings(){
                       defaults.', 'info');
         }
     }).done(function() {
-        // XSLT
         var template = $("#xslt-options-template").html(),
             rendered = Mustache.render(template, {options: settings.xslt});
         $('#select-xslt').html(rendered);
@@ -323,80 +332,47 @@ $("#help-modal").on("show.bs.modal", function() {
 });
 
 
-/** Setup the database. */
-function setupDB() {
-    var indexedDB = window.indexedDB || window.mozIndexedDB ||
-                    window.webkitIndexedDB || window.msIndexedDB ||
-                    window.shimIndexedDB;
-    var dbVersion = 2;
-    var open = indexedDB.open("TeiViewerDB", dbVersion);
-
-    open.onupgradeneeded = function(e) {
-        var thisDB = e.target.result,
-            store  = thisDB.createObjectStore("TeiStore", {keyPath: "id"});
-    }
-
-    open.onsuccess = function(e) {
-        db = e.target.result;
-    }
-
-    open.onerror = function(e) {
-        $('.upload-form').hide();
-        showAlert('Database could not be initialised.', 'danger');
-    }
-}
-
-
 /** Update the status bar with the number of records in the DB. */
 function countRecords() {
-    var transaction = db.transaction("TeiStore", "readonly"),
-        store       = transaction.objectStore("TeiStore"),
-        count       = store.count();
-    count.onsuccess = function() {
-        $('#files-uploaded').html(count.result + ' files uploaded');
-        if (count.result > 0) {
+    server.tei.count().then(function (n) {
+        $('#files-uploaded').html(n + ' files uploaded');
+        if (n > 0) {
             $('.upload-box').hide();
             $('#tei-table').show();
         } else {
             $('.upload-box').show();
             $('#tei-table').hide();
         }
-    }
-    count.onerror = function(e) {
-        showAlert(e.target.error, 'danger');
-    }
-    transaction.oncomplete  = function() {
         teiTable.fixFrozenTable();
-    }
+    }).catch(function (err) {
+        showAlert(err, 'danger');
+        throw err
+    });
 }
 
 /** Load records from the DB and transform. */
-function loadRecords(){
+function loadRecords(page, nDisplayed){
     showLoading();
-    var transaction = db.transaction("TeiStore", "readonly"),
-        store       = transaction.objectStore("TeiStore"),
-        cursor      = store.openCursor();
-        records     = [];
-
-    cursor.onsuccess = function(e) {
-        var res = e.target.result;
-        if(res) {
-            records.push(res.value.xml);
-            res.continue();
-        }
-    }
-    cursor.onerror = function(e) {
-        showAlert(e.target.error, 'danger');
-    }
-
-    transaction.oncomplete = function(e) {
-        var xmlStr = '<MERGED-TEI>' + records.join("") + '</MERGED-TEI>',
+    server.tei
+        .query()
+        .all()
+        .limit(page, 5)
+        .execute()
+        .then(function (data) {
+            var records = [];
+            $.each(data, function(i, v){
+                records.push(v.xml);
+            });
+            var xmlStr = '<MERGED-TEI>' + records.join("") + '</MERGED-TEI>',
             xmlDoc = loadXMLDoc(xmlStr);
-        teiTable.populate(xmlDoc);
-        countRecords();
-        applySettings();
-        hideLoading();
-    }
+            teiTable.populate(xmlDoc);
+            countRecords();
+            applySettings();
+            hideLoading();
+        }).catch(function (err) {
+            showAlert(err, 'danger');
+            throw err
+        });
 }
 
 
@@ -481,18 +457,21 @@ $(window).resize(function() {
 
 $(function() {
     $.ajaxSetup({ cache: false });
-    checkHTML5();
-    setupDB();
-
-    // Initialise settings
-    if (typeof Cookies.get('settings') != "undefined") {
-        loadSettings();
-    } else {
-        loadDefaultSettings();
-    }
-
-    // Initialise tooltips
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    checkHTML5();
+
+    db.open(dbOptions).then(function (s) {
+        server = s;
+        if (typeof Cookies.get('settings') != "undefined") {
+            loadSettings();
+        } else {
+            loadDefaultSettings();
+        }
+    }).catch(function (err) {
+        showAlert(err, 'danger');
+        throw err
     });
 });
