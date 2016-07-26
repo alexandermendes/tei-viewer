@@ -134,6 +134,7 @@ $( "#clear-selected" ).click(function(evt) {
     evt.preventDefault();
     showView("loading");
     $('#tei-view table tr[selected]').remove();
+    currentPage = 0;
     refreshView();
 });
 
@@ -142,6 +143,7 @@ $( "#clear-selected" ).click(function(evt) {
 $( "#clear-all" ).click(function(evt) {
     evt.preventDefault();
     showView("loading");
+    currentPage = 0;
     server.tei.clear();
     refreshView();
 });
@@ -366,14 +368,18 @@ function paginate(totalRecords) {
     var perPage    = Cookies.getJSON('settings').recordsPerPage,
         totalPages = Math.ceil(totalRecords / perPage);
     $('#pagination-text').html(totalRecords + ' records loaded');
-    $('#page-selection').bootpag({
-            total: totalPages,
-            maxVisible: 10
-        }).one("page", function(event, num) {
-            showView('loading');
-            currentPage = num - 1;
-            refreshView();
-        });
+    if (totalPages > 0) {
+        $('#page-selection').bootpag({
+                total: totalPages,
+                maxVisible: 10
+            }).one("page", function(event, num) {
+                showView('loading');
+                currentPage = num - 1;
+                refreshView();
+            });
+    } else {
+        $('#page-selection').html('');
+    }
 }
 
 
