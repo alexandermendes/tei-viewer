@@ -89,12 +89,11 @@ function formatLocus(shelfmark, locus) {
  * @param {object} ref - The ref element.
  */
 function formatReference(ref) {
-    var type = $(this).attr('type') || "",
-        text = $(this).text() || "",
-        str  = (type + " " + text).trim();
-    if (text.length > 0) {
-        $(this).html(str);
-    }
+    var target = ref.attr('target') || "",
+        type   = ref.attr('type') || "",
+        text   = ref.text() || "",
+        str    = (target + ": " + type + " " + text).trim();
+    ref.html(str);
 }
 
 
