@@ -1,5 +1,5 @@
 var teiTable = {};
-var server = "";
+var server = {};
 var currentPage = 0;
 
 // Database options
@@ -13,9 +13,10 @@ var dbOptions = {
     }
 }
 
+
 /**
- *  Upload XML files.
- *  @param {FileList} files - The files to upload.
+ * Upload XML files.
+ * @param {FileList} files - The files to upload.
  */
 function uploadFiles(files) {
     showView('loading');
@@ -368,7 +369,7 @@ function paginate(totalRecords) {
     $('#page-selection').bootpag({
             total: totalPages,
             maxVisible: 10
-        }).on("page", function(event, num){
+        }).one("page", function(event, num) {
             showView('loading');
             currentPage = num - 1;
             refreshView();
