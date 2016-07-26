@@ -1,6 +1,6 @@
 var teiTable = {};
 var server = "";
-var page = 0;
+var currentPage = 0;
 
 // Database options
 var dbOptions = {
@@ -73,23 +73,34 @@ function mergeXMLDocs(data) {
 
 /** Refresh the view. */
 function refreshView() {
-    var nRecords = Cookies.getJSON('settings').recordsPerPage;
+    var perPage = Cookies.getJSON('settings').recordsPerPage;
         xmlDoc   = {};
-    showView('loading');
     if (typeof(teiTable) !== 'undefined' && !teiTable.XSLTProcLoaded()) {
         showAlert('XSLT processor not loaded, please try again.', 'warning');
     } else {
         server.tei
             .query()
             .all()
-            .limit(page * nRecords, nRecords)
+            .limit(currentPage * perPage, perPage)
             .execute()
             .then(function (data) {
                 xmlDoc = mergeXMLDocs(data);
-                teiTable.populate(xmlDoc, page * nRecords);
-                countRecords();
-                applySettings();
-                showView('tei');
+                teiTable.populate(xmlDoc, currentPage * perPage);
+
+                server.tei.count().then(function (totalRecords) {
+                    paginate(totalRecords);
+                    if (totalRecords > 0) {
+                        showView('tei');
+                    } else {
+                        showView('upload');
+                    }
+                    applySettings();
+                }).catch(function (err) {
+                    showView('upload');
+                    showAlert(err, 'danger');
+                    throw err
+                });
+
             }).catch(function (err) {
                 showView('upload');
                 showAlert(err, 'danger');
@@ -120,6 +131,7 @@ function showAlert(msg, type) {
 /** Clear selected rows. */
 $( "#clear-selected" ).click(function(evt) {
     evt.preventDefault();
+    showView("loading");
     $('#tei-view table tr[selected]').remove();
     refreshView();
 });
@@ -128,6 +140,7 @@ $( "#clear-selected" ).click(function(evt) {
 /** Clear all rows. */
 $( "#clear-all" ).click(function(evt) {
     evt.preventDefault();
+    showView("loading");
     server.tei.clear();
     refreshView();
 });
@@ -135,7 +148,6 @@ $( "#clear-all" ).click(function(evt) {
 
 /** Refresh the current XSLT processors. */
 function setupXSLTProcessor() {
-    showView('loading');
     var tableXSLT = $('#select-xslt').val();
     return Promise.resolve($.ajax({
         url: "assets/xslt/" + tableXSLT
@@ -148,7 +160,6 @@ function setupXSLTProcessor() {
         showAlert('XSLT file ' + tableXSLT + ' could not be loaded, try \
                   reverting to default settings.', 'danger');
     }).then(function() {
-        showView('tei');
         refreshView();
     });
 }
@@ -206,18 +217,17 @@ function loadXMLDoc(xmlStr) {
 
 /** Reset to default settings. */
 $( "#reset-settings" ).click(function() {
+    evt.preventDefault();
+    showView("loading");
     var settings = Cookies.getJSON('settings');
-    settings.
-    loadSettings();
     $('#settings-modal').modal('hide');
+    loadSettings();
     showAlert('All settings have been reset to their defaults.', 'info');
-    refreshView();
 });
 
 
 /** Handle change of XSLT setting. */
 $( "#select-xslt" ).change(function() {
-    showView('loading');
     var settings    = Cookies.getJSON('settings'),
         defaultXSLT = $('#select-xslt').val();
     $.each(settings.xslt, function(index, value) {
@@ -267,7 +277,9 @@ $( "#freeze-header" ).change('click', function() {
 
 
 /** Handle change of records per page setting. */
-$( "#n-records" ).change('click', function() {
+$( "#n-records" ).change('click', function(evt) {
+    evt.preventDefault();
+    showView("loading");
     var settings       = Cookies.getJSON('settings'),
         recordsPerPage = parseInt($('#n-records').val());
     settings.recordsPerPage = recordsPerPage;
@@ -293,7 +305,7 @@ function loadSettings(){
     var settings = Cookies.getJSON('settings');
 
     $.getJSON("settings.json", function(defaults) {
-        if (settings === 'undefined') {
+        if (typeof(settings) === 'undefined') {
             settings = defaults;
             showAlert('Default settings loaded.', 'info');
         } else if (!compareJSON(settings, defaults)) {
@@ -333,20 +345,34 @@ $("#help-modal").on("show.bs.modal", function() {
 });
 
 
-/** Update the status bar with the number of records in the DB. */
-function countRecords() {
-    server.tei.count().then(function (n) {
-        $('#files-uploaded').html(n + ' files uploaded');
-        if (n > 0) {
-            showView('tei');
-        } else {
-            showView('upload');
-        }
-        teiTable.fixFrozenTable();
-    }).catch(function (err) {
-        showAlert(err, 'danger');
-        throw err
-    });
+/**
+ * Render a link to be used for pagination.
+ * @param {number} page - The page number.
+ * @param {string} id - The ID to which the template should be prepended.
+ */
+function renderPaginationTemplate(page, id) {
+    var template = $("#pagination-template").html(),
+        rendered = Mustache.render(template, {page: page});
+    $(id).prepend(rendered);
+}
+
+
+/**
+ * Add pagination to footer.
+ * @param {number} totalRecords - The total number of records loaded.
+ */
+function paginate(totalRecords) {
+    var perPage    = Cookies.getJSON('settings').recordsPerPage,
+        totalPages = Math.ceil(totalRecords / perPage);
+    $('#pagination-text').html(totalRecords + ' records loaded');
+    $('#page-selection').bootpag({
+            total: totalPages,
+            maxVisible: 10
+        }).on("page", function(event, num){
+            showView('loading');
+            currentPage = num - 1;
+            refreshView();
+        });
 }
 
 

@@ -9,7 +9,7 @@ body {
 }
 
 main {
-    min-height: calc(100vh - 90px);
+    min-height: calc(100vh - 140px);
     position: relative;
 }
 
@@ -25,8 +25,12 @@ a:focus {
     text-decoration: none;
 }
 
-#files-uploaded {
-    padding: 0px 10px 0px 10px;
+#pagination-text {
+    font-size: 0.8em;
+    float: right;
+    top: calc(25px + 0.8em);
+    right: 20px;
+    position: absolute;
 }
 
 /** Navigation */
@@ -56,7 +60,7 @@ a:focus {
 #tei-view {
     width: 100%;
     overflow-x: auto;
-    height: calc(100vh - 90px);
+    height: calc(100vh - 140px);
     position: relative;
 }
 
@@ -107,7 +111,7 @@ a:focus {
     font-size: 1.5em;
     color: #5E5E5E;
     position: relative;
-    padding: calc((100vh - 90px - (1.5em + 3em)) / 2) 20px;
+    padding: calc((100vh - 140px - (1.5em + 3em)) / 2) 20px;
     height: 100%;
 }
 
@@ -169,7 +173,6 @@ a:focus {
 }
 
 .modal-body {
-    max-height: calc(100vh - 150px);
     overflow-y: auto;
 }
 
@@ -180,9 +183,10 @@ footer {
     text-align: center;
     width: 100%;
     background-color: #F8F8F8;
-    height: 40px;
-    padding-top: 10px;
+    height: 85px;
+    padding-top: 5px;
     border-top: #e7e7e7 1px solid;
+    position: relative;
 }
 
 
