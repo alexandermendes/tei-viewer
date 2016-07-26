@@ -25,7 +25,7 @@ function uploadFiles(files) {
 
     for (var i = 0, f; f = files[i]; i++) {
         if (f.type !== 'text/xml') {
-            showAlert(f.name + ' is not a valid XML file', 'warning');
+            showAlert(f.name + ' is not a valid XML file.', 'warning');
             continue;
         }
         reader = new FileReader();
@@ -67,9 +67,8 @@ function showView(view) {
  * @param {string} id - The database ID of the record.
  */
 function preformatXml(xml, id) {
-    var xmlStr = xml.replace(/<\?xml.*?\?>/g, ""),
-        xmlStr = xml.replace(/<TEI/g, '<TEI id="' + id + '"');
-    return xmlStr;
+    return xml.replace(/<\?xml.*?\?>/g, "")
+              .replace(/<TEI/g, '<TEI id="' + id + '"');
 }
 
 
@@ -83,7 +82,7 @@ function mergeXMLDocs(data) {
         xmlStr = xmlStr.concat(preformatXml(value.xml, value.id));
     });
     xmlStr = xmlStr.concat('</MERGED-TEI>');
-    return loadXMLDoc(xmlStr);
+    return parseXML(xmlStr);
 }
 
 
@@ -168,28 +167,32 @@ function setupXSLTProcessor() {
 
 
 /**
- * Load and return an XML document.
+ * Parse and return an XML document.
  * @param {string} xmlStr - The XML string.
  */
-function loadXMLDoc(xmlStr) {
-    var xmlDoc = {};
-    if (typeof window.DOMParser != "undefined") {
-        return function(xmlStr) {
-            return (new window.DOMParser()).parseFromString(xmlStr, "text/xml");
-        }(xmlStr);
-    } else if (typeof window.ActiveXObject != "undefined" &&
-        new window.ActiveXObject("Microsoft.XMLDOM")) {
-            return function(xmlStr) {
-                xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
-                xmlDoc.async = "false";
-                xmlDoc.loadXML(xmlStr);
-                return xmlDoc;
-            }(xmlStr);
-    } else {
-        showAlert("No XML parser found", 'danger');
-        throw new Error("No XML parser found");
+function parseXML(xmlStr) {
+    var parser = new DOMParser(),
+        doc    = parser.parseFromString(xmlStr, 'text/xml');
+    if(isParseError(doc)) {
+        showAlert('Failed to parse XML.', 'danger');
     }
+    return doc;
 }
+
+
+/**
+ * PCheck if an XML document contains a parse error.
+ * @param {string} xmlDoc - The XML string.
+ */
+function isParseError(xmlDoc) {
+    var parser = new DOMParser(),
+        doc    = parser.parseFromString('<', 'text/xml'),
+        ns     = doc.getElementsByTagName("parsererror")[0].namespaceURI;
+    if (ns === 'http://www.w3.org/1999/xhtml') {
+        return xmlDoc.getElementsByTagName("parsererror").length > 0;
+    }
+    return xmlDoc.getElementsByTagNameNS(ns, 'parsererror').length > 0;
+};
 
 
 /** Clear selected rows. */
@@ -417,18 +420,21 @@ function checkHTML5Features() {
         msg         = "",
         div         = document.createElement('div');
 
-    if (typeof(FileReader) == 'undefined' || typeof(FileList) == 'undefined'
-        || typeof(Blob) == 'undefined') {
+    if (typeof(FileReader) === 'undefined' || typeof(FileList) === 'undefined'
+        || typeof(Blob) === 'undefined') {
         unsupported.push('File APIs');
     }
-    if (typeof(Promise) == 'undefined') {
+    if (typeof(Promise) === 'undefined') {
         unsupported.push('Promises');
     }
-    if (typeof(indexedDB) == 'undefined') {
+    if (typeof(indexedDB) === 'undefined') {
         unsupported.push('indexedDB');
     }
     if (!('draggable' in div) || !('ondragstart' in div && 'ondrop' in div)) {
         unsupported.push('Drag and Drop');
+    }
+    if (typeof(window.DOMParser) === "undefined") {
+        unsupported.push('DOM Parsing');
     }
 
     if (unsupported.length > 0) {
@@ -437,8 +443,7 @@ function checkHTML5Features() {
             msg = unsupported.join(', ') + ' or ' + unsupported;
         }
         showAlert('Your browser does not support HTML5 ' + msg + '. \
-                   Try upgrading (Firefox 45, Chrome 45 or Safari 9 \
-                   recommended).', 'danger');
+                   Try upgrading.', 'danger');
         throw new Error("HTML5 " + msg + " not supported.");
     }
 }
