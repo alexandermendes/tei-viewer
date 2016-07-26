@@ -405,6 +405,7 @@ function paginate(totalRecords) {
                 maxVisible: 10
             }).one("page", function(event, num) {
                 showView('loading');
+                $('#page-selection').html('');
                 currentPage = num - 1;
                 refreshView();
             });
