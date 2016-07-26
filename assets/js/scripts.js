@@ -51,10 +51,25 @@ function uploadFiles(files) {
 }
 
 
-/** Show a view. */
+/**
+ * Show a view.
+ * @param {string} view - The view to show.
+ */
 function showView(view) {
     $('.view').hide();
     $('#' + view + '-view').show();
+}
+
+
+/**
+ * Remove the XML declaration and add the database ID to an XML document.
+ * @param {string} view - The XML string to format.
+ * @param {string} id - The database ID of the record.
+ */
+function preformatXml(xml, id) {
+    var xmlStr = xml.replace(/<\?xml.*?\?>/g, ""),
+        xmlStr = xml.replace(/<TEI>/g, "<TEI id=" + id + ">");
+    return xmlStr;
 }
 
 
@@ -63,9 +78,9 @@ function showView(view) {
  * @param {Array} docs - The data to merge.
  */
 function mergeXMLDocs(data) {
-    var xmlStr  = "<MERGED-TEI>";
-    $.each(data, function(i, value){
-        xmlStr = xmlStr.concat(value.xml.replace(/<\?xml.*?\?>/g, ""));
+    var xmlStr = "<MERGED-TEI>";
+    $.each(data, function(i, value) {
+        xmlStr = xmlStr.concat(preformatXml(value.xml, value.id));
     });
     xmlStr = xmlStr.concat('</MERGED-TEI>');
     return loadXMLDoc(xmlStr);
@@ -121,11 +136,59 @@ function applySettings() {
 }
 
 
-/** Display a Bootstrap alert. */
+/**
+ * Display a Bootstrap alert.
+ * @param {string} msg - The message.
+ * @param {string} type - The type of the message.
+ */
 function showAlert(msg, type) {
     var template = $("#alert-template").html();
         rendered = Mustache.render(template, {msg: msg, type: type});
     $("#alerts").html(rendered);
+}
+
+
+/** Setup an XSLT processor. */
+function setupXSLTProcessor() {
+    var tableXSLT = $('#select-xslt').val();
+    return Promise.resolve($.ajax({
+        url: "assets/xslt/" + tableXSLT
+    })).then(function(data) {
+        XSLTProc = new XSLTProcessor();
+        XSLTProc.importStylesheet(data);
+        teiTable = new TeiTable();
+        teiTable.updateXSLTProc(XSLTProc)
+    }).catch(function() {
+        showAlert('XSLT file ' + tableXSLT + ' could not be loaded, try \
+                  reverting to default settings.', 'danger');
+    }).then(function() {
+        refreshView();
+    });
+}
+
+
+/**
+ * Load and return an XML document.
+ * @param {string} xmlStr - The XML string.
+ */
+function loadXMLDoc(xmlStr) {
+    var xmlDoc = {};
+    if (typeof window.DOMParser != "undefined") {
+        return function(xmlStr) {
+            return (new window.DOMParser()).parseFromString(xmlStr, "text/xml");
+        }(xmlStr);
+    } else if (typeof window.ActiveXObject != "undefined" &&
+        new window.ActiveXObject("Microsoft.XMLDOM")) {
+            return function(xmlStr) {
+                xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
+                xmlDoc.async = "false";
+                xmlDoc.loadXML(xmlStr);
+                return xmlDoc;
+            }(xmlStr);
+    } else {
+        showAlert("No XML parser found", 'danger');
+        throw new Error("No XML parser found");
+    }
 }
 
 
@@ -147,25 +210,6 @@ $( "#clear-all" ).click(function(evt) {
     server.tei.clear();
     refreshView();
 });
-
-
-/** Refresh the current XSLT processors. */
-function setupXSLTProcessor() {
-    var tableXSLT = $('#select-xslt').val();
-    return Promise.resolve($.ajax({
-        url: "assets/xslt/" + tableXSLT
-    })).then(function(data) {
-        XSLTProc = new XSLTProcessor();
-        XSLTProc.importStylesheet(data);
-        teiTable = new TeiTable();
-        teiTable.updateXSLTProc(XSLTProc)
-    }).catch(function() {
-        showAlert('XSLT file ' + tableXSLT + ' could not be loaded, try \
-                  reverting to default settings.', 'danger');
-    }).then(function() {
-        refreshView();
-    });
-}
 
 
 /** Export the table to CSV. */
@@ -194,28 +238,6 @@ $( "#csv-export" ).click(function() {
     link.setAttribute("download", "tei_data.csv");
     link.click();
 });
-
-
-/** Load and return an XML document. */
-function loadXMLDoc(xmlStr) {
-    var xmlDoc = {};
-    if (typeof window.DOMParser != "undefined") {
-        return function(xmlStr) {
-            return (new window.DOMParser()).parseFromString(xmlStr, "text/xml");
-        }(xmlStr);
-    } else if (typeof window.ActiveXObject != "undefined" &&
-        new window.ActiveXObject("Microsoft.XMLDOM")) {
-            return function(xmlStr) {
-                xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
-                xmlDoc.async = "false";
-                xmlDoc.loadXML(xmlStr);
-                return xmlDoc;
-            }(xmlStr);
-    } else {
-        showAlert("No XML parser found", 'danger');
-        throw new Error("No XML parser found");
-    }
-}
 
 
 /** Reset to default settings. */
@@ -292,6 +314,19 @@ $( "#n-records" ).change('click', function(evt) {
 });
 
 
+/** Load README.md into the help modal. */
+$("#help-modal").on("show.bs.modal", function() {
+    var converter = new showdown.Converter(),
+        str       = "",
+        html      = "";
+    $.get("README.md", function(readme) {
+        str  = readme.replace(/[\s\S]+?(?=#)/, "");
+        html = converter.makeHtml(text);
+        $(this).find(".modal-body").html(html);
+    });
+});
+
+
 /** Return true if both JSON files contain the same keys, false otherwise.
  *  @param {Object} a - A JSON file.
  *  @param {Object} b - A JSON file.
@@ -333,19 +368,6 @@ function loadSettings(){
         throw err
     });
 }
-
-
-/** Load README.md into the help modal. */
-$("#help-modal").on("show.bs.modal", function() {
-    var converter = new showdown.Converter(),
-        str       = "",
-        html      = "";
-    $.get("README.md", function(readme) {
-        str  = readme.replace(/[\s\S]+?(?=#)/, "");
-        html = converter.makeHtml(text);
-        $(this).find(".modal-body").html(html);
-    });
-});
 
 
 /**
