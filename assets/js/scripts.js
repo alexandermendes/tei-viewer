@@ -68,7 +68,7 @@ function showView(view) {
  */
 function preformatXml(xml, id) {
     var xmlStr = xml.replace(/<\?xml.*?\?>/g, ""),
-        xmlStr = xml.replace(/<TEI>/g, "<TEI id=" + id + ">");
+        xmlStr = xml.replace(/<TEI/g, '<TEI id="' + id + '"');
     return xmlStr;
 }
 
@@ -194,11 +194,17 @@ function loadXMLDoc(xmlStr) {
 
 /** Clear selected rows. */
 $( "#clear-selected" ).click(function(evt) {
+    var pending = $('#tei-view table tr[selected]').length;
     evt.preventDefault();
     showView("loading");
-    $('#tei-view table tr[selected]').remove();
-    currentPage = 0;
-    refreshView();
+    $('#tei-view table tr[selected]').each(function() {
+        server.tei.remove(parseInt($(this).context.id)).then(function(key) {
+            --pending
+            if (pending == 0) {
+                refreshView();
+            }
+        });
+    });
 });
 
 

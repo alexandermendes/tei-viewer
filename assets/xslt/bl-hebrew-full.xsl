@@ -56,6 +56,9 @@
 
     <xsl:template match="tei:TEI">
         <tr>
+            <xsl:attribute name="id">
+                <xsl:value-of select=".//@id" />
+            </xsl:attribute>
             <xsl:apply-templates select=".//tei:msDesc/tei:msIdentifier"/>
             <xsl:apply-templates select=".//tei:msDesc/tei:msContents"/>
             <xsl:call-template name="scribes"/>
