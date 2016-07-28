@@ -1,21 +1,17 @@
-// TEI table js
+/**
+ * Represents a TEI table.
+ * @constructor
+ * @param {object} container - The container for the table.
+ */
+function TeiTable(container) {
 
-function TeiTable() {
-
-    var XSLTProc    = {},
-        hiddenCols  = [];
+    var tableContainer = container,
+        XSLTProc      = {},
+        hiddenCols    = [];
 
     /** Populate the hide and show menus. */
     function _populateMenus() {
-
-        // Get heading, index and visibility for each column
-        var columns = []
-        $('table thead th').each(function(i) {
-            var h = {'heading': $(this).html(),
-                     'visible': hiddenCols.indexOf(i) == -1,
-                     'index': i}
-            columns.push(h);
-        });
+        var columns = [];
 
         /** Render menu with placeholder. */
         function renderPlaceholder(id) {
@@ -43,6 +39,13 @@ function TeiTable() {
             return (!this.visible) ? "show-column" : "show-column hidden";
         }
 
+        // Get heading, index and visibility for each column
+        tableContainer.find('table thead th').each(function(i) {
+            columns.push({'heading': $(this).html(),
+                         'visible': hiddenCols.indexOf(i) == -1,
+                         'index': i});
+        });
+
         // Render the hide menu or a placeholder
         if (hiddenCols.length !== $('table th').length) {
             renderMenu('hide', getHideCls)
@@ -64,18 +67,19 @@ function TeiTable() {
      * @param {number} firstIndex - Index from which to start row numbering.
      */
     function _addIndexColumn(firstIndex) {
-        $('table thead tr th').eq(0).before('<th class="index-column">#</th>');
-        $('table tbody').find('tr').each(function(i){
-            var index = firstIndex + i + 1;
+        tableContainer.find('table thead tr th')
+                     .eq(0)
+                     .before('<th class="index-column">#</th>');
+        tableContainer.find('table tbody').find('tr').each(function(i){
             $(this).find('td').eq(0).before('<td class="index-column">' +
-                                            index + '</td>');
+                                            (firstIndex + i + 1) + '</td>');
         });
     }
 
 
     /** Remove the index column from the table. */
     function _removeIndexColumn() {
-        $('table .index-column').remove();
+        tableContainer.find('table .index-column').remove();
     }
 
 
@@ -85,9 +89,9 @@ function TeiTable() {
                         {'tag': 'date', 'attr': 'calendar'}]
 
         $(tooltips).each(function(i, tooltip){
-            var attr = tooltip.attr;
-            $(tooltip.tag + '[' + attr + ']').each(function() {
-                var title = attr.capitalise()  + ': ' + $(this).attr(attr);
+            $(tooltip.tag + '[' + tooltip.attr + ']').each(function() {
+                var title = tooltip.attr.capitalise()  + ': ' +
+                            $(this).attr(tooltip.attr);
                 $(this).attr('data-toggle', 'tooltip');
                 $(this).attr('title', title);
             });
@@ -129,16 +133,20 @@ function TeiTable() {
     /** Fixes for frozen table header. */
     this.fixFrozenTable = function() {
 
+        if (!tableContainer.hasClass('fixed')) {
+            return;
+        }
+
         // Resize header cells
-        $('#tei-view.fixed tbody tr:first-child td').each(function(i) {
+        tableContainer.find('tbody tr:first-child td').each(function(i) {
             var colWidth = $(this).width();
             $('table thead tr th:nth-child(' + (i + 1) + ')').width(colWidth);
         });
 
         // Resize tbody to always show vertical scroll bar
-        var offset = $('#tei-view').scrollLeft();
-            width  = $('#tei-view').width();
-        $('#tei-view.fixed tbody').css('width', offset + width);
+        var offset = tableContainer.scrollLeft();
+            width  = tableContainer.width();
+        tableContainer.find('tbody').css('width', offset + width);
 
         // Get the width of a scroll bar.
         var $outer = $('<div>').css({
@@ -153,11 +161,11 @@ function TeiTable() {
         var scrollBarWidth = 100 - widthWithScroll;
 
         // Update height and margins of table body
-        var headerHeight = $('#tei-view thead').height(),
+        var headerHeight = tableContainer.find('thead').height(),
             footerHeight = $('footer').height(),
             offset       = 100 + scrollBarWidth + footerHeight;
-        $('#tei-view.fixed tbody').css('margin-top', headerHeight);
-        $('#tei-view.fixed tbody').css('max-height',
+        tableContainer.find('tbody').css('margin-top', headerHeight);
+        tableContainer.find('tbody').css('max-height',
                                        'calc(100vh - ' + offset + 'px)');
     }
 
@@ -170,7 +178,7 @@ function TeiTable() {
     this.populate = function(xml, firstIndex) {
         teiTable = this;
         html = XSLTProc.transformToFragment(xml, document);
-        $('#tei-view').html(html);
+        tableContainer.html(html);
         $(hiddenCols).each(function(k, v) {
             teiTable.hideColumn(v);
         });
@@ -227,9 +235,9 @@ function TeiTable() {
      */
     this.freezeHeader = function(bool) {
         if (bool) {
-            $('#tei-view').addClass('fixed');
+            tableContainer.addClass('fixed');
         } else {
-            $('#tei-view').removeClass('fixed');
+            tableContainer.removeClass('fixed');
         }
     }
 

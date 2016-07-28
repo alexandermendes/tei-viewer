@@ -149,21 +149,23 @@ function showAlert(msg, type) {
 }
 
 
-/** Setup an XSLT processor. */
-function setupXSLTProcessor() {
-    var tableXSLT = $('#select-xslt').val();
+/**
+ * Create a new TEI table and setup it's XSLT processor.
+ * @param {object} container - The container for the table.
+ */
+function createTeiTable(container) {
+    var tableXSLT = $('#select-xslt').val(),
+        table     = new TeiTable(container);
     return Promise.resolve($.ajax({
         url: "assets/xslt/" + tableXSLT
     })).then(function(data) {
         XSLTProc = new XSLTProcessor();
         XSLTProc.importStylesheet(data);
-        teiTable = new TeiTable();
-        teiTable.updateXSLTProc(XSLTProc)
+        table.updateXSLTProc(XSLTProc);
+        return table;
     }).catch(function() {
         showAlert('XSLT file ' + tableXSLT + ' could not be loaded, try \
                   reverting to default settings.', 'danger');
-    }).then(function() {
-        refreshView();
     });
 }
 
@@ -183,7 +185,7 @@ function parseXML(xmlStr) {
 
 
 /**
- * PCheck if an XML document contains a parse error.
+ * Check if an XML document contains a parse error.
  * @param {string} xmlDoc - The XML string.
  */
 function isParseError(xmlDoc) {
@@ -195,6 +197,59 @@ function isParseError(xmlDoc) {
     }
     return xmlDoc.getElementsByTagNameNS(ns, 'parsererror').length > 0;
 };
+
+
+/**
+ * Return a row as a comma seperated string.
+ * @param {object} rowElem - The row element.
+ */
+function getCommaSeperatedRow(rowElem) {
+    var row = [];
+    rowElem.find('th,td').each(function () {
+        var val = $(this)[0].innerText;
+        row.push('"' + val.replace(/"/g, '""') + '"');
+    });
+    return row.join(',');
+}
+
+
+/**
+ * Export a table to CSV.
+ * @param {object} tableElem - The table element.
+ */
+function exportTableToCSV(tableElem) {
+    var rows        = [],
+        csvFile     = {};
+        contentType = 'text/csv',
+        link        = document.createElement("a");
+
+    $(tableElem).find('tr').each(function() {
+        rows.push(getCommaSeperatedRow($(this)));
+    });
+
+    csvFile = new Blob([rows.join("\n")], {type: contentType});
+
+    link.download = 'tei-data.csv';
+    link.href = window.URL.createObjectURL(csvFile);
+    link.textContent = 'Download CSV';
+    link.dataset.downloadurl = [contentType, link.download, link.href].join(':');
+    link.click();
+}
+
+
+/**
+ * Convert a URL to a Blob.
+ * @param {string} url - The URL.
+ */
+function dataURLtoBlob(url) {
+    var arr  = url.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+}
 
 
 /** Clear selected rows. */
@@ -226,38 +281,43 @@ $( "#clear-all" ).click(function(evt) {
 
 
 /** Export the table to CSV. */
-$( "#csv-export" ).click(function() {
+$( "#csv-export" ).click(function(evt) {
+    var div    = $('<div></div>'),
+        xmlDoc = {},
+        table  = {};
+    evt.preventDefault();
+    showView('loading');
+    createTeiTable(div).then(function(t){
+        table = t;
+        server.tei.query().all().execute().then(function (data) {
+            setTimeout(function() {
+                xmlDoc = mergeXMLDocs(data);
 
-    // Return an escaped CSV string
-    function formatCSV(str) {
-        return '"' + str.replace(/"/g, '""') + '"';
-    }
+                setTimeout(function() {
+                    table.populate(xmlDoc, 0);
 
-    // Get table rows
-    var rows = [];
-    $('table tr').each(function() {
-        var row = [];
-        $(this).find('th,td').each(function () {
-            var val = $(this)[0].innerText;
-            row.push(formatCSV(val));
+                    setTimeout(function() {
+                        exportTableToCSV(div.find('table'));
+                    }, 100);
+
+                }, 100);
+
+            }, 100);
+        }).catch(function (err) {
+            showAlert(err, 'danger');
+            throw err;
+        }).then(function(table){
+            refreshView();
         });
-        rows.push(row.join(','));
     });
-
-    var csvString = rows.join("\n");
-    var encodedUri = encodeURI('data:attachment/csv;charset=utf-8,\uFEFF' + csvString);
-    var link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "tei_data.csv");
-    link.click();
 });
 
 
 /** Reset to default settings. */
-$( "#reset-settings" ).click(function() {
+$( "#reset-settings" ).click(function(evt) {
+    var settings = Cookies.getJSON('settings');
     evt.preventDefault();
     showView("loading");
-    var settings = Cookies.getJSON('settings');
     $('#settings-modal').modal('hide');
     loadSettings();
     showAlert('All settings have been reset to their defaults.', 'info');
@@ -265,9 +325,10 @@ $( "#reset-settings" ).click(function() {
 
 
 /** Handle change of XSLT setting. */
-$( "#select-xslt" ).change(function() {
+$( "#select-xslt" ).change(function(evt) {
     var settings    = Cookies.getJSON('settings'),
         defaultXSLT = $('#select-xslt').val();
+    evt.preventDefault();
     $.each(settings.xslt, function(index, value) {
         if (value.filename == defaultXSLT) {
             value['default'] = true;
@@ -277,14 +338,18 @@ $( "#select-xslt" ).change(function() {
     });
     Cookies.set('settings', settings);
     $('#settings-modal').modal('hide');
-    setupXSLTProcessor();
+    createTeiTable($('#tei-view')).then(function(table){
+        teiTable = table;
+        refreshView();
+    });
 });
 
 
 /** Handle change of show tooltips setting. */
-$( "#show-tooltips" ).change('click', function() {
+$( "#show-tooltips" ).change('click', function(evt) {
     var settings = Cookies.getJSON('settings'),
         showTips = $('#show-tooltips').val() == 'True';
+    evt.preventDefault();
     settings.showTooltips = showTips;
     Cookies.set('settings', settings);
     $('#settings-modal').modal('hide');
@@ -293,9 +358,10 @@ $( "#show-tooltips" ).change('click', function() {
 
 
 /** Handle change of show borders setting. */
-$( "#show-borders" ).change('click', function() {
+$( "#show-borders" ).change('click', function(evt) {
     var settings    = Cookies.getJSON('settings'),
         showBorders = $('#show-borders').val() == 'True';
+    evt.preventDefault();
     settings.showBorders = showBorders;
     Cookies.set('settings', settings);
     $('#settings-modal').modal('hide');
@@ -304,9 +370,10 @@ $( "#show-borders" ).change('click', function() {
 
 
 /** Handle change of freeze header setting. */
-$( "#freeze-header" ).change('click', function() {
+$( "#freeze-header" ).change('click', function(evt) {
     var settings     = Cookies.getJSON('settings'),
         freezeHeader = $('#freeze-header').val() == 'True';
+    evt.preventDefault();
     settings.freezeHeader = freezeHeader;
     Cookies.set('settings', settings);
     $('#settings-modal').modal('hide');
@@ -316,10 +383,10 @@ $( "#freeze-header" ).change('click', function() {
 
 /** Handle change of records per page setting. */
 $( "#n-records" ).change('click', function(evt) {
-    evt.preventDefault();
-    showView("loading");
     var settings       = Cookies.getJSON('settings'),
         recordsPerPage = parseInt($('#n-records').val());
+    evt.preventDefault();
+    showView("loading");
     settings.recordsPerPage = recordsPerPage;
     Cookies.set('settings', settings);
     $('#settings-modal').modal('hide');
@@ -375,7 +442,10 @@ function loadSettings(){
         $('#freeze-header').val(settings.freezeHeader.toCapsString());
         $('#n-records').val(settings.recordsPerPage);
         $('.selectpicker').selectpicker('refresh');
-        setupXSLTProcessor();
+        createTeiTable($('#tei-view')).then(function(table){
+            teiTable = table;
+            refreshView();
+        });
     }).fail(function(err) {
         showAlert(err, 'danger');
         throw err
