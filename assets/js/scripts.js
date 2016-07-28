@@ -1,6 +1,8 @@
-var teiTable = {};
-var server = {};
+var teiTable;
+var server;
+var lastSelected;
 var currentPage = 0;
+
 
 // Database options
 var dbOptions = {
@@ -199,15 +201,17 @@ function isParseError(xmlDoc) {
 $( "#clear-selected" ).click(function(evt) {
     var pending = $('#tei-view table tr[selected]').length;
     evt.preventDefault();
-    showView("loading");
-    $('#tei-view table tr[selected]').each(function() {
-        server.tei.remove(parseInt($(this).context.id)).then(function(key) {
-            --pending
-            if (pending == 0) {
-                refreshView();
-            }
+    if (pending > 0) {
+        showView("loading");
+        $('#tei-view table tr[selected]').each(function() {
+            server.tei.remove(parseInt($(this).context.id)).then(function(key) {
+                --pending
+                if (pending == 0) {
+                    refreshView();
+                }
+            });
         });
-    });
+    }
 });
 
 
@@ -493,13 +497,55 @@ $('#upload-view').on('drag dragstart dragend \
 
 /** Select or deselect table row on click event. */
 $("#tei-view").on('click', 'tr:not(a)', function(evt) {
-    if (evt.target.nodeName != "A" &&
-        typeof($(this).attr('selected')) === 'undefined') {
-            $(this).find('td').css('background-color', '#eee');
-            $(this).attr('selected', 'true');
+    var selected     = $('#tei-view table tbody tr[selected]'),
+        thisSelected = typeof($(this).attr('selected')) !== 'undefined';
+
+    if (evt.target.nodeName === "A") {
+        return;
+    }
+
+    // Select a row
+    function select(elem) {
+        elem.find('td:not(.index-column)').css('background-color', '#eee');
+        elem.attr('selected', 'true');
+        lastSelected = elem;
+    }
+
+    // Deselect a row
+    function deselect(elem) {
+        elem.find('td:not(.index-column)').css('background-color', '#fff');
+        elem.removeAttr('selected');
+    }
+
+    if (evt.shiftKey) {
+        if (!lastSelected) {
+            lastSelected = $('#tei-view table tbody tr').first();
+        }
+        if (lastSelected.index() < $(this).index()) {
+            $(lastSelected.nextUntil(this).andSelf().add(this)).each (function() {
+                select($(this));
+            });
+        } else {
+            $($(this).nextUntil(lastSelected).andSelf().add(lastSelected)).each (function() {
+                select($(this));
+            });
+        }
+    } else if(evt.ctrlKey || evt.metaKey) {
+        if (thisSelected) {
+            deselect($(this));
+        } else {
+            select($(this));
+        }
     } else {
-        $(this).find('td').css('background-color', '#fff');
-        $(this).removeAttr('selected');
+        selected.each(function() {
+            deselect($(this));
+        });
+        if (!thisSelected) {
+            select($(this));
+        }
+    }
+    if ($('#tei-view table tbody tr[selected]').length < 1) {
+        lastSelected = null;
     }
 });
 
