@@ -11,7 +11,8 @@
          "default":false
       }
    ],
-   "uniqueFilenames":false,
    "freezeHeader":true,
-   "showBorders":true
+   "showBorders":true,
+   "showTooltips": true,
+   "recordsPerPage": 50
 }

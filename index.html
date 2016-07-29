@@ -10,8 +10,9 @@
         <link rel="stylesheet" href="assets/vendor/bootstrap-3.3.6/css/bootstrap.min.css" media="all">
         <link rel="stylesheet" href="assets/vendor/bootstrap-select-1.10.0/css/bootstrap-select.min.css" media="screen">
         <link rel="stylesheet" href="assets/vendor/animate.min.css" media="screen">
+            <link rel="stylesheet" href="assets/vendor/codemirror/codemirror.css" media="screen">
         <link rel="stylesheet" href="assets/vendor/font-awesome-4.6.3/css/font-awesome.min.css" media="screen">
-        <link rel="stylesheet" href="assets/css/styles.css?v=1.7" media="all">
+        <link rel="stylesheet" href="assets/css/styles.css?v=1.1.3" media="all">
         <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -29,7 +30,7 @@
             </div>
 
             <div class="collapse navbar-collapse" id="main-navbar">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav" id="tei-view-menu">
                     <li>
                         <form class="navbar-form upload-form" method="post" action="" enctype="multipart/form-data">
                             <span class="btn btn-success btn-file">
@@ -50,31 +51,19 @@
                         <ul class="dropdown-menu" id="show-menu"></ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Borders
+                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Clear
                             <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu" id="borders-menu">
-                            <li><a href="#" id="show-borders">Show</a></li>
-                            <li><a href="#" id="hide-borders">Hide</a></li>
+                        <ul class="dropdown-menu" id="clear-menu">
+                            <li><a href="#" id="clear-selected">Selected Rows</a></li>
+                            <li><a href="#" id="clear-all">All Rows</a></li>
                         </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Header
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" id="header-menu">
-                            <li><a href="#" id="freeze-header">Freeze</a></li>
-                            <li><a href="#" id="unfreeze-header">Unfreeze</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" id="clear-views">Clear</a>
-                    </li>
-                    <li>
-                        <a href="#" onclick="window.print()">Print</a>
                     </li>
                     <li>
                         <a href="#" id="csv-export">Export</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="window.print()">Print</a>
                     </li>
                     <li>
                         <a href="#" data-toggle="modal" data-target="#settings-modal">Settings</a>
@@ -83,11 +72,28 @@
                         <a href="#" data-toggle="modal" data-target="#help-modal" data-remote="false">Help</a>
                     </li>
                 </ul>
+                <ul class="nav navbar-nav" id="xml-view-menu" style="display: none;">
+                    <li>
+                        <p class="navbar-btn">
+                            <a href="#" class="btn btn-default" id="xml-cancel">Cancel</a>
+                        </p>
+                    </li>
+                    <li>
+                        <p class="navbar-btn">
+                            <a href="#" class="btn btn-success" id="xml-save">Save</a>
+                        </p>
+                    </li>
+                    <li>
+                        <p class="navbar-btn">
+                            <a href="#" class="btn btn-info" id="xml-download">Download</a>
+                        </p>
+                    </li>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="https://github.com/alexandermendes/tei-viewer" id="gh-link">
-                            <span class="visible-md visible-lg fa fa-github fa-2x"></span>
-                            <span class="visible-xs visible-sm">View on GitHub</span>
+                            <span class="hidden-xs fa fa-github fa-2x"></span>
+                            <span class="visible-xs">View on GitHub</span>
                         </a>
                     </li>
                 </ul>
@@ -99,35 +105,34 @@
                 <!-- Alerts loaded here -->
             </div>
 
-            <div id="table-view">
-                <form class="upload-box has-advanced-upload upload-form" method="post" action="" enctype="multipart/form-data">
-                    <div class="upload-box-input">
-                        <span class="fa fa-download fa-3x"></span>
-                        <br>
-                        <span class="btn-file">
-                            <strong>Choose a file</strong>
-                            <input type="file" class="upload-box-file add-files" name="files[]" accept=".xml" multiple>
-                            <span class="uploadbox-dragndrop"> or drag it here</span>
-                        </span>
-                    </div>
-                    <div class="upload-box-uploading">Uploading&hellip;</div>
-                    <div class="upload-box-success">Done!</div>
-                    <div class="upload-box-error">Error! <span></span>.</div>
-                </form>
-                <div id="tei-table" style="display: none;">
-                    <!-- TEI data loaded here -->
+            <form id="upload-view" class="upload-form view" method="post" action="" enctype="multipart/form-data">
+                <div class="upload-box-input">
+                    <span class="fa fa-download fa-3x"></span>
+                    <br>
+                    <span class="btn-file">
+                        <strong>Choose a file</strong>
+                        <input type="file" class="add-files" name="files[]" accept=".xml" multiple>
+                        <span class="dragndrop"> or drag it here</span>
+                    </span>
                 </div>
+            </form>
+            <div id="tei-view" class="view" style="display: none;">
+                <!-- TEI data loaded here -->
+            </div>
+            <div id="xml-view" class="view" style="display: none;">
+                <span id="record-id"></span>
+                <textarea id="xml-textarea">
+                     <!-- XML editor loaded here -->
+                </textarea>
+            </div>
+            <div id="loading-view" class="view" style="display: none;">
+                <span class="fa fa-refresh fa-spin fa-4x"></span>
             </div>
         </main>
 
         <footer class="hidden-print">
-            <div class="col-sm-9">
-            </div>
-
-            <div class="col-sm-3 text-right">
-                <span id="loading-icon" class="fa fa-refresh fa-spin"></span>
-                <small><span id="files-uploaded"></span></small>
-            </div>
+            <span id="pagination-text"></span>
+            <div id="page-selection"></div>
         </footer>
 
         <!-- Settings modal -->
@@ -145,24 +150,43 @@
                                 <select class="selectpicker select-xslt form-control" id="select-xslt"></select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="unique-fn">Unique Filenames</label>
-                                <select class="selectpicker form-control" id="unique-fn" disabled>
+                                <label class="control-label" for="show-tooltips">Show Tooltips:</label>
+                                <select class="selectpicker form-control" id="show-tooltips">
                                     <option>True</option>
                                     <option>False</option>
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label class="control-label" for="show-borders">Show Borders:</label>
+                                <select class="selectpicker form-control" id="show-borders">
+                                    <option>True</option>
+                                    <option>False</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="freeze-header">Freeze Header:</label>
+                                <select class="selectpicker form-control" id="freeze-header">
+                                    <option>True</option>
+                                    <option>False</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="n-records">Records Per Page:</label>
+                                <select class="selectpicker form-control" id="n-records">
+                                    <option>10</option>
+                                    <option>25</option>
+                                    <option>50</option>
+                                    <option>100</option>
+                                    <option>250</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <div class="text-right">
-                                    <button type="button" class="btn btn-default" id="reset-settings" disabled>Reset Settings</button>
+                                    <button type="button" class="btn btn-default" id="reset-settings">Reset Settings</button>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <div id="disabled-settings-msg" class="modal-footer">
-                        <div class="text-center">
-                            <p><strong>Note:</strong> Some settings are disabled while XML files are loaded.</p>
-                        </div>
-                        </div>
                 </div>
             </div>
         </div>
@@ -189,8 +213,12 @@
         <script src="assets/vendor/mustache.min.js"></script>
         <script src="assets/vendor/js.cookie-2.1.1.min.js"></script>
         <script src="assets/vendor/showdown.min.js"></script>
-        <script src="assets/js/table.js"></script>
-        <script src="assets/js/scripts.js"></script>
+        <script src='assets/vendor/db.js'></script>
+        <script src='assets/vendor/jquery.bootpag.min.js'></script>
+        <script src='assets/vendor/codemirror/codemirror.js'></script>
+        <script src='assets/vendor/codemirror/xml.js'></script>
+        <script src="assets/js/table.js?v=1.2.0"></script>
+        <script src="assets/js/scripts.js?v=1.2.0"></script>
 
         <!-- Mustache templates -->
         <script id="xslt-options-template" type="text/html">
@@ -198,22 +226,40 @@
                 <option value="{{ filename }}" {{#default}}selected{{/default}}>{{ label }}</option>
             {{ /options }}
         </script>
+
         <script id="alert-template" type="text/html">
-            <div class="alert alert-{{ type }} animated bounceInRight" role="alert">
+            <div class="alert alert-{{ type }} animated fadeIn" role="alert">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong class="text-capitalize">{{ type }}:</strong> {{ msg }}
+                {{#error}}<strong class="text-capitalize">{{ type }}: </strong>{{/error}}{{ msg }}
             </div>
         </script>
         <script id="table-menu-ph-template" type="text/html">
-            <option value="" class="text-center" selected disabled>{{ label }}</option>
+            <option value="" class="text-center" selected disabled>{{ heading }}</option>
         </script>
+
         <script id="link-template" type="text/html">
             <a href="{{ url }}" target="_blank">{{ text }}</a>
         </script>
+
         <script id="table-menu-template" type="text/html">
-            {{ #headings }}
-                <li><a href="#" class="{{ cls }}" data-index="{{ index }}">{{ label }}</a></li>
-            {{ /headings }}
+            {{ #columns }}
+                <li><a href="#" class="{{ cls }}" data-index="{{ index }}">{{ heading }}</a></li>
+            {{ /columns }}
         </script>
+
+        <script id="pagination-template" type="text/html">
+            <a href="#" class="show-page" data-page="{{ page }}">{{ page }}</a>
+        </script>
+
+        <script id="index-template" type="text/html">
+            <td class="index-column">{{ index }}
+                <p>
+                    <a href="#" class="show-xml">
+                        <span class="fa fa-code"></span>
+                    </a>
+                </p>
+            </td>
+        </script>
+
     </body>
 </html>

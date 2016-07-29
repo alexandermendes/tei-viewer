@@ -1,29 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0">
+<xsl:import href="assets/xslt/helpers.xsl" />
 <xsl:output method="html" />
-
-    <xsl:template name="multiValue">
-        <xsl:param name="values"/>
-        <xsl:for-each select="$values">
-            <xsl:if test="string-length(.) &gt; 0">
-                <xsl:value-of select="normalize-space(.)"/>
-                <xsl:if test="position() != last()">
-                    <br />
-                </xsl:if>
-            </xsl:if>
-        </xsl:for-each>
-    </xsl:template>
-
-    <xsl:template name="recursiveCopy">
-        <xsl:param name="root"/>
-        <xsl:for-each select="$root">
-            <xsl:for-each select=".">
-                <xsl:element name="{name()}">
-                    <xsl:copy-of select="@*|node()" />
-                </xsl:element>
-            </xsl:for-each>
-        </xsl:for-each>
-    </xsl:template>
 
     <xsl:template match="MERGED-TEI">
         <table class="table">
@@ -43,9 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                <xsl:apply-templates select="tei:TEI">
-                    <xsl:sort select=".//tei:msDesc/tei:msIdentifier/tei:idno"/>
-                </xsl:apply-templates>
+                <xsl:apply-templates select="tei:TEI" />
             </tbody>
         </table>
 
@@ -58,6 +34,9 @@
 
     <xsl:template match="tei:TEI">
         <tr>
+            <xsl:attribute name="id">
+                <xsl:value-of select=".//@id" />
+            </xsl:attribute>
             <xsl:apply-templates select=".//tei:msDesc/tei:msIdentifier"/>
             <xsl:apply-templates select=".//tei:msDesc/tei:msContents"/>
             <xsl:call-template name="scribes"/>
@@ -76,13 +55,15 @@
 
     <xsl:template match="tei:msContents">
         <td>  <!-- 2: Title -->
-            <xsl:call-template name="multiValue">
-                <xsl:with-param name="values" select="tei:msItem[1]/tei:title" />
+            <xsl:call-template name="recursiveCopy">
+                <xsl:with-param name="root" select="tei:msItem[1]/tei:title" />
+                <xsl:with-param name="break-lines" select="true()" />
             </xsl:call-template>
         </td>
         <td>  <!-- 3: Authors -->
-            <xsl:call-template name="multiValue">
-                <xsl:with-param name="values" select="tei:msItem[1]/tei:author/tei:persName" />
+            <xsl:call-template name="recursiveCopy">
+                <xsl:with-param name="root" select="tei:msItem[1]/tei:author/tei:persName" />
+                <xsl:with-param name="break-lines" select="true()" />
             </xsl:call-template>
         </td>
         <td>  <!-- 4: Contents -->
@@ -99,8 +80,9 @@
 
     <xsl:template name="scribes">
         <td>  <!-- 6: Scribes -->
-            <xsl:call-template name="multiValue">
-                <xsl:with-param name="values" select=".//*/tei:name[@type='person' and @role='scribe']" />
+            <xsl:call-template name="recursiveCopy">
+                <xsl:with-param name="root" select=".//*/tei:name[@type='person' and @role='scribe']" />
+                <xsl:with-param name="break-lines" select="true()" />
             </xsl:call-template>
         </td>
     </xsl:template>
