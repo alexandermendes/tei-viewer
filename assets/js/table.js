@@ -6,8 +6,9 @@
 function TeiTable(container) {
 
     var tableContainer = container,
-        XSLTProc      = {},
-        hiddenCols    = [];
+        XSLTProc       = {},
+        hiddenCols     = [],
+        teiTable       = this;
 
     /** Populate the hide and show menus. */
     function _populateMenus() {
@@ -177,7 +178,6 @@ function TeiTable(container) {
      * @param {number} firstIndex - Index from which to start row numbering.
      */
     this.populate = function(xml, firstIndex) {
-        teiTable = this;
         html = XSLTProc.transformToFragment(xml, document);
         tableContainer.html(html);
         $(hiddenCols).each(function(k, v) {
