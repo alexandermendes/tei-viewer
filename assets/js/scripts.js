@@ -24,6 +24,7 @@ var dbOptions = {
 function uploadFiles(files) {
     showView('loading');
     var pending = files.length,
+        total   = pending,
         reader  = {};
 
     for (var i = 0, f; f = files[i]; i++) {
@@ -45,6 +46,8 @@ function uploadFiles(files) {
                 --pending
                 if (pending == 0) {
                     $('.upload-form').trigger("reset");
+                    showAlert(total + ' file' + (total == 1 ? '' : 's') +
+                              ' added.', 'success', true)
                     refreshView();
                 }
             };
@@ -153,11 +156,15 @@ function applySettings() {
  */
 function showAlert(msg, type, fadeOut) {
     var template = $("#alert-template").html();
-        rendered = Mustache.render(template, {msg: msg, type: type});
+        rendered = Mustache.render(template, {msg: msg, type: type,
+                                   error: type == 'danger'});
     $("#alerts").html(rendered);
     if (fadeOut) {
         setTimeout(function() {
             $("#alerts .alert").addClass('fadeOut');
+            setTimeout(function() {
+                $("#alerts").html('');
+            }, 1000);
         }, 2000);
     }
 }
@@ -308,7 +315,8 @@ $("#xml-download").click(function(evt) {
 
 /** Clear selected rows. */
 $("#clear-selected").click(function(evt) {
-    var pending = $('#tei-view table tr[selected]').length;
+    var pending = $('#tei-view table tr[selected]').length,
+        total   = pending;
     evt.preventDefault();
     if (pending > 0) {
         showView("loading");
@@ -316,6 +324,8 @@ $("#clear-selected").click(function(evt) {
             server.tei.remove(parseInt($(this).context.id)).then(function(key) {
                 --pending
                 if (pending == 0) {
+                    showAlert(total + ' row' + (total == 1 ? '' : 's') +
+                              ' deleted.', 'info', true)
                     refreshView();
                 }
             });
@@ -341,6 +351,7 @@ $("#csv-export").click(function(evt) {
         table  = {};
     evt.preventDefault();
     showView('loading');
+    showAlert('Preparing export...', 'info', true);
     createTeiTable(div).then(function(t){
         table = t;
         server.tei.query().all().execute().then(function (data) {
