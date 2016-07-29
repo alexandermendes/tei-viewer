@@ -67,12 +67,13 @@ function TeiTable(container) {
      * @param {number} firstIndex - Index from which to start row numbering.
      */
     function _addIndexColumn(firstIndex) {
-        tableContainer.find('table thead tr th')
-                     .eq(0)
-                     .before('<th class="index-column">#</th>');
+        var tableHeader = tableContainer.find('table thead tr th').eq(0),
+            template    = $("#index-template").html(),
+            rendered    = {};
+        tableHeader.before('<th class="index-column">#</th>');
         tableContainer.find('table tbody').find('tr').each(function(i){
-            $(this).find('td').eq(0).before('<td class="index-column">' +
-                                            (firstIndex + i + 1) + '</td>');
+            rendered = Mustache.render(template, {index: firstIndex + i + 1});
+            $(this).find('td').eq(0).before(rendered);
         });
     }
 

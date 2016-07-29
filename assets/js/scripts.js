@@ -1,6 +1,7 @@
 var teiTable;
 var server;
 var lastSelected;
+var codeEditor;
 var currentPage = 0;
 
 
@@ -33,9 +34,9 @@ function uploadFiles(files) {
         reader = new FileReader();
         reader.onload = (function(theFile) {
             return function(evt) {
-
                 server.tei.add({
-                    xml: evt.target.result
+                    xml: evt.target.result,
+                    filename: theFile.name
                 }).catch(function (err) {
                     showAlert(err, 'danger');
                     throw err
@@ -60,6 +61,13 @@ function uploadFiles(files) {
 function showView(view) {
     $('.view').hide();
     $('#' + view + '-view').show();
+    if (view === 'xml') {
+        $('#xml-view-menu').show();
+        $('#tei-view-menu').hide();
+    } else {
+        $('#tei-view-menu').show();
+        $('#xml-view-menu').hide();
+    }
 }
 
 
@@ -141,11 +149,17 @@ function applySettings() {
  * Display a Bootstrap alert.
  * @param {string} msg - The message.
  * @param {string} type - The type of the message.
+ * @param {number} fadeOut - If true, fade out after 3 seconds.
  */
-function showAlert(msg, type) {
+function showAlert(msg, type, fadeOut) {
     var template = $("#alert-template").html();
         rendered = Mustache.render(template, {msg: msg, type: type});
     $("#alerts").html(rendered);
+    if (fadeOut) {
+        setTimeout(function() {
+            $("#alerts .alert").addClass('fadeOut');
+        }, 2000);
+    }
 }
 
 
@@ -231,7 +245,6 @@ function exportTableToCSV(tableElem) {
 
     link.download = 'tei-data.csv';
     link.href = window.URL.createObjectURL(csvFile);
-    link.textContent = 'Download CSV';
     link.dataset.downloadurl = [contentType, link.download, link.href].join(':');
     link.click();
 }
@@ -252,8 +265,49 @@ function dataURLtoBlob(url) {
 }
 
 
+/** Handle XML cancel button event */
+$("#xml-cancel").click(function(evt) {
+    showView('tei');
+    evt.preventDefault();
+});
+
+
+/** Handle XML save button event */
+$("#xml-save").click(function(evt) {
+    var recordID = parseInt($('#record-id').html());
+    evt.preventDefault();
+    server.tei.get(recordID).then(function(result) {
+        result.xml = codeEditor.getValue();
+        server.tei.update(result).then(function(data){
+            showView('loading');
+            refreshView();
+            showAlert('Record updated!', 'success', true)
+        }).catch(function (err) {
+            showAlert(err, 'danger');
+            throw err
+        });
+    });
+});
+
+
+/** Handle XML download button event */
+$("#xml-download").click(function(evt) {
+    evt.preventDefault();
+    var contentType = 'application/xml',
+        link        = document.createElement("a"),
+        xmlFile     = {};
+    server.tei.get(recordID).then(function(result) {
+        xmlFile     = new Blob([codeEditor.getValue()], {type: contentType});
+        link.download = result.filename;
+        link.href = window.URL.createObjectURL(xmlFile);
+        link.dataset.downloadurl = [contentType, link.download, link.href].join(':');
+        link.click();
+    });
+});
+
+
 /** Clear selected rows. */
-$( "#clear-selected" ).click(function(evt) {
+$("#clear-selected").click(function(evt) {
     var pending = $('#tei-view table tr[selected]').length;
     evt.preventDefault();
     if (pending > 0) {
@@ -271,7 +325,7 @@ $( "#clear-selected" ).click(function(evt) {
 
 
 /** Clear all rows. */
-$( "#clear-all" ).click(function(evt) {
+$("#clear-all").click(function(evt) {
     evt.preventDefault();
     showView("loading");
     currentPage = 0;
@@ -281,7 +335,7 @@ $( "#clear-all" ).click(function(evt) {
 
 
 /** Export the table to CSV. */
-$( "#csv-export" ).click(function(evt) {
+$("#csv-export").click(function(evt) {
     var div    = $('<div></div>'),
         xmlDoc = {},
         table  = {};
@@ -314,7 +368,7 @@ $( "#csv-export" ).click(function(evt) {
 
 
 /** Reset to default settings. */
-$( "#reset-settings" ).click(function(evt) {
+$("#reset-settings").click(function(evt) {
     var settings = Cookies.getJSON('settings');
     evt.preventDefault();
     showView("loading");
@@ -325,7 +379,7 @@ $( "#reset-settings" ).click(function(evt) {
 
 
 /** Handle change of XSLT setting. */
-$( "#select-xslt" ).change(function(evt) {
+$("#select-xslt").change(function(evt) {
     var settings    = Cookies.getJSON('settings'),
         defaultXSLT = $('#select-xslt').val();
     evt.preventDefault();
@@ -346,7 +400,7 @@ $( "#select-xslt" ).change(function(evt) {
 
 
 /** Handle change of show tooltips setting. */
-$( "#show-tooltips" ).change('click', function(evt) {
+$("#show-tooltips").change('click', function(evt) {
     var settings = Cookies.getJSON('settings'),
         showTips = $('#show-tooltips').val() == 'True';
     evt.preventDefault();
@@ -358,7 +412,7 @@ $( "#show-tooltips" ).change('click', function(evt) {
 
 
 /** Handle change of show borders setting. */
-$( "#show-borders" ).change('click', function(evt) {
+$("#show-borders").change('click', function(evt) {
     var settings    = Cookies.getJSON('settings'),
         showBorders = $('#show-borders').val() == 'True';
     evt.preventDefault();
@@ -370,7 +424,7 @@ $( "#show-borders" ).change('click', function(evt) {
 
 
 /** Handle change of freeze header setting. */
-$( "#freeze-header" ).change('click', function(evt) {
+$("#freeze-header").change('click', function(evt) {
     var settings     = Cookies.getJSON('settings'),
         freezeHeader = $('#freeze-header').val() == 'True';
     evt.preventDefault();
@@ -382,7 +436,7 @@ $( "#freeze-header" ).change('click', function(evt) {
 
 
 /** Handle change of records per page setting. */
-$( "#n-records" ).change('click', function(evt) {
+$("#n-records").change('click', function(evt) {
     var settings       = Cookies.getJSON('settings'),
         recordsPerPage = parseInt($('#n-records').val());
     evt.preventDefault();
@@ -525,7 +579,7 @@ function checkHTML5Features() {
 
 
 /** Handle click event for hide column menu item. */
-$( "#hide-menu" ).on('click', '.hide-column', function(evt) {
+$("#hide-menu").on('click', '.hide-column', function(evt) {
     var index = parseInt($(this).attr('data-index'));
     evt.preventDefault();
     teiTable.hideColumn(index);
@@ -534,7 +588,7 @@ $( "#hide-menu" ).on('click', '.hide-column', function(evt) {
 
 
 /** Handle click event for show column menu item. */
-$( "#show-menu" ).on('click', '.show-column', function(evt) {
+$("#show-menu").on('click', '.show-column', function(evt) {
     var index = parseInt($(this).attr('data-index'));
     evt.preventDefault();
     teiTable.showColumn(index);
@@ -543,9 +597,31 @@ $( "#show-menu" ).on('click', '.show-column', function(evt) {
 
 
 /** Handle add files event. */
-$( ".add-files" ).change(function(evt) {
+$(".add-files").change(function(evt) {
     var files = evt.target.files;
     uploadFiles(files);
+});
+
+
+/** Handle a show XML event. */
+$("#tei-view").on('click', ".show-xml", function(evt) {
+    var recordID = parseInt($(this).parents('tr')[0].id);
+    evt.preventDefault();
+    server.tei.get(recordID).then(function(result) {
+        if (typeof(codeEditor) !== 'undefined') {
+            codeEditor.getWrapperElement().remove();
+        }
+        $('#record-id').html(result.id);
+        $('#xml-textarea').text(result.xml);
+        showView('xml');
+        codeEditor = CodeMirror.fromTextArea(document.getElementById('xml-textarea'), {
+            mode:'text/xml',
+            lineNumbers: true,
+            autofocus: true,
+            lineWrapping: true,
+            scrollbarStyle: null,
+        });
+    });
 });
 
 
@@ -569,8 +645,7 @@ $('#upload-view').on('drag dragstart dragend \
 $("#tei-view").on('click', 'tr:not(a)', function(evt) {
     var selected     = $('#tei-view table tbody tr[selected]'),
         thisSelected = typeof($(this).attr('selected')) !== 'undefined';
-
-    if (evt.target.nodeName === "A") {
+    if (evt.target.nodeName === "A" || evt.target.parentNode.nodeName == "A") {
         return;
     }
 
