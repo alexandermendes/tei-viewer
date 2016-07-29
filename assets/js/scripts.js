@@ -300,7 +300,8 @@ $("#xml-save").click(function(evt) {
 /** Handle XML download button event */
 $("#xml-download").click(function(evt) {
     evt.preventDefault();
-    var contentType = 'application/xml',
+    var recordID    = parseInt($('#record-id').html()),
+        contentType = 'application/xml',
         link        = document.createElement("a"),
         xmlFile     = {};
     server.tei.get(recordID).then(function(result) {
