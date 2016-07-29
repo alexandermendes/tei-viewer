@@ -1,22 +1,13 @@
 # tei-viewer
 
-A single page HTML5 application to display and export summaries of multiple
-TEI XML documents.
-
-Uploaded files are saved to client-side storage and transformed via XSLT to be
-displayed in table form.
+An HTML5 application for viewing TEI XML documents in table form.
 
 [Try it here](http://alexandermendes.github.io/tei-viewer/)
 
 
 ## Requirements
 
-This application requires a browser that supports HTML5 indexedDB, Promises
-and the File APIs, for example:
-
-- Chrome 45
-- Firefox 45
-- Safari 9
+The application requires a browser with HTML5 support.
 
 
 ## Toolbar
@@ -29,11 +20,11 @@ The core functionality is provided via the following toolbar buttons:
 
 - **Show:** Show table columns.
 
-- **Clear:** Remove all or selected rows.
+- **Clear:** Remove all, or selected rows.
+
+- **Export:** Export the all rows to a CSV file.
 
 - **Print:** Print the current view.
-
-- **Export:** Export the table to a CSV file.
 
 - **Settings:** View and modify the settings.
 
@@ -42,21 +33,26 @@ The core functionality is provided via the following toolbar buttons:
 
 ## Settings
 
-The following general settings are provided:
+A cookie is used to store the following general settings between uses:
 
 - **XSLT:** The XSLT script used to transform uploaded XML documents for table display.
+
+- **Show Tooltips:** Show/hide tooltips.
 
 - **Show Borders:** Show/hide table borders.
 
 - **Freeze Header:** Freeze/unfreeze the header row.
 
-- **Show Tooltips:** Show/hide tooltips.
-
 - **Records Per Page:** The maximum number of records to display on each page.
 
 - **Reset Settings:** Return to default settings.
 
-**Note:** A cookie is used to store the above settings between uses.
+
+## XML Editor
+
+Clicking the **<\>** icon in the index column of each row will take you to a code
+editor containing the original XML document. From here you can make changes that
+will be reflected in the table and download the edited copies.
 
 
 ## Running offline
