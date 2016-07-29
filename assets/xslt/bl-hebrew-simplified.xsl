@@ -21,9 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                <xsl:apply-templates select="tei:TEI">
-                    <xsl:sort select=".//tei:msDesc/tei:msIdentifier/tei:idno"/>
-                </xsl:apply-templates>
+                <xsl:apply-templates select="tei:TEI" />
             </tbody>
         </table>
 
