@@ -65,9 +65,15 @@ p.navbar-btn {
     margin: 8px 4px;
 }
 
+.CodeMirror {
+    height: 100%;
+}
+
+
 /** Views */
 
-#tei-view {
+#tei-view,
+#xml-view {
     width: 100%;
     overflow-x: auto;
     height: calc(100vh - 140px);

@@ -630,7 +630,6 @@ $("#tei-view").on('click', ".show-xml", function(evt) {
             lineNumbers: true,
             autofocus: true,
             lineWrapping: true,
-            scrollbarStyle: null,
         });
     });
 });
