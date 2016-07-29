@@ -50,7 +50,7 @@ A cookie is used to store the following general settings between uses:
 
 ## XML Editor
 
-Clicking the **<\>** icon in the index column of each row will take you to a code
+Clicking the **<\\>** icon in the index column of each row will take you to a code
 editor containing the original XML document. From here you can make changes that
 will be reflected in the table and download the edited copies.
 
