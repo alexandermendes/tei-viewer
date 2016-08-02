@@ -57,16 +57,13 @@ will be reflected in the table and download the edited copies.
 
 ## Running offline
 
-It is possible to run tei-viewer offline, however, your browser will probably
-block certain AJAX calls to the local filesystem. There are various ways around
-this, depending on your browser, but perhaps one of the simplest is to just run
-a local server.
-
 Here's an example of how to run a local instance of tei-viewer using Python 2.x:
 
 ```
 git clone https://github.com/alexandermendes/tei-viewer
 cd tei-viewer
+bower install
+cd dist
 python -m SimpleHTTPServer
 ```
 
