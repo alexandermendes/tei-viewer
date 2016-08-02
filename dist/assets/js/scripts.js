@@ -48,7 +48,7 @@ function uploadFiles(files) {
         reader.readAsText(files[i]);
     }
     $('.upload-form').trigger("reset");
-    showAlert(total + ' file' + (files.length == 1 ? '' : 's') + ' added.',
+    showAlert(files.length + ' file' + (files.length == 1 ? '' : 's') + ' added.',
               'success', true);
     refreshView();
 }
