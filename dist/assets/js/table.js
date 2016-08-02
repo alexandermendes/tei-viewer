@@ -43,8 +43,8 @@ function TeiTable(container) {
         // Get heading, index and visibility for each column
         tableContainer.find('table thead th').each(function(i) {
             columns.push({'heading': $(this).html(),
-                         'visible': hiddenCols.indexOf(i) == -1,
-                         'index': i});
+                         'visible': hiddenCols.indexOf(i + 1) == -1,
+                         'index': i + 1});
         });
 
         // Render the hide menu or a placeholder

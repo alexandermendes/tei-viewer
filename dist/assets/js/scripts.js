@@ -595,18 +595,20 @@ function checkHTML5Features() {
 
 /** Handle click event for hide column menu item. */
 $("#hide-menu").on('click', '.hide-column', function(evt) {
-    var index = parseInt($(this).attr('data-index'));
+    var index   = parseInt($(this).attr('data-index')),
+        perPage = Cookies.getJSON('settings').recordsPerPage;
     evt.preventDefault();
-    teiTable.hideColumn(index);
+    teiTable.hideColumn(index, currentPage * perPage);
     applySettings();
 });
 
 
 /** Handle click event for show column menu item. */
 $("#show-menu").on('click', '.show-column', function(evt) {
-    var index = parseInt($(this).attr('data-index'));
+    var index   = parseInt($(this).attr('data-index')),
+        perPage = Cookies.getJSON('settings').recordsPerPage;
     evt.preventDefault();
-    teiTable.showColumn(index);
+    teiTable.showColumn(index, currentPage * perPage);
     applySettings();
 });
 
