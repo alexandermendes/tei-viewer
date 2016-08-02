@@ -23,7 +23,8 @@ var dbOptions = {
  */
 function uploadFiles(files) {
     showView('loading');
-    var reader  = {};
+    var reader  = {},
+        pending = files.length;
 
     /** Save the file to the database. */
     function saveFile(theFile) {
@@ -31,6 +32,15 @@ function uploadFiles(files) {
             server.tei.add({
                 xml: evt.target.result,
                 filename: theFile.name
+            }).then(function() {
+                pending--;
+                if (pending === 0) {
+                    showAlert(files.length + ' file' +
+                              (files.length == 1 ? '' : 's') + ' added.',
+                              'success', true);
+                    $('.upload-form').trigger("reset");
+                    refreshView();
+                }
             }).catch(function (err) {
                 showAlert(err, 'danger');
                 throw err;
@@ -47,10 +57,6 @@ function uploadFiles(files) {
         reader.onload = saveFile(files[i]);
         reader.readAsText(files[i]);
     }
-    $('.upload-form').trigger("reset");
-    showAlert(files.length + ' file' + (files.length == 1 ? '' : 's') + ' added.',
-              'success', true);
-    refreshView();
 }
 
 
