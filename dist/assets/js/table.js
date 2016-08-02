@@ -49,14 +49,14 @@ function TeiTable(container) {
 
         // Render the hide menu or a placeholder
         if (hiddenCols.length !== $('table th').length) {
-            renderMenu('hide', getHideCls)
+            renderMenu('hide', getHideCls);
         } else {
             renderPlaceholder('hide');
         }
 
         // Render the show menu or a placeholder
         if (hiddenCols.length > 0) {
-            renderMenu('show', getShowCls)
+            renderMenu('show', getShowCls);
         } else {
             renderPlaceholder('show');
         }
@@ -88,7 +88,7 @@ function TeiTable(container) {
     /** Populate tooltips. */
     function _populateTooltips() {
         var tooltips = [{'tag': 'name', 'attr': 'role'},
-                        {'tag': 'date', 'attr': 'calendar'}]
+                        {'tag': 'date', 'attr': 'calendar'}];
 
         $(tooltips).each(function(i, tooltip){
             $(tooltip.tag + '[' + tooltip.attr + ']').each(function() {
@@ -113,7 +113,7 @@ function TeiTable(container) {
         _removeIndexColumn();
         _populateMenus();
         _addIndexColumn(firstIndex);
-    }
+    };
 
 
     /**
@@ -129,7 +129,7 @@ function TeiTable(container) {
         _removeIndexColumn();
         _populateMenus();
         _addIndexColumn(firstIndex);
-    }
+    };
 
 
     /** Fixes for frozen table header. */
@@ -164,12 +164,12 @@ function TeiTable(container) {
 
         // Update height and margins of table body
         var headerHeight = tableContainer.find('thead').height(),
-            footerHeight = $('footer').height(),
-            offset       = 100 + scrollBarWidth + footerHeight;
+            footerHeight = $('footer').height();
+        offset = 100 + scrollBarWidth + footerHeight;
         tableContainer.find('tbody').css('margin-top', headerHeight);
         tableContainer.find('tbody').css('max-height',
                                        'calc(100vh - ' + offset + 'px)');
-    }
+    };
 
 
     /**
@@ -186,7 +186,7 @@ function TeiTable(container) {
         _removeIndexColumn();
         _populateMenus();
         _addIndexColumn(firstIndex);
-    }
+    };
 
 
     /**
@@ -195,13 +195,13 @@ function TeiTable(container) {
      */
     this.updateXSLTProc = function(xsltProc) {
         XSLTProc = xsltProc;
-    }
+    };
 
 
     /** Check if an XSLT processor has been loaded. */
     this.XSLTProcLoaded = function() {
         return typeof(XSLTProc) !== 'undefined';
-    }
+    };
 
 
     /**
@@ -214,7 +214,7 @@ function TeiTable(container) {
         } else {
             $('table').removeClass('table-bordered');
         }
-    }
+    };
 
 
     /**
@@ -227,7 +227,7 @@ function TeiTable(container) {
         } else {
             $('[data-toggle="tooltip"]').removeAttr('data-toggle');
         }
-    }
+    };
 
 
     /**
@@ -240,10 +240,10 @@ function TeiTable(container) {
         } else {
             tableContainer.removeClass('fixed');
         }
-    }
+    };
 
     // String function to capitalise first letter
     String.prototype.capitalise = function() {
         return this.charAt(0).toUpperCase() + this.slice(1);
-    }
+    };
 }

@@ -14,7 +14,7 @@ var dbOptions = {
             key: {keyPath: 'id', autoIncrement: true}
         }
     }
-}
+};
 
 
 /**
@@ -23,37 +23,34 @@ var dbOptions = {
  */
 function uploadFiles(files) {
     showView('loading');
-    var pending = files.length,
-        total   = pending,
-        reader  = {};
+    var reader  = {};
 
-    for (var i = 0, f; f = files[i]; i++) {
-        if (f.type !== 'text/xml') {
+    /** Save the file to the database. */
+    function saveFile(theFile) {
+        return function(evt) {
+            server.tei.add({
+                xml: evt.target.result,
+                filename: theFile.name
+            }).catch(function (err) {
+                showAlert(err, 'danger');
+                throw err;
+            });
+        };
+    }
+
+    for (var i = 0; i < files.length; i++) {
+        if (files[i].type !== 'text/xml') {
             showAlert(f.name + ' is not a valid XML file.', 'warning');
             continue;
         }
         reader = new FileReader();
-        reader.onload = (function(theFile) {
-            return function(evt) {
-                server.tei.add({
-                    xml: evt.target.result,
-                    filename: theFile.name
-                }).catch(function (err) {
-                    showAlert(err, 'danger');
-                    throw err
-                });
-
-                --pending
-                if (pending == 0) {
-                    $('.upload-form').trigger("reset");
-                    showAlert(total + ' file' + (total == 1 ? '' : 's') +
-                              ' added.', 'success', true)
-                    refreshView();
-                }
-            };
-        })(f);
-        reader.readAsText(f);
+        reader.onload = saveFile(files[i]);
+        reader.readAsText(files[i]);
     }
+    $('.upload-form').trigger("reset");
+    showAlert(total + ' file' + (files.length == 1 ? '' : 's') + ' added.',
+              'success', true);
+    refreshView();
 }
 
 
@@ -126,13 +123,13 @@ function refreshView() {
                 }).catch(function (err) {
                     showView('upload');
                     showAlert(err, 'danger');
-                    throw err
+                    throw err;
                 });
 
             }).catch(function (err) {
                 showView('upload');
                 showAlert(err, 'danger');
-                throw err
+                throw err;
             });
     }
 }
@@ -185,8 +182,8 @@ function createTeiTable(container) {
         table.updateXSLTProc(XSLTProc);
         return table;
     }).catch(function() {
-        showAlert('XSLT file ' + tableXSLT + ' could not be loaded, try \
-                  reverting to default settings.', 'danger');
+        showAlert('XSLT file ' + tableXSLT + ' could not be loaded, try ' +
+                  'reverting to default settings.', 'danger');
     });
 }
 
@@ -217,7 +214,7 @@ function isParseError(xmlDoc) {
         return xmlDoc.getElementsByTagName("parsererror").length > 0;
     }
     return xmlDoc.getElementsByTagNameNS(ns, 'parsererror').length > 0;
-};
+}
 
 
 /**
@@ -241,8 +238,8 @@ function getCommaSeperatedRow(rowElem) {
 function exportTableToCSV(tableElem) {
     var rows        = [],
         csvFile     = {};
-        contentType = 'text/csv',
-        link        = document.createElement("a");
+        contentType = 'text/csv';
+    var link = document.createElement("a");
 
     $(tableElem).find('tr').each(function() {
         rows.push(getCommaSeperatedRow($(this)));
@@ -288,10 +285,10 @@ $("#xml-save").click(function(evt) {
         server.tei.update(result).then(function(data){
             showView('loading');
             refreshView();
-            showAlert('Record updated!', 'success', true)
+            showAlert('Record updated!', 'success', true);
         }).catch(function (err) {
             showAlert(err, 'danger');
-            throw err
+            throw err;
         });
     });
 });
@@ -323,10 +320,10 @@ $("#clear-selected").click(function(evt) {
         showView("loading");
         $('#tei-view table tr[selected]').each(function() {
             server.tei.remove(parseInt($(this).context.id)).then(function(key) {
-                --pending
-                if (pending == 0) {
+                --pending;
+                if (pending === 0) {
                     showAlert(total + ' row' + (total == 1 ? '' : 's') +
-                              ' deleted.', 'info', true)
+                              ' deleted.', 'info', true);
                     refreshView();
                 }
             });
@@ -494,8 +491,8 @@ function loadSettings(){
             showAlert('Default settings loaded.', 'info');
         } else if (!compareJSON(settings, defaults)) {
             settings = defaults;
-            showAlert('Custom settings no longer valid, reverting to \
-                      defaults.', 'info');
+            showAlert('Custom settings no longer valid, reverting to defaults.',
+                      'info');
         }
         Cookies.set('settings', settings);
 
@@ -514,7 +511,7 @@ function loadSettings(){
         });
     }).fail(function(err) {
         showAlert(err, 'danger');
-        throw err
+        throw err;
     });
 }
 
@@ -561,8 +558,8 @@ function checkHTML5Features() {
         msg         = "",
         div         = document.createElement('div');
 
-    if (typeof(FileReader) === 'undefined' || typeof(FileList) === 'undefined'
-        || typeof(Blob) === 'undefined') {
+    if (typeof(FileReader) === 'undefined' || typeof(FileList) === 'undefined' ||
+        typeof(Blob) === 'undefined') {
         unsupported.push('File APIs');
     }
     if (typeof(Promise) === 'undefined') {
@@ -583,8 +580,8 @@ function checkHTML5Features() {
         if (unsupported.length > 0) {
             msg = unsupported.join(', ') + ' or ' + unsupported;
         }
-        showAlert('Your browser does not support HTML5 ' + msg + '. \
-                   Try upgrading.', 'danger');
+        showAlert('Your browser does not support HTML5 ' + msg +
+                  ', try upgrading.', 'danger');
         throw new Error("HTML5 " + msg + " not supported.");
     }
 }
@@ -637,8 +634,7 @@ $("#tei-view").on('click', ".show-xml", function(evt) {
 
 
 /** Handle upload box drag and drop event. */
-$('#upload-view').on('drag dragstart dragend \
-                     dragover dragenter dragleave drop', function(evt) {
+$('#upload-view').on('drag dragstart dragend dragover dragenter dragleave drop', function(evt) {
     var files = {};
     evt.preventDefault();
     evt.stopPropagation();
@@ -725,7 +721,7 @@ $(window).resize(function() {
 // Boolean function to convert value to capitalized string
 Boolean.prototype.toCapsString = function () {
     return this.toString().charAt(0).toUpperCase() + this.toString().slice(1);
-}
+};
 
 
 // Initialise
@@ -742,6 +738,6 @@ $(function() {
         loadSettings();
     }).catch(function (err) {
         showAlert(err, 'danger');
-        throw err
+        throw err;
     });
 });
