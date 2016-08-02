@@ -14,7 +14,7 @@ module.exports = function(grunt) {
                   jQuery: true
                 }
             }
-        },
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
