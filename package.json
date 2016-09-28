@@ -13,7 +13,6 @@
     },
     "dependencies":{
         "codemirror":"~5",
-        "bootstrap":"~3",
         "db.js":"~0",
         "font-awesome":"^4.6.3",
         "mustache":"~2",

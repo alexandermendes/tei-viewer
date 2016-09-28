@@ -275,3 +275,26 @@ footer {
 #tei-view [data-toggle=tooltip]:hover {
     border-bottom-color: #cdcdcd;
 }
+
+
+/** British Library Styles */
+
+#tei-table msItem,
+#tei-table deconote,
+#tei-table colophon,
+#tei-table summary {
+    margin: 0 0 10px;
+    display: block;
+}
+
+#tei-table dimensions {
+    display: block;
+}
+
+#tei-table title {
+    display: inline;
+}
+
+#tei-table msitem>title {
+    font-weight: 600;
+}

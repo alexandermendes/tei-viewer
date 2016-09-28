@@ -24,7 +24,7 @@ module.exports = function(grunt) {
                     'assets/js/table.js',
                     'assets/js/scripts.js',
                 ],
-                dest: 'js/dist/bundle.js'
+                dest: 'assets/js/dist/bundle.js'
             }
         }
     });
