@@ -13,7 +13,7 @@ npm install
 grunt
 # install bundler
 gem install bundler
-# install jekyll
+# install gems
 bundle install
 # serve
 bundle exec jekyll serve
