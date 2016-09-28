@@ -1,0 +1,277 @@
+/** General */
+
+html,
+body {
+    height: 100%;
+}
+
+main {
+    min-height: calc(100vh - 140px);
+    position: relative;
+}
+
+.alert {
+    width: 25%;
+    z-index: 999;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+a:hover,
+a:active,
+a:focus {
+    text-decoration: none;
+}
+
+#pagination-text {
+    font-size: 0.8em;
+    float: right;
+    top: calc(25px + 0.8em);
+    right: 20px;
+    position: absolute;
+}
+
+#record-id {
+    display: none;
+}
+
+
+/** Navigation */
+
+.navbar {
+    margin-bottom: 0px;
+}
+
+.navbar #gh-link {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.navbar-toggle {
+    padding: 6px 10px;
+}
+
+.navbar-form {
+    border: none;
+    margin: 0px;
+    padding: 10px 15px;
+}
+
+p.navbar-btn {
+    margin: 8px 4px;
+}
+
+.CodeMirror {
+    height: 100%;
+}
+
+
+/** Views */
+
+#tei-view,
+#xml-view {
+    width: 100%;
+    overflow-x: auto;
+    height: calc(100vh - 140px);
+    position: relative;
+}
+
+#tei-view table {
+    table-layout: auto;
+    margin-bottom: 0px;
+}
+
+#tei-view table>tbody>tr>td:not(:first-child),
+#tei-view table>tbody>tr>th:not(:first-child),
+#tei-view table>tfoot>tr>td:not(:first-child),
+#tei-view table>tfoot>tr>th:not(:first-child),
+#tei-view table>thead>tr>td:not(:first-child),
+#tei-view table>thead>tr>th:not(:first-child) {
+    background-color: #fff;
+    min-width: 300px;
+}
+
+#tei-view table>tbody>tr>td:first-child,
+#tei-view table>tbody>tr>th:first-child,
+#tei-view table>tfoot>tr>td:first-child,
+#tei-view table>tfoot>tr>th:first-child,
+#tei-view table>thead>tr>td:first-child,
+#tei-view table>thead>tr>th:first-child {
+    background-color: #F8F8F8;
+    padding: 8px 10px 8px 10px;
+    text-align: center;
+    min-width: 60px;
+}
+
+#tei-view table>tbody>tr>td,
+#tei-view table>tbody>tr>th,
+#tei-view table>tfoot>tr>td,
+#tei-view table>tfoot>tr>th,
+#tei-view table>thead>tr>td,
+#tei-view table>thead>tr>th {
+    padding: 8px 20px 8px 20px;
+}
+
+#tei-view table.table-responsive,
+#tei-view table.table-bordered {
+    border: none;
+}
+
+#upload-view,
+#loading-view {
+    text-align: center;
+    font-size: 1.5em;
+    color: #5E5E5E;
+    position: relative;
+    padding: calc((100vh - 140px - (1.5em + 3em)) / 2) 20px;
+    height: 100%;
+}
+
+#upload-view {
+    outline: 2px dashed #ADADAD;
+    outline-offset: -10px;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear;
+}
+
+#upload-view .btn-file:hover {
+    color: #449D44;
+    cursor: pointer;
+}
+
+#upload-view .btn-file .dragndrop {
+    color: #5E5E5E;
+    display: inline;
+}
+
+#upload-view.is-dragover {
+  background-color: #E6E6E6;
+}
+
+
+/** Buttons */
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+}
+
+
+/** Modals */
+
+#help-modal h2:first-child {
+    padding: 0px 20px 0px 20px;
+}
+#help-modal h2:not(:first-child) {
+    padding: 20px 20px 0px 20px;
+}
+#help-modal p {
+    padding: 0px 20px 0px 20px;
+}
+#help-modal pre {
+    margin: 20px 20px 10px 20px;
+}
+
+.modal-body {
+    overflow-y: auto;
+}
+
+
+/** Footer */
+
+footer {
+    text-align: center;
+    width: 100%;
+    background-color: #F8F8F8;
+    height: 85px;
+    padding-top: 5px;
+    border-top: #e7e7e7 1px solid;
+    position: relative;
+}
+
+
+/** At-rules */
+
+@media screen {
+
+    #tei-view.fixed {
+        overflow-y: hidden;
+    }
+
+    #tei-view.fixed table  {
+        position: relative;
+        table-layout: fixed;
+        height: 100%;
+    }
+
+    #tei-view.fixed table thead {
+        position: absolute;
+        z-index: 10;
+    }
+
+    #tei-view.fixed table tbody {
+        display: block;
+        overflow-x: hidden;
+    }
+
+}
+
+@media print {
+    #tei-view {
+        overflow: visible;
+    }
+    #tei-view table>tbody>tr>td,
+    #tei-view table>tbody>tr>th,
+    #tei-view table>tfoot>tr>td,
+    #tei-view table>tfoot>tr>th,
+    #tei-view table>thead>tr>td,
+    #tei-view table>thead>tr>th {
+        min-width: 0;
+        width: auto!important;
+    }
+    #tei-view a, a:after {
+        content: normal!important;
+    }
+}
+
+@media(max-width:767px){
+    .alert {
+        width: 100%;
+        z-index:999;
+        border-radius:0px;
+        position: absolute;
+    }
+}
+
+
+/** TEI */
+
+#tei-view title {
+    display: inline;
+}
+
+#tei-view quote {
+    font-style: italic;
+}
+
+#tei-view [data-toggle=tooltip] {
+    border-bottom: 1px dashed #999;
+    display: inline;
+}
+
+#tei-view [data-toggle=tooltip]:hover {
+    border-bottom-color: #cdcdcd;
+}

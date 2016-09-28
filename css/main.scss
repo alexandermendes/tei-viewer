@@ -1,0 +1,13 @@
+---
+# Main Sass file
+---
+@charset "utf-8";
+
+$icon-font-path: assets/fonts;
+
+@import
+    "bootstrap",
+    "font-awesome-sprockets",
+    "font-awesome",
+    "base"
+;
