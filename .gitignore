@@ -1,7 +1,4 @@
 node_modules
-bower_components
-.grunt/grunt-gh-pages/gh-pages/src/
 Gemfile.lock
 _site/
-
 .jekyll-metadata

@@ -1,15 +1,31 @@
 {
-  "name": "tei-viewer",
-  "version": "0.2.0",
-  "description": "An HTML5 application for viewing TEI XML documents in table form.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/alexandermendes/tei-viewer"
-  },
-  "license": "MIT",
-  "devDependencies": {
-    "grunt": "^1.0.1",
-    "grunt-contrib-jshint": "^1.0.0",
-    "grunt-gh-pages": "^1.1.0"
-  }
+    "name":"tei-viewer",
+    "version":"0.3.0",
+    "description":"An HTML5 application for viewing and manipulating TEI XML documents in table form.",
+    "main":"index.html",
+    "repository":{
+        "type":"git",
+        "url":"https://github.com/alexandermendes/tei-viewer"
+    },
+    "license":"MIT",
+    "bugs":{
+        "url":"https://github.com/alexandermendes/tei-viewer/issues"
+    },
+    "dependencies":{
+        "codemirror":"~5",
+        "bootstrap":"~3",
+        "db.js":"~0",
+        "font-awesome":"^4.6.3",
+        "mustache":"~2",
+        "showdown":"~1",
+        "js-cookie":"~2",
+        "animate.css":"~3",
+        "bootpag":"~1",
+        "bootstrap-select":"~1"
+    },
+    "devDependencies":{
+        "grunt":"^1.0.0",
+        "grunt-contrib-jshint":"^1.0.0",
+        "grunt-contrib-concat":"^1.0.0"
+    }
 }
