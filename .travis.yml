@@ -1,0 +1,24 @@
+sudo: false
+
+language: ruby
+
+rvm:
+  - 2.2.5
+
+env:
+  global:
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+
+os:
+  - osx
+  - linux
+
+install:
+  - npm install -g grunt-cli
+  - npm install
+  - bundle install
+
+script:
+  - grunt default
+  - bundle exec jekyll build
+  - htmlproofer ./_site --allow-hash-href
