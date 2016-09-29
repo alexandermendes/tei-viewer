@@ -60,10 +60,21 @@ module.exports = function(grunt) {
                     'node_modules/bootpag/lib/jquery.bootpag.js',
                     'node_modules/codemirror/lib/codemirror.js',
                     'node_modules/codemirror/mode/xml/xml.js',
+                    'node_modules/pnotify/dist/pnotify.js',
+                    'node_modules/pnotify/dist/pnotify.buttons.js',
+                    'node_modules/pnotify/dist/pnotify.confirm.js',
                     'assets/js/table.js',
                     'assets/js/scripts.js'
                 ],
                 dest: 'assets/js/dist/vendor.js'
+            },
+            css: {
+                src: [
+                    'node_modules/pnotify/dist/pnotify.css',
+                    'node_modules/pnotify/dist/pnotify.buttons.css',
+                    'node_modules/pnotify/dist/pnotify.brighttheme.css'
+                ],
+                dest: 'assets/css/dist/vendor.css'
             }
         }
     });

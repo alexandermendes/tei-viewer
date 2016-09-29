@@ -35,14 +35,14 @@ function uploadFiles(files) {
             }).then(function() {
                 pending--;
                 if (pending === 0) {
-                    showAlert(files.length + ' file' +
-                              (files.length == 1 ? '' : 's') + ' added.',
-                              'success', true);
+                    notify(files.length + ' file' +
+                           (files.length == 1 ? '' : 's') + ' added.',
+                           'success');
                     $('.upload-form').trigger("reset");
                     refreshView();
                 }
             }).catch(function (err) {
-                showAlert(err, 'danger');
+                notify(err, 'error');
                 throw err;
             });
         };
@@ -50,7 +50,7 @@ function uploadFiles(files) {
 
     for (var i = 0; i < files.length; i++) {
         if (files[i].type !== 'text/xml') {
-            showAlert(f.name + ' is not a valid XML file.', 'warning');
+            notify(f.name + ' is not a valid XML file.', 'warning');
             continue;
         }
         reader = new FileReader();
@@ -107,7 +107,7 @@ function refreshView() {
     var perPage = Cookies.getJSON('settings').recordsPerPage;
         xmlDoc   = {};
     if (typeof(teiTable) === 'undefined' || !teiTable.XSLTProcLoaded()) {
-        showAlert('XSLT processor not loaded, please try again.', 'warning');
+        notify('XSLT processor not loaded, please try again.', 'warning');
     } else {
         server.tei
             .query()
@@ -128,13 +128,13 @@ function refreshView() {
                     applySettings();
                 }).catch(function (err) {
                     showView('upload');
-                    showAlert(err, 'danger');
+                    notify(err, 'error');
                     throw err;
                 });
 
             }).catch(function (err) {
                 showView('upload');
-                showAlert(err, 'danger');
+                notify(err, 'error');
                 throw err;
             });
     }
@@ -148,28 +148,6 @@ function applySettings() {
     teiTable.showTooltips(settings.showTooltips);
     teiTable.freezeHeader(settings.freezeHeader);
     teiTable.fixFrozenTable();
-}
-
-
-/**
- * Display a Bootstrap alert.
- * @param {string} msg - The message.
- * @param {string} type - The type of the message.
- * @param {number} fadeOut - If true, fade out after 3 seconds.
- */
-function showAlert(msg, type, fadeOut) {
-    var template = $("#alert-template").html();
-        rendered = Mustache.render(template, {msg: msg, type: type,
-                                   error: type == 'danger'});
-    $("#alerts").html(rendered);
-    if (fadeOut) {
-        setTimeout(function() {
-            $("#alerts .alert").addClass('fadeOut');
-            setTimeout(function() {
-                $("#alerts").html('');
-            }, 1000);
-        }, 2000);
-    }
 }
 
 
@@ -188,8 +166,8 @@ function createTeiTable(container) {
         table.updateXSLTProc(XSLTProc);
         return table;
     }).catch(function() {
-        showAlert('XSLT file ' + tableXSLT + ' could not be loaded, try ' +
-                  'reverting to default settings.', 'danger');
+        notify('XSLT file ' + tableXSLT + ' could not be loaded, try ' +
+               'reverting to default settings.', 'error');
     });
 }
 
@@ -202,7 +180,7 @@ function parseXML(xmlStr) {
     var parser = new DOMParser(),
         doc    = parser.parseFromString(xmlStr, 'text/xml');
     if(isParseError(doc)) {
-        showAlert('Failed to parse XML.', 'danger');
+        notify('Failed to parse XML.', 'error');
     }
     return doc;
 }
@@ -304,9 +282,9 @@ $("#xml-save").click(function(evt) {
         server.tei.update(result).then(function(data){
             showView('loading');
             refreshView();
-            showAlert('Record updated!', 'success', true);
+            notify('Record updated!', 'success');
         }).catch(function (err) {
-            showAlert(err, 'danger');
+            notify(err, 'error');
             throw err;
         });
     });
@@ -341,8 +319,8 @@ $("#clear-selected").click(function(evt) {
             server.tei.remove(parseInt($(this).context.id)).then(function(key) {
                 --pending;
                 if (pending === 0) {
-                    showAlert(total + ' row' + (total == 1 ? '' : 's') +
-                              ' deleted.', 'info', true);
+                    notify(total + ' row' + (total == 1 ? '' : 's') +
+                           ' deleted.', 'info');
                     refreshView();
                 }
             });
@@ -368,7 +346,7 @@ $("#csv-export").click(function(evt) {
         table  = {};
     evt.preventDefault();
     showView('loading');
-    showAlert('Preparing export...', 'info', true);
+    notify('Preparing export...', 'info');
     createTeiTable(div).then(function(t){
         table = t;
         server.tei.query().all().execute().then(function (data) {
@@ -386,7 +364,7 @@ $("#csv-export").click(function(evt) {
 
             }, 100);
         }).catch(function (err) {
-            showAlert(err, 'danger');
+            notify(err, 'error');
             throw err;
         }).then(function(table){
             refreshView();
@@ -402,7 +380,7 @@ $("#reset-settings").click(function(evt) {
     showView("loading");
     $('#settings-modal').modal('hide');
     loadSettings();
-    showAlert('All settings have been reset to their defaults.', 'info');
+    notify('All settings have been reset to their defaults.', 'info');
 });
 
 
@@ -494,10 +472,10 @@ function loadSettings(){
     $.getJSON("settings.json", function(defaults) {
         if (typeof(settings) === 'undefined') {
             settings = defaults;
-            showAlert('Default settings loaded.', 'info');
+            notify('Default settings loaded.', 'info');
         } else if (!compareJSON(settings, defaults)) {
             settings = defaults;
-            showAlert('Custom settings no longer valid, reverting to defaults.',
+            notify('Custom settings no longer valid, reverting to defaults.',
                       'info');
         }
         Cookies.set('settings', settings);
@@ -516,7 +494,7 @@ function loadSettings(){
             refreshView();
         });
     }).fail(function(err) {
-        showAlert(err, 'danger');
+        notify(err, 'error');
         throw err;
     });
 }
@@ -711,7 +689,7 @@ $(function() {
         server = s;
         loadSettings();
     }).catch(function (err) {
-        showAlert(err, 'danger');
+        notify(err, 'error');
         throw err;
     });
 });

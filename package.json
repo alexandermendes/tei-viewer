@@ -27,7 +27,8 @@
         "animate.css":"~3",
         "bootpag":"~1",
         "bootstrap-select":"~1",
-        "modernizr": "~3"
+        "modernizr": "~3",
+        "pnotify": "~3"
     },
     "devDependencies":{
         "grunt":"^1.0.0",
