@@ -27721,7 +27721,8 @@ function mergeXMLDocs(data) {
 function refreshView() {
     var perPage = Cookies.getJSON('settings').recordsPerPage;
         xmlDoc   = {};
-    if (typeof(teiTable) === 'undefined' || teiTable.XSLTProcLoaded()) {
+    console.log(teiTable);
+    if (typeof(teiTable) === 'undefined' || !teiTable.XSLTProcLoaded()) {
         showAlert('XSLT processor not loaded, please try again.', 'warning');
     } else {
         server.tei
