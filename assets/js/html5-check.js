@@ -8,8 +8,8 @@ var required = [
 
 $.each(required, function(i, v){
     if (!v) {
-        showAlert('Your browser does not support the required HTML5 ' +
-                  'features, please upgrade.', 'danger');
+        notify('Your browser does not support the required HTML5 features, ' +
+               'please upgrade.', 'error');
     }
 });
 

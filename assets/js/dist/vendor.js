@@ -27706,7 +27706,7 @@ function uploadFiles(files) {
                     refreshView();
                 }
             }).catch(function (err) {
-                notify(err, 'error');
+                notify(err.message, 'error');
                 throw err;
             });
         };
@@ -27771,7 +27771,7 @@ function refreshView() {
     var perPage = Cookies.getJSON('settings').recordsPerPage;
         xmlDoc   = {};
     if (typeof(teiTable) === 'undefined' || !teiTable.XSLTProcLoaded()) {
-        notify('XSLT processor not loaded, please try again.', 'warning');
+        notify('XSLT processor not loaded, please try again.', 'error');
     } else {
         server.tei
             .query()
@@ -27792,13 +27792,13 @@ function refreshView() {
                     applySettings();
                 }).catch(function (err) {
                     showView('upload');
-                    notify(err, 'error');
+                    notify(err.message, 'error');
                     throw err;
                 });
 
             }).catch(function (err) {
                 showView('upload');
-                notify(err, 'error');
+                notify(err.message, 'error');
                 throw err;
             });
     }
@@ -27948,7 +27948,7 @@ $("#xml-save").click(function(evt) {
             refreshView();
             notify('Record updated!', 'success');
         }).catch(function (err) {
-            notify(err, 'error');
+            notify(err.message, 'error');
             throw err;
         });
     });
@@ -28028,7 +28028,7 @@ $("#csv-export").click(function(evt) {
 
             }, 100);
         }).catch(function (err) {
-            notify(err, 'error');
+            notify(err.message, 'error');
             throw err;
         }).then(function(table){
             refreshView();
@@ -28157,8 +28157,8 @@ function loadSettings(){
             teiTable = table;
             refreshView();
         });
-    }).fail(function(err) {
-        notify(err, 'error');
+    }).fail(function(xhr, textStatus, errorThrown) {
+        notify(xhr.status + ":" + xhr.statusText, 'error');
         throw err;
     });
 }
@@ -28353,7 +28353,7 @@ $(function() {
         server = s;
         loadSettings();
     }).catch(function (err) {
-        notify(err, 'error');
+        notify(err.message, 'error');
         throw err;
     });
 });
