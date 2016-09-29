@@ -28158,7 +28158,7 @@ function loadSettings(){
             refreshView();
         });
     }).fail(function(xhr, textStatus, errorThrown) {
-        notify(xhr.status + ":" + xhr.statusText, 'error');
+        notify("Settings file not found", 'error');
         throw err;
     });
 }

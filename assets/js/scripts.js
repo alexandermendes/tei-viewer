@@ -253,26 +253,6 @@ function dataURLtoBlob(url) {
 }
 
 
-/** Load README.md into the help modal. */
-function loadHelp() {
-    var converter = new showdown.Converter(),
-        text      = "",
-        html      = "";
-    $.get("https://cdn.rawgit.com/alexandermendes/tei-viewer/master/README.md", function(readme) {
-        text  = readme.replace(/[\s\S]+?(?=#)/, "");
-        html = converter.makeHtml(text);
-        $("#help-modal .modal-body").html(html);
-    });
-}
-
-
-/** Handle XML cancel button event */
-$("#xml-cancel").click(function(evt) {
-    showView('tei');
-    evt.preventDefault();
-});
-
-
 /** Handle XML save button event */
 $("#xml-save").click(function(evt) {
     var recordID = parseInt($('#record-id').html());
@@ -681,8 +661,6 @@ $(function() {
     showView('loading');
     $.ajaxSetup({ cache: false });
     $('[data-toggle="tooltip"]').tooltip();
-
-    loadHelp();
 
     // Configure DB and load settings
     db.open(dbOptions).then(function(s) {

@@ -46,13 +46,13 @@
 
 	'use strict';
 
-	var _html5Check = __webpack_require__(1);
-
-	var _html5Check2 = _interopRequireDefault(_html5Check);
-
-	var _notify = __webpack_require__(2);
+	var _notify = __webpack_require__(1);
 
 	var _notify2 = _interopRequireDefault(_notify);
+
+	var _html5Check = __webpack_require__(2);
+
+	var _html5Check2 = _interopRequireDefault(_html5Check);
 
 	function _interopRequireDefault(obj) {
 	  return obj && obj.__esModule ? obj : { default: obj };
@@ -60,27 +60,6 @@
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var html5Check;
-
-	var required = [Modernizr.filereader, Modernizr.promises, Modernizr.indexeddb];
-
-	$.each(required, function (i, v) {
-	    if (!v) {
-	        showAlert('Your browser does not support the required HTML5 ' + 'features, please upgrade.', 'danger');
-	    }
-	});
-
-	exports.default = html5Check;
-
-/***/ },
-/* 2 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -126,6 +105,27 @@
 	};
 
 	exports.default = notify;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var html5Check;
+
+	var required = [Modernizr.filereader, Modernizr.promises, Modernizr.indexeddb];
+
+	$.each(required, function (i, v) {
+	    if (!v) {
+	        notify('Your browser does not support the required HTML5 features, ' + 'please upgrade.', 'error');
+	    }
+	});
+
+	exports.default = html5Check;
 
 /***/ }
 /******/ ]);

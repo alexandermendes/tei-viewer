@@ -3,6 +3,7 @@ title: TEI Viewer
 author: Alexander Mendes
 email: alexanderhmendes@gmail.com
 description: An HTML5 application for viewing and manipulating TEI XML documents in table form.
+repository: alexandermendes/tei-viewer
 
 # Build settings
 incremental: true

@@ -9,7 +9,8 @@
         </div>
 
         <div class="collapse navbar-collapse" id="main-navbar">
-            <ul class="nav navbar-nav" id="tei-view-menu">
+            <ul class="nav navbar-nav">
+                {% if page.active == 'table' %}
                 <li>
                     <form class="navbar-form upload-form" method="post" action="" enctype="multipart/form-data">
                         <span class="btn btn-success btn-file">
@@ -48,13 +49,18 @@
                     <a href="#" data-toggle="modal" data-target="#settings-modal">Settings</a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="modal" data-target="#help-modal" data-remote="false">Help</a>
+                    <a href="/docs/">Help</a>
                 </li>
-            </ul>
-            <ul class="nav navbar-nav" id="xml-view-menu" style="display: none;">
+                {% elsif page.active == 'docs' %}
                 <li>
                     <p class="navbar-btn">
-                        <a href="#" class="btn btn-default" id="xml-cancel">Cancel</a>
+                        <a href="/" class="btn btn-default">Back</a>
+                    </p>
+                </li>
+                {% elsif page.active == 'editor' %}
+                <li>
+                    <p class="navbar-btn">
+                        <a href="/" class="btn btn-default">Back</a>
                     </p>
                 </li>
                 <li>
@@ -67,7 +73,10 @@
                         <a href="#" class="btn btn-info" id="xml-download">Download</a>
                     </p>
                 </li>
-            </ul>
+                {% endif %}
+                </ul>
+
+
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <a href="{{ site.github.repository_url }}" id="gh-link">
@@ -76,6 +85,7 @@
                     </a>
                 </li>
             </ul>
+
         </div>
     </div>
 </nav>
