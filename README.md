@@ -4,6 +4,21 @@ An HTML5 application for viewing TEI XML documents in table form.
 
 [Try it here](http://alexandermendes.github.io/tei-viewer/)
 
+The site is built with Jekyll and served with GitHub Pages.
+
+```
+# install npm packages
+npm install
+# run any tasks
+grunt
+# install bundler
+gem install bundler
+# install gems
+bundle install
+# serve
+bundle exec jekyll serve
+```
+
 
 ## Requirements
 
@@ -53,21 +68,6 @@ A cookie is used to store the following general settings between uses:
 Clicking the **<\\>** icon in the index column of each row will take you to a code
 editor containing the original XML document. From here you can make changes that
 will be reflected in the table and download the edited copies.
-
-
-## Running offline
-
-Here's an example of how to run a local instance of tei-viewer using Python 2.x:
-
-```
-git clone https://github.com/alexandermendes/tei-viewer
-cd tei-viewer
-bower install
-cd dist
-python -m SimpleHTTPServer
-```
-
-Then visit [http://localhost:8000/](http://localhost:8000/)
 
 
 ## Contributing

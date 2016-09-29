@@ -1,0 +1,16 @@
+# Site settings
+title: TEI Viewer
+author: Alexander Mendes
+email: alexanderhmendes@gmail.com
+description: An HTML5 application for viewing and manipulating TEI XML documents in table form.
+
+# Build settings
+incremental: true
+exclude:
+  - vendor
+  - node_modules
+  - Gruntfile.js
+  - package.json
+  
+sass:
+  style: :compressed
