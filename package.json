@@ -12,6 +12,11 @@
         "url":"https://github.com/alexandermendes/tei-viewer/issues"
     },
     "dependencies":{
+        "babel-core": "^6.0.0",
+        "babel-loader": "^6.0.0",
+        "babel-preset-es2015": "^6.0.0",
+        "webpack": "^1.0.0",
+        "webpack-dev-server": "^1.0.0",
         "codemirror":"~5",
         "bootstrap-sass":"~3",
         "db.js":"~0",
@@ -21,11 +26,14 @@
         "js-cookie":"~2",
         "animate.css":"~3",
         "bootpag":"~1",
-        "bootstrap-select":"~1"
+        "bootstrap-select":"~1",
+        "modernizr": "~3"
     },
     "devDependencies":{
         "grunt":"^1.0.0",
         "grunt-contrib-jshint":"^1.0.0",
-        "grunt-contrib-concat":"^1.0.0"
+        "grunt-contrib-concat":"^1.0.0",
+        "grunt-modernizr": "^1.0.0",
+        "grunt-webpack": "^1.0.0"
     }
 }

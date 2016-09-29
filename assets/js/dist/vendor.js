@@ -28330,26 +28330,3 @@ $(function() {
         throw err;
     });
 });
-
-import html5 from './html5-check.js';
-
-html5.check();
-var html5;
-
-html5.check = function() {
-
-    required = [
-        Modernizr.filereader,
-        Modernizr.promises,
-        Modernizr.indexeddb
-    ];
-
-    $.each(required, function(i, v){
-        if (v) {
-            showAlert('Your browser does not support HTML5, please upgrade.', 'danger');
-        }
-    });
-
-};
-
-export default html5;

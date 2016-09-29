@@ -558,40 +558,6 @@ function paginate(totalRecords) {
 }
 
 
-/** Check for the required HTML5 features */
-function checkHTML5Features() {
-    var unsupported = [],
-        msg         = "",
-        div         = document.createElement('div');
-
-    if (typeof(FileReader) === 'undefined' || typeof(FileList) === 'undefined' ||
-        typeof(Blob) === 'undefined') {
-        unsupported.push('File APIs');
-    }
-    if (typeof(Promise) === 'undefined') {
-        unsupported.push('Promises');
-    }
-    if (typeof(indexedDB) === 'undefined') {
-        unsupported.push('indexedDB');
-    }
-    if (!('draggable' in div) || !('ondragstart' in div && 'ondrop' in div)) {
-        unsupported.push('Drag and Drop');
-    }
-    if (typeof(window.DOMParser) === "undefined") {
-        unsupported.push('DOM Parsing');
-    }
-
-    if (unsupported.length > 0) {
-        msg = unsupported.pop();
-        if (unsupported.length > 0) {
-            msg = unsupported.join(', ') + ' or ' + unsupported;
-        }
-        showAlert('Your browser does not support HTML5 ' + msg +
-                  ', try upgrading.', 'danger');
-        throw new Error("HTML5 " + msg + " not supported.");
-    }
-}
-
 
 /** Handle click event for hide column menu item. */
 $("#hide-menu").on('click', '.hide-column', function(evt) {
@@ -738,7 +704,6 @@ $(function() {
     $.ajaxSetup({ cache: false });
     $('[data-toggle="tooltip"]').tooltip();
 
-    checkHTML5Features();
     loadHelp();
 
     // Configure DB and load settings

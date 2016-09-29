@@ -13,7 +13,9 @@
 
         {% include mustache.html %}
 
-        <script src="assets/js/dist/bundle.js"></script>
+        <script src="{{ "assets/js/dist/vendor.js" | prepend: site.baseurl }}"></script>
+        <script src="{{ "assets/js/dist/custom-modernizr.min.js" | prepend: site.baseurl }}"></script>
+        <script src="{{ "assets/js/dist/packed.js" | prepend: site.baseurl }}"></script>
 
     </body>
 
