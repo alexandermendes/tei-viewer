@@ -9,10 +9,6 @@ env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 
-os:
-  - osx
-  - linux
-
 install:
   - npm install -g grunt-cli
   - npm install
