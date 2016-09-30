@@ -3,7 +3,8 @@ var html5Check;
 var required = [
     Modernizr.filereader,
     Modernizr.promises,
-    Modernizr.indexeddb
+    Modernizr.indexeddb,
+    Modernizr.blobconstructor
 ];
 
 $.each(required, function(i, v){

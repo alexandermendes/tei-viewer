@@ -124,7 +124,7 @@
 	});
 	var html5Check;
 
-	var required = [Modernizr.filereader, Modernizr.promises, Modernizr.indexeddb];
+	var required = [Modernizr.filereader, Modernizr.promises, Modernizr.indexeddb, Modernizr.blobconstructor];
 
 	$.each(required, function (i, v) {
 	    if (!v) {
@@ -185,7 +185,7 @@
 	            reject(new Error('Invalid ID parameter in URL'));
 	        }
 
-	        return dbServer.tei.get(id).then(function (record) {
+	        dbServer.tei.get(parseInt(id)).then(function (record) {
 	            if (typeof record === 'undefined') {
 	                reject(new Error('Record not found'));
 	            }
@@ -214,17 +214,13 @@
 
 	/** Handle XML download button event */
 	$("#xml-download").click(function (evt) {
-	    var recordID = parseInt($('#record-id').html()),
-	        contentType = 'application/xml',
+	    var contentType = 'application/xml',
 	        link = document.createElement("a"),
-	        xmlFile = {};
-	    dbServer.tei.get(recordID).then(function (result) {
 	        xmlFile = new Blob([codeEditor.getValue()], { type: contentType });
-	        link.download = result.filename;
-	        link.href = window.URL.createObjectURL(xmlFile);
-	        link.dataset.downloadurl = [contentType, link.download, link.href].join(':');
-	        link.click();
-	    });
+	    link.download = record.filename;
+	    link.href = window.URL.createObjectURL(xmlFile);
+	    link.dataset.downloadurl = [contentType, link.download, link.href].join(':');
+	    link.click();
 	});
 
 	$(document).ready(function () {
@@ -232,7 +228,6 @@
 	        var promise = loadRecord();
 	        promise.then(function (record) {
 	            record = record;
-	            $('#editor').show();
 	            $('#editor').text(record.xml);
 	            editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
 	                mode: 'text/xml',
