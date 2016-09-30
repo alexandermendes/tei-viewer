@@ -7,8 +7,14 @@
     <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
     <meta name="author" content="{{ site.author }}">
 
+    <link rel="icon" href="{{ "/assets/img/favicon.png" | prepend: site.url }}">
+    <!--[if IE]>
+    <link rel="shortcut icon" href="{{ "/assets/img/favicon.ico" | prepend: site.url }}">
+    <![endif]-->
+
     <link rel="stylesheet" href="{{ "/assets/css/dist/vendor.css" | prepend: site.url }}">
     <link rel="stylesheet" href="{{ "/assets/css/main.css" | prepend: site.url }}">
+
     <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
