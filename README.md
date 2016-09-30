@@ -8,10 +8,11 @@ An HTML5 application for viewing and editing TEI XML documents in table form.
 
 The site is built with Jekyll and served with GitHub Pages.
 
+
 ```
 # install npm packages
 npm install
-# run any tasks
+# run Grunt tasks (dev or build)
 grunt
 # install bundler
 gem install bundler
@@ -20,3 +21,8 @@ bundle install
 # serve
 bundle exec jekyll serve
 ```
+
+
+## Testing
+
+Tests are run with `grunt test`
