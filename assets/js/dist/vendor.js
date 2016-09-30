@@ -27335,7 +27335,6 @@ function TeiTable(container) {
 
 var teiTable;
 var lastSelected;
-var codeEditor;
 var currentPage = 0;
 
 

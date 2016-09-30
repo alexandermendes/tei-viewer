@@ -1,5 +1,3 @@
-window.dbServer;
-
 /**
  * Global DB server class.
  */
@@ -9,7 +7,7 @@ class DBServer {
      * Initialise with database options.
      */
     constructor() {
-        this.server;
+        this.server = null;
         this.options = {
             server: 'tei-viewer',
             version: 3,
@@ -43,12 +41,12 @@ class DBServer {
     /**
      * Return a record, ensuring that a connection is established first.
      */
-    get(recordID) {
+    get(id) {
         var _this = this;
 
-        function getRecord(recordID) {
+        function getRecord(id) {
             return new Promise(function(resolve, reject) {
-                _this.server.tei.get(recordID).then(function(record) {
+                _this.server.tei.get(id).then(function(record) {
                     if (typeof record === 'undefined') {
                         reject(new Error('Record not found'));
                     }
@@ -60,14 +58,14 @@ class DBServer {
         }
 
         return new Promise(function(resolve, reject) {
-            if (typeof _this.server === 'undefined') {
-                _this.connect().then(function(){
-                    resolve(getRecord(recordID));
+            if (_this.server === null) {
+                _this.connect().then(function() {
+                    resolve(getRecord(id));
                 }).catch(function (err) {
                     reject(err);
                 });
             } else {
-                resolve(getRecord(recordID));
+                resolve(getRecord(id));
             }
         });
 
@@ -82,7 +80,7 @@ class DBServer {
 
         function updateRecord(record) {
             return new Promise(function(resolve, reject) {
-                _this.server.tei.update(record).then(function(){
+                _this.server.tei.update(record).then(function() {
                     resolve();
                 }).catch(function (err) {
                     reject(err);
@@ -91,8 +89,8 @@ class DBServer {
         }
 
         return new Promise(function(resolve, reject) {
-            if (typeof _this.server === 'undefined') {
-                _this.connect().then(function(){
+            if (_this.server === null) {
+                _this.connect().then(function() {
                     resolve(updateRecord(record));
                 }).catch(function (err) {
                     reject(err);

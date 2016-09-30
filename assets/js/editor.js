@@ -2,27 +2,24 @@ var editor;
 var record;
 
 /**
- * Load a record from id parameter given in the current URL.
+ * Load a record from the id URL parameter.
  */
 function loadRecord() {
     return new Promise(function(resolve, reject) {
         var uri   = new URI(document.location.href),
-        query = URI.parseQuery(uri.query()),
-        id    = query.id;
+            query = URI.parseQuery(uri.query()),
+            id    = query.id;
 
         if (isNaN(id)) {
             reject(new Error('Invalid ID parameter in URL'));
         }
 
-        dbServer.get(parseInt(id)).then(function(record) {
-            if (typeof record === 'undefined') {
-                reject(new Error('Record not found'));
-            }
-            resolve(record);
+        dbServer.get(parseInt(id)).then(function(r) {
+            record = r;
+            resolve();
         }).catch(function (err) {
             reject(err);
         });
-
     });
 }
 
@@ -31,14 +28,14 @@ function loadRecord() {
  */
 $("#xml-save").click(function(evt) {
     record.xml = editor.getValue();
-    dbServer.update(record).then(function(){
+    dbServer.update(record).then(function() {
         notify('Record saved!', 'success');
     }).catch(function (err) {
         notify(err.message, 'error');
         throw err;
     });
+    evt.preventDefault();
 });
-
 
 /**
  * Download the record.
@@ -51,14 +48,12 @@ $("#xml-download").click(function(evt) {
     link.href = window.URL.createObjectURL(file);
     link.dataset.downloadurl = [type, link.download, link.href].join(':');
     link.click();
+    evt.preventDefault();
 });
-
 
 $(document).ready(function() {
     if ($("#editor").length) {
-        var promise = loadRecord();
-        promise.then(function(r) {
-            record = r;
+        loadRecord().then(function() {
             $('#editor').text(record.xml);
             editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
                 mode:'text/xml',

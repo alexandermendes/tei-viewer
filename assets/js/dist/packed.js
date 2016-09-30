@@ -143,24 +143,140 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	window.dbServer = undefined;
 
-	db.open({
-	    server: 'tei-viewer',
-	    version: 3,
-	    schema: {
-	        tei: {
-	            key: { keyPath: 'id', autoIncrement: true }
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
 	        }
-	    }
-	}).then(function (server) {
-	    window.dbServer = server;
-	}).catch(function (err) {
-	    notify(err.message, 'error');
-	    throw err;
-	});
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
 
-	exports.default = window.dbServer;
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError("Cannot call a class as a function");
+	    }
+	}
+
+	/**
+	 * Global DB server class.
+	 */
+	var DBServer = function () {
+
+	    /**
+	     * Initialise with database options.
+	     */
+	    function DBServer() {
+	        _classCallCheck(this, DBServer);
+
+	        this.server = null;
+	        this.options = {
+	            server: 'tei-viewer',
+	            version: 3,
+	            schema: {
+	                tei: {
+	                    key: { keyPath: 'id', autoIncrement: true }
+	                }
+	            }
+	        };
+	    }
+
+	    /**
+	     * Connect to the database.
+	     */
+
+	    _createClass(DBServer, [{
+	        key: 'connect',
+	        value: function connect() {
+	            var _this = this;
+	            return new Promise(function (resolve, reject) {
+	                db.open(_this.options).then(function (server) {
+	                    _this.server = server;
+	                    resolve();
+	                }).catch(function (err) {
+	                    if (err.type === 'blocked') {
+	                        oldConnection.close();
+	                        return err.resume;
+	                    }
+	                    reject(err);
+	                });
+	            });
+	        }
+
+	        /**
+	         * Return a record, ensuring that a connection is established first.
+	         */
+
+	    }, {
+	        key: 'get',
+	        value: function get(id) {
+	            var _this = this;
+
+	            function getRecord(id) {
+	                return new Promise(function (resolve, reject) {
+	                    _this.server.tei.get(id).then(function (record) {
+	                        if (record == null) {
+	                            reject(new Error('Record not found'));
+	                        }
+	                        resolve(record);
+	                    }).catch(function (err) {
+	                        reject(err);
+	                    });
+	                });
+	            }
+
+	            return new Promise(function (resolve, reject) {
+	                if (_this.server == null) {
+	                    _this.connect().then(function () {
+	                        resolve(getRecord(id));
+	                    }).catch(function (err) {
+	                        reject(err);
+	                    });
+	                } else {
+	                    resolve(getRecord(id));
+	                }
+	            });
+	        }
+
+	        /**
+	         * Update a record, ensuring that a connection is established first.
+	         */
+
+	    }, {
+	        key: 'update',
+	        value: function update(record) {
+	            var _this = this;
+
+	            function updateRecord(record) {
+	                return new Promise(function (resolve, reject) {
+	                    _this.server.tei.update(record).then(function () {
+	                        resolve();
+	                    }).catch(function (err) {
+	                        reject(err);
+	                    });
+	                });
+	            }
+
+	            return new Promise(function (resolve, reject) {
+	                if (_this.server == null) {
+	                    _this.connect().then(function () {
+	                        resolve(updateRecord(record));
+	                    }).catch(function (err) {
+	                        reject(err);
+	                    });
+	                } else {
+	                    resolve(updateRecord(record));
+	                }
+	            });
+	        }
+	    }]);
+
+	    return DBServer;
+	}();
+
+	exports.default = window.dbServer = new DBServer();
 
 /***/ },
 /* 4 */
@@ -174,7 +290,9 @@
 	var editor;
 	var record;
 
-	/** Attempt to load a record from id parameter given in the current URL. */
+	/**
+	 * Load a record from the id URL parameter.
+	 */
 	function loadRecord() {
 	    return new Promise(function (resolve, reject) {
 	        var uri = new URI(document.location.href),
@@ -185,49 +303,46 @@
 	            reject(new Error('Invalid ID parameter in URL'));
 	        }
 
-	        dbServer.tei.get(parseInt(id)).then(function (record) {
-	            if (typeof record === 'undefined') {
-	                reject(new Error('Record not found'));
-	            }
-	            resolve(record);
+	        dbServer.get(parseInt(id)).then(function (r) {
+	            record = r;
+	            resolve();
 	        }).catch(function (err) {
 	            reject(err);
 	        });
 	    });
 	}
 
-	/** Handle XML save button event */
+	/**
+	 * Save the record.
+	 */
 	$("#xml-save").click(function (evt) {
-	    record.xml = codeEditor.getValue();
-	    dbServer.tei.update(result).then(function () {
-	        showView('loading');
-	        refreshView();
-
-	        // Go back to main view
-
-	        notify('Record updated!', 'success');
+	    record.xml = editor.getValue();
+	    dbServer.update(record).then(function () {
+	        notify('Record saved!', 'success');
 	    }).catch(function (err) {
 	        notify(err.message, 'error');
 	        throw err;
 	    });
+	    evt.preventDefault();
 	});
 
-	/** Handle XML download button event */
+	/**
+	 * Download the record.
+	 */
 	$("#xml-download").click(function (evt) {
-	    var contentType = 'application/xml',
+	    var type = 'application/xml',
 	        link = document.createElement("a"),
-	        xmlFile = new Blob([codeEditor.getValue()], { type: contentType });
+	        file = new Blob([editor.getValue()], { type: type });
 	    link.download = record.filename;
-	    link.href = window.URL.createObjectURL(xmlFile);
-	    link.dataset.downloadurl = [contentType, link.download, link.href].join(':');
+	    link.href = window.URL.createObjectURL(file);
+	    link.dataset.downloadurl = [type, link.download, link.href].join(':');
 	    link.click();
+	    evt.preventDefault();
 	});
 
 	$(document).ready(function () {
 	    if ($("#editor").length) {
-	        var promise = loadRecord();
-	        promise.then(function (record) {
-	            record = record;
+	        loadRecord().then(function () {
 	            $('#editor').text(record.xml);
 	            editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
 	                mode: 'text/xml',
@@ -237,6 +352,7 @@
 	            });
 	        }).catch(function (error) {
 	            notify(error.message, 'error');
+	            throw error;
 	        });
 	    }
 	});
