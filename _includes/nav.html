@@ -8,7 +8,8 @@
             <a class="navbar-brand" href="{{ site.github.url }}">Tei Viewer</a>
         </div>
 
-        <div class="collapse navbar-collapse" id="main-navbar">
+        <div id="main-navbar" class="collapse navbar-collapse">
+
             <ul class="nav navbar-nav">
                 {% if page.active == 'table' %}
                 <li>
@@ -45,8 +46,19 @@
                 <li>
                     <a href="#" onclick="window.print()">Print</a>
                 </li>
-                <li>
-                    <a href="#" data-toggle="modal" data-target="#settings-modal">Settings</a>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">XSLT
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" id="select-xslt">
+                        {% for file in site.static_files %}
+                            {% if file.path contains 'xslt/' %}
+                                {% unless file.path contains 'xslt/helpers.xsl' %}
+                                    <li><a href="#" id="clear-selected">{{ file.path | remove_first: "/assets/xslt/" }}</a></li>
+                                {% endunless %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
                 </li>
                 <li>
                     <a href="/docs/">Help</a>
@@ -74,8 +86,7 @@
                     </p>
                 </li>
                 {% endif %}
-                </ul>
-
+            </ul>
 
             <ul class="nav navbar-nav navbar-right">
                 <li>
