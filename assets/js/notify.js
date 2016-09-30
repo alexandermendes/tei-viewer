@@ -31,7 +31,6 @@ window.notify = function(msg, type) {
             break;
     }
 
-    opts.text = msg;
     new PNotify(opts);
 };
 

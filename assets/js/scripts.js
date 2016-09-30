@@ -1,20 +1,7 @@
 var teiTable;
-var server;
 var lastSelected;
 var codeEditor;
 var currentPage = 0;
-
-
-// Database options
-var dbOptions = {
-    server: 'tei-viewer',
-    version: 3,
-    schema: {
-        tei: {
-            key: {keyPath: 'id', autoIncrement: true}
-        }
-    }
-};
 
 
 /**
@@ -29,7 +16,7 @@ function uploadFiles(files) {
     /** Save the file to the database. */
     function saveFile(theFile) {
         return function(evt) {
-            server.tei.add({
+            dbServer.tei.add({
                 xml: evt.target.result,
                 filename: theFile.name
             }).then(function() {
@@ -109,7 +96,7 @@ function refreshView() {
     if (typeof(teiTable) === 'undefined' || !teiTable.XSLTProcLoaded()) {
         notify('XSLT processor not loaded, please try again.', 'error');
     } else {
-        server.tei
+        dbServer.tei
             .query()
             .all()
             .limit(currentPage * perPage, perPage)
@@ -118,7 +105,7 @@ function refreshView() {
                 xmlDoc = mergeXMLDocs(data);
                 teiTable.populate(xmlDoc, currentPage * perPage);
 
-                server.tei.count().then(function (totalRecords) {
+                dbServer.tei.count().then(function (totalRecords) {
                     paginate(totalRecords);
                     if (totalRecords > 0) {
                         showView('tei');
@@ -156,7 +143,7 @@ function applySettings() {
  * @param {object} container - The container for the table.
  */
 function createTeiTable(container) {
-    var tableXSLT = $('#select-xslt').val(),
+    var tableXSLT = Cookies.get('xslt') || $('#select-xslt li:first').text();
         table     = new TeiTable(container);
     return Promise.resolve($.ajax({
         url: "assets/xslt/" + tableXSLT
@@ -238,56 +225,6 @@ function exportTableToCSV(tableElem) {
 }
 
 
-/**
- * Convert a URL to a Blob.
- * @param {string} url - The URL.
- */
-function dataURLtoBlob(url) {
-    var arr  = url.split(','),
-        mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new Blob([u8arr], {type:mime});
-}
-
-
-/** Handle XML save button event */
-$("#xml-save").click(function(evt) {
-    var recordID = parseInt($('#record-id').html());
-    evt.preventDefault();
-    server.tei.get(recordID).then(function(result) {
-        result.xml = codeEditor.getValue();
-        server.tei.update(result).then(function(data){
-            showView('loading');
-            refreshView();
-            notify('Record updated!', 'success');
-        }).catch(function (err) {
-            notify(err.message, 'error');
-            throw err;
-        });
-    });
-});
-
-
-/** Handle XML download button event */
-$("#xml-download").click(function(evt) {
-    evt.preventDefault();
-    var recordID    = parseInt($('#record-id').html()),
-        contentType = 'application/xml',
-        link        = document.createElement("a"),
-        xmlFile     = {};
-    server.tei.get(recordID).then(function(result) {
-        xmlFile     = new Blob([codeEditor.getValue()], {type: contentType});
-        link.download = result.filename;
-        link.href = window.URL.createObjectURL(xmlFile);
-        link.dataset.downloadurl = [contentType, link.download, link.href].join(':');
-        link.click();
-    });
-});
-
-
 /** Clear selected rows. */
 $("#clear-selected").click(function(evt) {
     var pending = $('#tei-view table tr[selected]').length,
@@ -296,7 +233,7 @@ $("#clear-selected").click(function(evt) {
     if (pending > 0) {
         showView("loading");
         $('#tei-view table tr[selected]').each(function() {
-            server.tei.remove(parseInt($(this).context.id)).then(function(key) {
+            dbServer.tei.remove(parseInt($(this).context.id)).then(function(key) {
                 --pending;
                 if (pending === 0) {
                     notify(total + ' row' + (total == 1 ? '' : 's') +
@@ -314,7 +251,7 @@ $("#clear-all").click(function(evt) {
     evt.preventDefault();
     showView("loading");
     currentPage = 0;
-    server.tei.clear();
+    dbServer.tei.clear();
     refreshView();
 });
 
@@ -329,7 +266,7 @@ $("#csv-export").click(function(evt) {
     notify('Preparing export...', 'info');
     createTeiTable(div).then(function(t){
         table = t;
-        server.tei.query().all().execute().then(function (data) {
+        dbServer.tei.query().all().execute().then(function (data) {
             setTimeout(function() {
                 xmlDoc = mergeXMLDocs(data);
 
@@ -353,84 +290,14 @@ $("#csv-export").click(function(evt) {
 });
 
 
-/** Reset to default settings. */
-$("#reset-settings").click(function(evt) {
-    var settings = Cookies.getJSON('settings');
+$('#select-xslt li').on('click', function(evt){
+    var xslt = $(this).text();
     evt.preventDefault();
-    showView("loading");
-    $('#settings-modal').modal('hide');
-    loadSettings();
-    notify('All settings have been reset to their defaults.', 'info');
-});
-
-
-/** Handle change of XSLT setting. */
-$("#select-xslt").change(function(evt) {
-    var settings    = Cookies.getJSON('settings'),
-        defaultXSLT = $('#select-xslt').val();
-    evt.preventDefault();
-    $.each(settings.xslt, function(index, value) {
-        if (value.filename == defaultXSLT) {
-            value['default'] = true;
-        } else {
-            value['default'] = false;
-        }
-    });
-    Cookies.set('settings', settings);
-    $('#settings-modal').modal('hide');
+    Cookies.set('xslt', xslt);
     createTeiTable($('#tei-view')).then(function(table){
         teiTable = table;
         refreshView();
     });
-});
-
-
-/** Handle change of show tooltips setting. */
-$("#show-tooltips").change('click', function(evt) {
-    var settings = Cookies.getJSON('settings'),
-        showTips = $('#show-tooltips').val() == 'True';
-    evt.preventDefault();
-    settings.showTooltips = showTips;
-    Cookies.set('settings', settings);
-    $('#settings-modal').modal('hide');
-    applySettings();
-});
-
-
-/** Handle change of show borders setting. */
-$("#show-borders").change('click', function(evt) {
-    var settings    = Cookies.getJSON('settings'),
-        showBorders = $('#show-borders').val() == 'True';
-    evt.preventDefault();
-    settings.showBorders = showBorders;
-    Cookies.set('settings', settings);
-    $('#settings-modal').modal('hide');
-    applySettings();
-});
-
-
-/** Handle change of freeze header setting. */
-$("#freeze-header").change('click', function(evt) {
-    var settings     = Cookies.getJSON('settings'),
-        freezeHeader = $('#freeze-header').val() == 'True';
-    evt.preventDefault();
-    settings.freezeHeader = freezeHeader;
-    Cookies.set('settings', settings);
-    $('#settings-modal').modal('hide');
-    applySettings();
-});
-
-
-/** Handle change of records per page setting. */
-$("#n-records").change('click', function(evt) {
-    var settings       = Cookies.getJSON('settings'),
-        recordsPerPage = parseInt($('#n-records').val());
-    evt.preventDefault();
-    showView("loading");
-    settings.recordsPerPage = recordsPerPage;
-    Cookies.set('settings', settings);
-    $('#settings-modal').modal('hide');
-    refreshView();
 });
 
 
@@ -447,35 +314,10 @@ function compareJSON(a, b) {
 
 /** Load settings. */
 function loadSettings(){
-    var settings = Cookies.getJSON('settings');
-
-    $.getJSON("settings.json", function(defaults) {
-        if (typeof(settings) === 'undefined') {
-            settings = defaults;
-            notify('Default settings loaded.', 'info');
-        } else if (!compareJSON(settings, defaults)) {
-            settings = defaults;
-            notify('Custom settings no longer valid, reverting to defaults.',
-                      'info');
-        }
-        Cookies.set('settings', settings);
-
-    }).done(function() {
-        var template = $("#xslt-options-template").html(),
-            rendered = Mustache.render(template, {options: settings.xslt});
-        $('#select-xslt').html(rendered);
-        $('#show-borders').val(settings.showBorders.toCapsString());
-        $('#show-tooltips').val(settings.showTooltips.toCapsString());
-        $('#freeze-header').val(settings.freezeHeader.toCapsString());
-        $('#n-records').val(settings.recordsPerPage);
-        $('.selectpicker').selectpicker('refresh');
-        createTeiTable($('#tei-view')).then(function(table){
-            teiTable = table;
-            refreshView();
-        });
-    }).fail(function(xhr, textStatus, errorThrown) {
-        notify("Settings file not found", 'error');
-        throw err;
+    var settings = Cookies.get('xslt');
+    createTeiTable($('#tei-view')).then(function(table){
+        teiTable = table;
+        refreshView();
     });
 }
 
@@ -547,21 +389,7 @@ $(".add-files").change(function(evt) {
 /** Handle a show XML event. */
 $("#tei-view").on('click', ".show-xml", function(evt) {
     var recordID = parseInt($(this).parents('tr')[0].id);
-    evt.preventDefault();
-    server.tei.get(recordID).then(function(result) {
-        if (typeof(codeEditor) !== 'undefined') {
-            codeEditor.getWrapperElement().remove();
-        }
-        $('#record-id').html(result.id);
-        $('#xml-textarea').text(result.xml);
-        showView('xml');
-        codeEditor = CodeMirror.fromTextArea(document.getElementById('xml-textarea'), {
-            mode:'text/xml',
-            lineNumbers: true,
-            autofocus: true,
-            lineWrapping: true,
-        });
-    });
+    window.location.href = '/editor?id=' + recordID;
 });
 
 
@@ -662,12 +490,9 @@ $(function() {
     $.ajaxSetup({ cache: false });
     $('[data-toggle="tooltip"]').tooltip();
 
-    // Configure DB and load settings
-    db.open(dbOptions).then(function(s) {
-        server = s;
-        loadSettings();
-    }).catch(function (err) {
-        notify(err.message, 'error');
-        throw err;
+    createTeiTable($('#tei-view')).then(function(table){
+        teiTable = table;
+        refreshView();
     });
+
 });
