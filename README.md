@@ -1,5 +1,7 @@
 # tei-viewer
 
+[![Build Status](https://travis-ci.org/alexandermendes/tei-viewer.svg?branch=master)](https://travis-ci.org/alexandermendes/tei-viewer)
+
 An HTML5 application for viewing and editing TEI XML documents in table form.
 
 [Try it here](http://alexandermendes.github.io/tei-viewer/)
