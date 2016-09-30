@@ -104,7 +104,8 @@ module.exports = function(grunt) {
                 src: [
                     'node_modules/pnotify/dist/pnotify.css',
                     'node_modules/pnotify/dist/pnotify.buttons.css',
-                    'node_modules/pnotify/dist/pnotify.brighttheme.css'
+                    'node_modules/pnotify/dist/pnotify.brighttheme.css',
+                    'node_modules/codemirror/lib/codemirror.css'
                 ],
                 dest: 'assets/css/dist/vendor.css'
             }
