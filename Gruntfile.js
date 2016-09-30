@@ -13,6 +13,7 @@ module.exports = function(grunt) {
                 esversion: 6
             }
         },
+
         modernizr: {
             dist: {
                 "parseFiles": true,
@@ -27,12 +28,12 @@ module.exports = function(grunt) {
                 "uglify": true
             }
         },
+
         webpack: {
             js: {
-                // webpack options
                 entry: "./assets/js/main.js",
                 output: {
-                    path: "assets/js/dist/",
+                    path: "./assets/js/dist/",
                     filename: "packed.js",
                 },
                 module: {
@@ -47,6 +48,37 @@ module.exports = function(grunt) {
                 }
             }
         },
+
+
+        //"webpack-dev-server": {
+        //    js: {
+        //        entry: "./assets/js/main.js",
+        //        output: {
+        //            path: "./assets/js/dist/",
+        //            publicPath: "./assets/js/dist/",
+        //            filename: "packed.js",
+        //            contentBase: "./assets/js/dist",
+        //        },
+        //        module: {
+        //            loaders: [{
+        //                test: /\.js$/,
+        //                exclude: /node_modules/,
+        //                loader: 'babel-loader',
+        //                query: {
+        //                    presets: ['es2015']
+        //                }
+        //            }]
+        //        },
+        //        start: {
+        //            keepAlive: false,
+        //            webpack: {
+        //                devtool: 'eval',
+        //                debug: true
+        //            }
+        //        }
+        //    }
+        //},
+
         concat: {
             js: {
                 src: [
@@ -76,15 +108,27 @@ module.exports = function(grunt) {
                 ],
                 dest: 'assets/css/dist/vendor.css'
             }
-        }
+        },
+
+        watch: {
+            options: {
+                livereload: true
+            },
+            js: {
+                files: ['assets/js/*.js'],
+                tasks: ['webpack', 'modernizr']
+            }
+        },
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-modernizr');
     grunt.loadNpmTasks('grunt-webpack');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
-    grunt.registerTask( 'default', ['jshint', 'modernizr:dist', 'webpack',
-                                    'concat']);
+    grunt.registerTask('dev', ['modernizr:dist', 'webpack', 'concat', 'watch']);
+    grunt.registerTask('build', ['modernizr:dist', 'webpack', 'concat']);
+    grunt.registerTask('test', ['jshint'])
 
 };

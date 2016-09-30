@@ -15,6 +15,7 @@ install:
   - bundle install
 
 script:
-  - grunt default
+  - grunt test
+  - grunt build
   - bundle exec jekyll build
   - htmlproofer ./_site --allow-hash-href
