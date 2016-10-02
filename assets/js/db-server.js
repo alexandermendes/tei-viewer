@@ -99,8 +99,71 @@ class DBServer {
                 resolve(updateRecord(record));
             }
         });
-
     }
+
+    /**
+     * Return multiple records, ensuring that a connection is established first.
+     */
+    getMultiple(fromRecord=0, toRecord=50) {
+        var _this = this;
+
+        function getMultipleRecords(fromRecord, toRecord) {
+            return new Promise(function(resolve, reject) {
+                _this.server.tei.query()
+                                .all()
+                                .limit(fromRecord, toRecord)
+                                .execute()
+                                .then(function(records) {
+                                    resolve(records);
+                }).catch(function (err) {
+                    reject(err);
+                });
+            });
+        }
+
+        return new Promise(function(resolve, reject) {
+            if (_this.server === null) {
+                _this.connect().then(function() {
+                    resolve(getMultipleRecords(fromRecord, toRecord));
+                }).catch(function (err) {
+                    reject(err);
+                });
+            } else {
+                resolve(getMultipleRecords(fromRecord, toRecord));
+            }
+        });
+    }
+
+
+    /**
+     * Count records, ensuring that a connection is established first.
+     */
+    count() {
+        var _this = this;
+
+        function countRecords() {
+            return new Promise(function(resolve, reject) {
+                _this.server.tei.count().then(function (n) {
+                    resolve(n);
+                }).catch(function (err) {
+                    reject(err);
+                });
+            });
+        }
+
+        return new Promise(function(resolve, reject) {
+            if (_this.server === null) {
+                _this.connect().then(function() {
+                    resolve(countRecords());
+                }).catch(function (err) {
+                    reject(err);
+                });
+            } else {
+                resolve(countRecords());
+            }
+        });
+    }
+
 }
 
 export default window.dbServer = new DBServer();
