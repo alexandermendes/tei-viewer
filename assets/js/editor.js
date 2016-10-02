@@ -2,28 +2,6 @@ var editor;
 var record;
 
 /**
- * Load a record from the id URL parameter.
- */
-function loadRecord() {
-    return new Promise(function(resolve, reject) {
-        var uri   = new URI(document.location.href),
-            query = URI.parseQuery(uri.query()),
-            id    = query.id;
-
-        if (isNaN(id)) {
-            reject(new Error('Invalid ID parameter in URL'));
-        }
-
-        dbServer.get(parseInt(id)).then(function(r) {
-            record = r;
-            resolve();
-        }).catch(function (err) {
-            reject(err);
-        });
-    });
-}
-
-/**
  * Save the record.
  */
 $("#xml-save").click(function(evt) {
@@ -53,7 +31,9 @@ $("#xml-download").click(function(evt) {
 
 $(document).ready(function() {
     if ($("#editor").length) {
-        loadRecord().then(function() {
+        var id = parseURL.getIntParameter('id');
+        dbServer.get(id).then(function(r) {
+            record = r;
             $('#editor').text(record.xml);
             editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
                 mode:'text/xml',
@@ -61,9 +41,9 @@ $(document).ready(function() {
                 autofocus: true,
                 lineWrapping: true,
             });
-        }).catch(function(error) {
-            notify(error.message, 'error');
-            throw error;
+        }).catch(function (err) {
+            notify(err.message, 'error');
+            throw err;
         });
     }
 });
