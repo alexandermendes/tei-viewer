@@ -3,9 +3,14 @@
 ---
 @charset "utf-8";
 
+$heading-font-stack: 'Roboto Slab', sans-serif;
+$base-font-stack: 'Roboto', sans-serif;
+$base-font-size: 16px;
+
 @import
     "bootstrap",
     "font-awesome-sprockets",
     "font-awesome",
-    "base"
+    "base",
+    "partials/typography"
 ;
