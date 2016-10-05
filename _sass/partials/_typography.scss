@@ -9,7 +9,8 @@ h1,h2,h3,h4,h5,h6 {
 
 nav,
 nav .navbar-nav .btn,
-nav .navbar-nav .nav-link {
+nav .navbar-nav .nav-link,
+#loading {
     font-family: $heading-font-stack;
     font-size: 0.85em;
     font-weight: 700;
@@ -23,4 +24,8 @@ nav .navbar-nav .dropdown-item {
 
 nav .navbar-nav .navbar-brand {
     font-size: 1.15em;
+}
+
+#loading .fa {
+    font-size: 4em;
 }

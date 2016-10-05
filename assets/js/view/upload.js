@@ -119,6 +119,8 @@ $(document).ready(function() {
                 progress  = (100 * processed) / total;
             $('#total-progress').attr('value', progress);
         });
+
+        loading.hide();
     }
 });
 
