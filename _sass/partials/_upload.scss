@@ -1,0 +1,53 @@
+#upload-view {
+    overflow-y: auto;
+}
+
+#upload-form {
+    position: absolute;
+    border: none;
+}
+
+#upload-form:not(.dz-started) {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    font-size: 1.5em;
+    color: darken($grey, 25%);
+    outline: 2px dashed $grey;
+    outline-offset: -10px;
+    transition: outline-offset .15s ease-in-out, background .15s linear;
+}
+
+#upload-form.dz-drag-hover {
+    background: lighten($grey, 25%);
+}
+
+#upload-form:not(.dz-started) .dz-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+#upload-view .progress {
+    border-radius: 0;
+}
+
+#upload-view div.table {
+    display: table;
+}
+
+#upload-view div.table .file-row {
+    display: table-row;
+}
+
+#upload-view div.table .file-row > div {
+    display: table-cell;
+    vertical-align: top;
+    border-bottom: 1px solid lighten($grey, 25%);
+    padding: 8px;
+}
+
+#upload-view div.table .file-row:nth-child(even) {
+    background: lighten($grey, 35%);
+}

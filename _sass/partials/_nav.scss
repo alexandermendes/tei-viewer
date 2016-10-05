@@ -1,0 +1,50 @@
+.navbar {
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    border-radius: 0;
+    padding: 0.7rem 1rem 0.6rem;
+}
+
+.navbar .navbar-brand {
+    padding: 0 1rem 0 0;
+}
+
+.navbar .nav > li > .nav-link.btn {
+    color: $white;
+}
+
+.navbar .nav > li > .nav-link:not(.btn) {
+    padding: 0.425rem 0.25rem;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.navbar .nav > li > .nav-link:not(.btn)::before,
+.navbar .nav > li > .nav-link:not(.btn)::after {
+    display: inline-block;
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.2s;
+}
+
+.navbar .nav > li > .nav-link:not(.btn)::before {
+    margin-right: 10px;
+    content: '[';
+    transform: translateX(20px);
+}
+
+.navbar .nav > li > .nav-link:not(.btn)::after {
+    margin-left: 10px;
+    content: ']';
+    transform: translateX(-20px);
+}
+
+.navbar .nav > li > .nav-link:not(.btn):hover::before,
+.navbar .nav > li > .nav-link:not(.btn):hover::after,
+.navbar .nav > li > .nav-link:not(.btn):focus::before,
+.navbar .nav > li > .nav-link:not(.btn):focus::after {
+    opacity: 1;
+    transform: translateX(0px);
+}
+
+.navbar .nav > li > .dropdown-toggle::after {
+    border: none;
+    vertical-align: initial;
+}

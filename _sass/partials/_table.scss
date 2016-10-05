@@ -1,0 +1,109 @@
+#tei-view {
+    width: 100%;
+    overflow-x: auto;
+    height: calc(100vh - 140px);
+    position: relative;
+}
+
+#tei-view table {
+    table-layout: auto;
+    margin-bottom: 0px;
+}
+
+#tei-view table>tbody>tr>td:not(:first-child),
+#tei-view table>tbody>tr>th:not(:first-child),
+#tei-view table>tfoot>tr>td:not(:first-child),
+#tei-view table>tfoot>tr>th:not(:first-child),
+#tei-view table>thead>tr>td:not(:first-child),
+#tei-view table>thead>tr>th:not(:first-child) {
+    background-color: #fff;
+    min-width: 300px;
+}
+
+#tei-view table>tbody>tr>td:first-child,
+#tei-view table>tbody>tr>th:first-child,
+#tei-view table>tfoot>tr>td:first-child,
+#tei-view table>tfoot>tr>th:first-child,
+#tei-view table>thead>tr>td:first-child,
+#tei-view table>thead>tr>th:first-child {
+    background-color: #F8F8F8;
+    padding: 8px 10px 8px 10px;
+    text-align: center;
+    min-width: 60px;
+}
+
+#tei-view table>tbody>tr>td,
+#tei-view table>tbody>tr>th,
+#tei-view table>tfoot>tr>td,
+#tei-view table>tfoot>tr>th,
+#tei-view table>thead>tr>td,
+#tei-view table>thead>tr>th {
+    padding: 8px 20px 8px 20px;
+}
+
+#tei-view table.table-responsive,
+#tei-view table.table-bordered {
+    border: none;
+}
+
+@media screen {
+
+    #tei-view.fixed {
+        overflow-y: hidden;
+    }
+
+    #tei-view.fixed table  {
+        position: relative;
+        table-layout: fixed;
+        height: 100%;
+    }
+
+    #tei-view.fixed table thead {
+        position: absolute;
+        z-index: 10;
+    }
+
+    #tei-view.fixed table tbody {
+        display: block;
+        overflow-x: hidden;
+    }
+
+}
+
+@media print {
+    #tei-view {
+        overflow: visible;
+    }
+    #tei-view table>tbody>tr>td,
+    #tei-view table>tbody>tr>th,
+    #tei-view table>tfoot>tr>td,
+    #tei-view table>tfoot>tr>th,
+    #tei-view table>thead>tr>td,
+    #tei-view table>thead>tr>th {
+        min-width: 0;
+        width: auto!important;
+    }
+    #tei-view a, a:after {
+        content: normal!important;
+    }
+}
+
+
+/** TEI */
+
+#tei-view title {
+    display: inline;
+}
+
+#tei-view quote {
+    font-style: italic;
+}
+
+#tei-view [data-toggle=tooltip] {
+    border-bottom: 1px dashed #999;
+    display: inline;
+}
+
+#tei-view [data-toggle=tooltip]:hover {
+    border-bottom-color: #cdcdcd;
+}

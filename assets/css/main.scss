@@ -1,16 +1,49 @@
 ---
 # Main Sass file
 ---
+
 @charset "utf-8";
 
-$heading-font-stack: 'Roboto Slab', sans-serif;
+@font-face {
+    font-family: Montserrat;
+    src: url('/assets/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Montserrat;
+    src: url('/assets/fonts/Montserrat/Montserrat-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url('/assets/fonts/Roboto/Roboto-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url('/assets/fonts/Roboto/Roboto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+$heading-font-stack: 'Montserrat', sans-serif;
 $base-font-stack: 'Roboto', sans-serif;
-$base-font-size: 16px;
+
+$white: #FFFFFF;
+$grey: #ADADAD;
 
 @import
-    "bootstrap",
-    "font-awesome-sprockets",
-    "font-awesome",
     "base",
-    "partials/typography"
+    "partials/typography",
+    "partials/upload",
+    "partials/table",
+    "partials/nav",
+    "partials/footer",
+    "partials/loading"
 ;
