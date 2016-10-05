@@ -6,7 +6,8 @@ var required = [
     Modernizr.indexeddb,
     Modernizr.blobconstructor,
     Modernizr.flexbox,
-    Modernizr.webworkers
+    Modernizr.webworkers,
+    Modernizr.generators
 ];
 
 $.each(required, function(i, v){
