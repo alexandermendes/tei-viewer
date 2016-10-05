@@ -133,14 +133,13 @@ class DBServer {
     /**
      * Return multiple records, ensuring that a connection is established first.
      */
-    getMultiple(fromRecord=0, toRecord=50) {
+    getAll() {
         var _this = this;
 
-        function getMultipleRecords(fromRecord, toRecord) {
+        function getAllRecords(fromRecord, toRecord) {
             return new Promise(function(resolve, reject) {
                 _this.server.tei.query()
                                 .all()
-                                .limit(fromRecord, toRecord)
                                 .execute()
                                 .then(function(records) {
                                     resolve(records);
@@ -153,12 +152,12 @@ class DBServer {
         return new Promise(function(resolve, reject) {
             if (_this.server === null) {
                 _this.connect().then(function() {
-                    resolve(getMultipleRecords(fromRecord, toRecord));
+                    resolve(getAllRecords());
                 }).catch(function (err) {
                     reject(err);
                 });
             } else {
-                resolve(getMultipleRecords(fromRecord, toRecord));
+                resolve(getAllRecords());
             }
         });
     }
@@ -189,6 +188,35 @@ class DBServer {
                 });
             } else {
                 resolve(countRecords());
+            }
+        });
+    }
+
+    /**
+     * Clear all records, ensuring that a connection is established first.
+     */
+    clearAll() {
+        var _this = this;
+
+        function clearAllRecords() {
+            return new Promise(function(resolve, reject) {
+                _this.server.tei.clear().then(function () {
+                    resolve();
+                }).catch(function (err) {
+                    reject(err);
+                });
+            });
+        }
+
+        return new Promise(function(resolve, reject) {
+            if (_this.server === null) {
+                _this.connect().then(function() {
+                    resolve(clearAllRecords());
+                }).catch(function (err) {
+                    reject(err);
+                });
+            } else {
+                resolve(clearAllRecords());
             }
         });
     }
