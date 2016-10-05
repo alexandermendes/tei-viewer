@@ -45,7 +45,7 @@ class DBServer {
     add(data) {
         var _this = this;
 
-        function addRecord(id, xml) {
+        function addRecord(data) {
             return new Promise(function(resolve, reject) {
                 _this.server.tei.add(data).then(function() {
                     resolve();
