@@ -7,10 +7,12 @@
 
         {% include nav.html %}
 
-        <main>
-            <div class="container">
+        {% include loading.html %}
+
+        <main id="help-view" class="m-t-3 m-b-3 invisible">
+            <div class="container-fluid">
                 <div class="row">
-                    <div class="col-xs-12 col-md-8 col-md-offset-2">
+                    <div class="col-xs-12 col-md-8 offset-md-2">
                         {{ content }}
                     </div>
                 </div>
@@ -19,9 +21,9 @@
 
         {% include footer.html %}
 
-        <script src="{{ "/assets/js/dist/vendor.js" | prepend: site.url }}"></script>
-        <script src="{{ "/assets/js/dist/custom-modernizr.min.js" | prepend: site.url }}"></script>
-        <script src="{{ "/assets/js/dist/packed.js" | prepend: site.url }}"></script>
+        <script src="{{ "/assets/dist/js/vendor.js" | prepend: site.url }}"></script>
+        <script src="{{ "/assets/dist/js/custom-modernizr.min.js" | prepend: site.url }}"></script>
+        <script src="{{ "/assets/dist/js/packed.js" | prepend: site.url }}"></script>
 
     </body>
 

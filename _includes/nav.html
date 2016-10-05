@@ -1,100 +1,89 @@
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="fa fa-bars"></span>
-            </button>
-            <a class="navbar-brand" href="{{ site.github.url }}">Tei Viewer</a>
-        </div>
+<nav class="navbar navbar-light navbar-static-top bg-faded invisible">
+    <div class="container-fluid">
 
-        <div id="main-navbar" class="collapse navbar-collapse">
+        <a class="navbar-brand" href="/">Tei Viewer</a>
 
+        <button class="navbar-toggler hidden-lg-up pull-xs-right" type="button" data-toggle="collapse" data-target="#main-navbar">
+            &#9776;
+        </button>
+
+        <div id="main-navbar" class="collapse navbar-toggleable-md">
             <ul class="nav navbar-nav">
+                {% unless page.active == 'table' %}
+                <li class="nav-item">
+                    <a href="/" class="nav-link nav-exit">View Table</a>
+                </li>
+                {% endunless %}
+
                 {% if page.active == 'table' %}
-                <li>
-                    <form class="navbar-form upload-form" method="post" action="" enctype="multipart/form-data">
-                        <span class="btn btn-success btn-file">
-                            Add Files <input type="file" class="add-files" name="files[]" accept=".xml" multiple>
-                        </span>
-                    </form>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Hide</a>
+                    <div class="dropdown-menu" id="hide-menu">
+                    </div>
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Hide
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" id="hide-menu"></ul>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Show</a>
+                    <div class="dropdown-menu" id="show-menu">
+                    </div>
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Show
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" id="show-menu"></ul>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Clear</a>
+                    <div class="dropdown-menu" id="clear-menu">
+                        <a href="#" class="dropdown-item" id="clear-selected">Selected Rows</a>
+                        <a href="#" class="dropdown-item" id="clear-all">All Rows</a>
+                    </div>
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Clear
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" id="clear-menu">
-                        <li><a href="#" id="clear-selected">Selected Rows</a></li>
-                        <li><a href="#" id="clear-all">All Rows</a></li>
-                    </ul>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="csv-export">Export</a>
                 </li>
-                <li>
-                    <a href="#" id="csv-export">Export</a>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="window.print()">Print</a>
                 </li>
-                <li>
-                    <a href="#" onclick="window.print()">Print</a>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">XSLT
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" id="select-xslt">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">XSLT</a>
+                    <div class="dropdown-menu" id="select-xslt">
                         {% for file in site.static_files %}
                             {% if file.path contains 'xslt/' %}
                                 {% unless file.path contains 'xslt/helpers.xsl' %}
-                                    <li><a href="#" id="clear-selected">{{ file.path | remove_first: "/assets/xslt/" }}</a></li>
+                                    <a href="#" class="dropdown-item" id="clear-selected">{{ file.path | remove_first: "/assets/xslt/" }}</a>
                                 {% endunless %}
                             {% endif %}
                         {% endfor %}
-                    </ul>
-                </li>
-                <li>
-                    <a href="/docs/">Help</a>
-                </li>
-                {% elsif page.active == 'docs' %}
-                <li>
-                    <p class="navbar-btn">
-                        <a href="/" class="btn btn-default">Back</a>
-                    </p>
+                    </div>
                 </li>
                 {% elsif page.active == 'editor' %}
-                <li>
-                    <p class="navbar-btn">
-                        <a href="/" class="btn btn-default">Back</a>
-                    </p>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="xml-save">Save</a>
                 </li>
-                <li>
-                    <p class="navbar-btn">
-                        <a href="#" class="btn btn-success" id="xml-save">Save</a>
-                    </p>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="xml-download">Download</a>
                 </li>
-                <li>
-                    <p class="navbar-btn">
-                        <a href="#" class="btn btn-info" id="xml-download">Download</a>
-                    </p>
+                {% elsif page.active == 'upload' %}
+                <li class="nav-item">
+                    <a href="#" class="nav-link add-files">Add Files</a>
                 </li>
                 {% endif %}
+
+                {% unless page.active == 'help' %}
+                <li class="nav-item">
+                    <a href="/help/" class="nav-link nav-exit">Help</a>
+                </li>
+                {% endunless %}
             </ul>
 
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="{{ site.github.repository_url }}" id="gh-link">
-                        <span class="hidden-xs fa fa-github fa-2x"></span>
-                        <span class="visible-xs">View on GitHub</span>
-                    </a>
+            <ul class="nav navbar-nav pull-lg-right">
+
+                {% if page.active == 'table' %}
+                <li item="nav-item">
+                    <a href="/upload/" class="btn btn-primary nav-link nav-exit">Upload</a>
                 </li>
+                {% endif %}
+
+                {% if page.active == 'upload' %}
+                <li item="nav-item">
+                    <button id="start-upload" class="btn btn-primary nav-link">Upload <span id="n-files"></span> Files</button>
+                </li>
+                {% endif %}
             </ul>
 
         </div>
