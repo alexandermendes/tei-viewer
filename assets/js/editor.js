@@ -31,7 +31,7 @@ $("#xml-download").click(function(evt) {
 
 $(document).ready(function() {
     if ($("#editor").length) {
-        var id = parseURL.getIntParameter('id');
+        var id = parseURL.getIntParameter('id', true);
         dbServer.get(id).then(function(r) {
             record = r;
             $('#editor').text(record.xml);

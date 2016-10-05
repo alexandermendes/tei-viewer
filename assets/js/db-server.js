@@ -38,6 +38,36 @@ class DBServer {
         });
     }
 
+
+    /**
+     * Add a record, ensuring that a connection is established first.
+     */
+    add(data) {
+        var _this = this;
+
+        function addRecord(id, xml) {
+            return new Promise(function(resolve, reject) {
+                _this.server.tei.add(data).then(function() {
+                    resolve();
+                }).catch(function (err) {
+                    reject(err);
+                });
+            });
+        }
+
+        return new Promise(function(resolve, reject) {
+            if (_this.server === null) {
+                _this.connect().then(function() {
+                    resolve(addRecord(data));
+                }).catch(function (err) {
+                    reject(err);
+                });
+            } else {
+                resolve(addRecord(data));
+            }
+        });
+    }
+
     /**
      * Return a record, ensuring that a connection is established first.
      */
@@ -68,7 +98,6 @@ class DBServer {
                 resolve(getRecord(id));
             }
         });
-
     }
 
 

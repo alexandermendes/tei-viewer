@@ -28,6 +28,8 @@ window.notify = function(msg, type) {
         default:
             opts.title = 'Info';
             opts.icon = 'fa fa-info-circle';
+            opts.delay = 3000;
+            opts.hide = true;
             break;
     }
 

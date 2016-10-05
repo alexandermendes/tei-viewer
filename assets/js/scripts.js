@@ -4,49 +4,6 @@ var currentPage = 0;
 
 
 /**
- * Upload XML files.
- * @param {FileList} files - The files to upload.
- */
-function uploadFiles(files) {
-    showView('loading');
-    var reader  = {},
-        pending = files.length;
-
-    /** Save the file to the database. */
-    function saveFile(theFile) {
-        return function(evt) {
-            dbServer.tei.add({
-                xml: evt.target.result,
-                filename: theFile.name
-            }).then(function() {
-                pending--;
-                if (pending === 0) {
-                    notify(files.length + ' file' +
-                           (files.length == 1 ? '' : 's') + ' added.',
-                           'success');
-                    $('.upload-form').trigger("reset");
-                    refreshView();
-                }
-            }).catch(function (err) {
-                notify(err.message, 'error');
-                throw err;
-            });
-        };
-    }
-
-    for (var i = 0; i < files.length; i++) {
-        if (files[i].type !== 'text/xml') {
-            notify(f.name + ' is not a valid XML file.', 'warning');
-            continue;
-        }
-        reader = new FileReader();
-        reader.onload = saveFile(files[i]);
-        reader.readAsText(files[i]);
-    }
-}
-
-
-/**
  * Show a view.
  * @param {string} view - The view to show.
  */
@@ -60,31 +17,6 @@ function showView(view) {
         $('#tei-view-menu').show();
         $('#xml-view-menu').hide();
     }
-}
-
-
-/**
- * Remove the XML declaration and add the database ID to an XML document.
- * @param {string} view - The XML string to format.
- * @param {string} id - The database ID of the record.
- */
-function preformatXml(xml, id) {
-    return xml.replace(/<\?xml.*?\?>/g, "")
-              .replace(/<TEI/g, '<TEI id="' + id + '"');
-}
-
-
-/**
- * Return a merged XML document.
- * @param {Array} docs - The data to merge.
- */
-function mergeXMLDocs(data) {
-    var xmlStr = "<MERGED-TEI>";
-    $.each(data, function(i, value) {
-        xmlStr = xmlStr.concat(preformatXml(value.xml, value.id));
-    });
-    xmlStr = xmlStr.concat('</MERGED-TEI>');
-    return parseXML(xmlStr);
 }
 
 
@@ -155,35 +87,6 @@ function createTeiTable(container) {
         notify('XSLT file ' + tableXSLT + ' could not be loaded, try ' +
                'reverting to default settings.', 'error');
     });
-}
-
-
-/**
- * Parse and return an XML document.
- * @param {string} xmlStr - The XML string.
- */
-function parseXML(xmlStr) {
-    var parser = new DOMParser(),
-        doc    = parser.parseFromString(xmlStr, 'text/xml');
-    if(isParseError(doc)) {
-        notify('Failed to parse XML.', 'error');
-    }
-    return doc;
-}
-
-
-/**
- * Check if an XML document contains a parse error.
- * @param {string} xmlDoc - The XML string.
- */
-function isParseError(xmlDoc) {
-    var parser = new DOMParser(),
-        doc    = parser.parseFromString('<', 'text/xml'),
-        ns     = doc.getElementsByTagName("parsererror")[0].namespaceURI;
-    if (ns === 'http://www.w3.org/1999/xhtml') {
-        return xmlDoc.getElementsByTagName("parsererror").length > 0;
-    }
-    return xmlDoc.getElementsByTagNameNS(ns, 'parsererror').length > 0;
 }
 
 
@@ -378,35 +281,6 @@ $("#show-menu").on('click', '.show-column', function(evt) {
 });
 
 
-/** Handle add files event. */
-$(".add-files").change(function(evt) {
-    var files = evt.target.files;
-    uploadFiles(files);
-});
-
-
-/** Handle a show XML event. */
-$("#tei-view").on('click', ".show-xml", function(evt) {
-    var recordID = parseInt($(this).parents('tr')[0].id);
-    window.location.href = '/editor?id=' + recordID;
-});
-
-
-/** Handle upload box drag and drop event. */
-$('#upload-view').on('drag dragstart dragend dragover dragenter dragleave drop', function(evt) {
-    var files = {};
-    evt.preventDefault();
-    evt.stopPropagation();
-}).on('dragover dragenter', function() {
-    $('#upload-view').addClass('is-dragover');
-}).on('dragleave dragend drop', function() {
-    $('#upload-view').removeClass('is-dragover');
-}).on('drop', function(e) {
-    files = evt.originalEvent.dataTransfer.files;
-    uploadFiles(files);
-});
-
-
 /** Select or deselect table row on click event. */
 $("#tei-view").on('click', 'tr:not(a)', function(evt) {
     var selected     = $('#tei-view table tbody tr[selected]'),
@@ -485,7 +359,6 @@ Boolean.prototype.toCapsString = function () {
 
 // Initialise
 $(function() {
-    showView('loading');
     $.ajaxSetup({ cache: false });
     $('[data-toggle="tooltip"]').tooltip();
 

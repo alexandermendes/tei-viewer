@@ -4,7 +4,9 @@ var required = [
     Modernizr.filereader,
     Modernizr.promises,
     Modernizr.indexeddb,
-    Modernizr.blobconstructor
+    Modernizr.blobconstructor,
+    Modernizr.flexbox,
+    Modernizr.webworkers
 ];
 
 $.each(required, function(i, v){
