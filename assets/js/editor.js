@@ -1,39 +1,50 @@
 var editor;
-var record;
 
 /**
  * Save the record.
  */
 $("#xml-save").click(function(evt) {
-    record.xml = editor.getValue();
-    dbServer.update(record).then(function() {
+    var transformer = new Transformer();
+    editor.record.xml = editor.getValue();
+
+    transformer.loadXSLT().then(function() {
+        return transformer.updateRecord(editor.record);
+    }).then(function() {
+        return dbServer.update(editor.record);
+    }).then(function() {
         notify('Record saved!', 'success');
     }).catch(function (err) {
         notify(err.message, 'error');
         throw err;
     });
+
+    $(this).blur();
     evt.preventDefault();
 });
 
 /**
  * Download the record.
  */
-$("#xml-download").click(function(evt) {
-    var type = 'application/xml',
-        link = document.createElement("a"),
-        file = new Blob([editor.getValue()], {type: type});
-    link.download = record.filename;
-    link.href = window.URL.createObjectURL(file);
-    link.dataset.downloadurl = [type, link.download, link.href].join(':');
-    link.click();
+$("#xml-export").click(function(evt) {
+    download.xml([editor.record]);
+    $(this).blur();
     evt.preventDefault();
 });
 
 $(document).ready(function() {
-    if ($("#editor").length) {
-        var id = parseURL.getIntParameter('id', true);
-        dbServer.get(id).then(function(r) {
-            record = r;
+    if ($("#editor-view").length) {
+        var id = null;
+
+        try {
+            id = parseURL.getIntParameter('id', true);
+        } catch(err) {
+            $('#editor').hide();
+            loading.hide();
+            notify(err.message, 'error', 1000)
+            throw err;
+        }
+
+        dbServer.get(id).then(function(record) {
             $('#editor').text(record.xml);
             editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
                 mode:'text/xml',
@@ -41,8 +52,12 @@ $(document).ready(function() {
                 autofocus: true,
                 lineWrapping: true,
             });
+            editor.record = record;
+            loading.hide();
         }).catch(function (err) {
-            notify(err.message, 'error');
+            $('#editor').hide();
+            loading.hide();
+            notify(err.message, 'error', 1000)
             throw err;
         });
     }

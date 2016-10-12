@@ -6,11 +6,15 @@ loading.hide = function() {
         $("nav, main, footer").show();
         $("nav, footer").addClass('animated slideInLeft');
         $("main").addClass('animated slideInRight');
+        window.scrollTo(0, 0);
     }, 400);
 }
 
 loading.text = function(text) {
-    $('#loading-text').text(text);
+    setTimeout(function() {
+        $('#loading-text').text(text);
+    }, 100);
+
 }
 
 export default window.loading;

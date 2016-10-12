@@ -2,15 +2,15 @@ window.parseURL = {getIntParameter: null}
 
 parseURL.getIntParameter = function(parameter, required=false) {
     var uri   = new URI(document.location.href),
-        query = URI.parseQuery(uri.query());
+        query = URI.parseQuery(uri.query()),
+        param = parseInt(query[parameter]);
 
-    if (typeof query[parameter] === 'undefined' && !required) {
-        return null;
+    if (isNaN(param) && required) {
+        throw new Error('Invalid parameters in URL');
     }
 
-    if (isNaN(query[parameter])) {
-        notify('Invalid parameters in URL', 'error');
-        throw new Error('Invalid parameters in URL');
+    if (isNaN(param)) {
+        return null;
     }
 
     return parseInt(query[parameter]);

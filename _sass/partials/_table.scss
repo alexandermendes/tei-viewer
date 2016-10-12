@@ -1,109 +1,179 @@
-#tei-view {
-    width: 100%;
+.dataTables_wrapper {
     overflow-x: auto;
-    height: calc(100vh - 140px);
-    position: relative;
 }
 
-#tei-view table {
-    table-layout: auto;
-    margin-bottom: 0px;
+.dt-buttons {
+    float: left;
 }
 
-#tei-view table>tbody>tr>td:not(:first-child),
-#tei-view table>tbody>tr>th:not(:first-child),
-#tei-view table>tfoot>tr>td:not(:first-child),
-#tei-view table>tfoot>tr>th:not(:first-child),
-#tei-view table>thead>tr>td:not(:first-child),
-#tei-view table>thead>tr>th:not(:first-child) {
-    background-color: #fff;
-    min-width: 300px;
+.dt-button.buttons-columnVisibility.dropdown-item.active,
+.dt-button.buttons-columnVisibility.dropdown-item.active:focus,
+.dt-button.buttons-columnVisibility.dropdown-item.active:hover {
+    color: initial;
+    text-decoration: initial;
+    background-color: initial;
+    outline: initial;
 }
 
-#tei-view table>tbody>tr>td:first-child,
-#tei-view table>tbody>tr>th:first-child,
-#tei-view table>tfoot>tr>td:first-child,
-#tei-view table>tfoot>tr>th:first-child,
-#tei-view table>thead>tr>td:first-child,
-#tei-view table>thead>tr>th:first-child {
-    background-color: #F8F8F8;
-    padding: 8px 10px 8px 10px;
-    text-align: center;
-    min-width: 60px;
+.dt-button.buttons-columnVisibility span::before {
+    font-family: "FontAwesome";
+    content: "\f00d";
+    margin-right: 1rem;
 }
 
-#tei-view table>tbody>tr>td,
-#tei-view table>tbody>tr>th,
-#tei-view table>tfoot>tr>td,
-#tei-view table>tfoot>tr>th,
-#tei-view table>thead>tr>td,
-#tei-view table>thead>tr>th {
-    padding: 8px 20px 8px 20px;
+.dt-button.buttons-columnVisibility.active span::before {
+    content: "\f00c";
 }
 
-#tei-view table.table-responsive,
-#tei-view table.table-bordered {
-    border: none;
+table.dataTable,
+table.dataTable thead {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    border-collapse: collapse!important;
+}
+
+table.dataTable tbody tr.selected td:nth-child(n+2) {
+    background-color: $blue;
+    color: $white;
+}
+
+table.dataTable tr .select-checkbox::after {
+    font-family: "FontAwesome";
+    content: "\f096";
+}
+
+table.dataTable tr.selected .select-checkbox::after {
+    content: "\f046";
+}
+
+table.dataTable .dataTables_empty {
+    position: fixed;
+    width: 100vw;
+}
+
+.dataTables_info .select-info::before {
+    content: " ("
+}
+
+.dataTables_info .select-info::after {
+    content: " )"
+}
+
+.dt-button-collection.dropdown-menu {
+    max-height: 260px;
+    overflow-x: hidden;
+}
+
+@media print {
+    .dataTables_wrapper {
+        overflow: visible;
+    }
+}
+
+
+/** table */
+
+.dataTables_wrapper title {
+    display: inline;
+}
+
+.dataTables_wrapper quote {
+    font-style: italic;
+}
+
+.dataTables_wrapper [data-toggle=tooltip] {
+    border-bottom: 1px dashed #999;
+    display: inline;
+}
+
+.dataTables_wrapper [data-toggle=tooltip]:hover {
+    border-bottom-color: #cdcdcd;
+}
+
+#table-view {
+    overflow-x: auto;
 }
 
 @media screen {
 
-    #tei-view.fixed {
+    #table-view {
         overflow-y: hidden;
     }
 
-    #tei-view.fixed table  {
+    #table-view table  {
+        border: none;
         position: relative;
         table-layout: fixed;
         height: 100%;
     }
 
-    #tei-view.fixed table thead {
+    #table-view table thead {
         position: absolute;
-        z-index: 10;
     }
 
-    #tei-view.fixed table tbody {
+    #table-view table tbody {
+        width: 100%;
         display: block;
         overflow-x: hidden;
+        height: calc(100% - 2.6rem);
+        margin-top: (2rem);
     }
 
-}
+    #table-view .table th,
+    #table-view table.table td {
+        padding: 8px 20px;
+    }
 
-@media print {
-    #tei-view {
-        overflow: visible;
+    #table-view table th:nth-child(n+2) {
+        background-color: $white;
+        height: 1rem;
     }
-    #tei-view table>tbody>tr>td,
-    #tei-view table>tbody>tr>th,
-    #tei-view table>tfoot>tr>td,
-    #tei-view table>tfoot>tr>th,
-    #tei-view table>thead>tr>td,
-    #tei-view table>thead>tr>th {
-        min-width: 0;
-        width: auto!important;
-    }
-    #tei-view a, a:after {
-        content: normal!important;
+
+    table td:nth-child(-n+3),
+    table th:nth-child(-n+3) {
+        text-align: center;
     }
 }
 
 
 /** TEI */
 
-#tei-view title {
+#table-view title {
     display: inline;
 }
 
-#tei-view quote {
+#table-view quote {
     font-style: italic;
 }
 
-#tei-view [data-toggle=tooltip] {
+#table-view [data-toggle=tooltip] {
     border-bottom: 1px dashed #999;
     display: inline;
 }
 
-#tei-view [data-toggle=tooltip]:hover {
+#table-view [data-toggle=tooltip]:hover {
     border-bottom-color: #cdcdcd;
+}
+
+
+/** British Library Styles */
+
+.dataTables_wrapper msItem,
+.dataTables_wrapper deconote,
+.dataTables_wrapper colophon,
+.dataTables_wrapper summary {
+    margin: 0 0 10px;
+    display: block;
+}
+
+.dataTables_wrapper dimensions {
+    display: block;
+}
+
+.dataTables_wrapper title {
+    display: inline;
+}
+
+.dataTables_wrapper msitem>title {
+    font-weight: 600;
 }

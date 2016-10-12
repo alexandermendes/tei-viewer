@@ -17,35 +17,12 @@
 
                 {% if page.active == 'table' %}
                 <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Hide</a>
-                    <div class="dropdown-menu" id="hide-menu">
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Show</a>
-                    <div class="dropdown-menu" id="show-menu">
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Clear</a>
-                    <div class="dropdown-menu" id="clear-menu">
-                        <a href="#" class="dropdown-item" id="clear-selected">Selected Rows</a>
-                        <a href="#" class="dropdown-item" id="clear-all">All Rows</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" id="csv-export">Export</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="window.print()">Print</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">XSLT</a>
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Transform</a>
                     <div class="dropdown-menu" id="select-xslt">
                         {% for file in site.static_files %}
                             {% if file.path contains 'xslt/' %}
                                 {% unless file.path contains 'xslt/helpers.xsl' %}
-                                    <a href="#" class="dropdown-item" id="clear-selected">{{ file.path | remove_first: "/assets/xslt/" }}</a>
+                                    <a href="#" class="dropdown-item">{{ file.path | remove_first: "/assets/xslt/" }}</a>
                                 {% endunless %}
                             {% endif %}
                         {% endfor %}
@@ -56,7 +33,7 @@
                     <a href="#" class="nav-link" id="xml-save">Save</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link" id="xml-download">Download</a>
+                    <a href="#" class="nav-link" id="xml-export">Export XML</a>
                 </li>
                 {% elsif page.active == 'upload' %}
                 <li class="nav-item">
@@ -66,25 +43,23 @@
 
                 {% unless page.active == 'help' %}
                 <li class="nav-item">
-                    <a href="/help/" class="nav-link nav-exit">Help</a>
+                    <a href="/help" class="nav-link nav-exit">Help</a>
                 </li>
                 {% endunless %}
             </ul>
 
-            <ul class="nav navbar-nav pull-lg-right">
+            <form class="form-inline pull-lg-right">
 
                 {% if page.active == 'table' %}
-                <li item="nav-item">
-                    <a href="/upload/" class="btn btn-primary nav-link nav-exit">Upload</a>
-                </li>
+                <input id="table-search" type="search" class="form-control" placeholder="Search">
                 {% endif %}
 
-                {% if page.active == 'upload' %}
-                <li item="nav-item">
-                    <button id="start-upload" class="btn btn-primary nav-link">Upload <span id="n-files"></span> Files</button>
-                </li>
-                {% endif %}
-            </ul>
+                {% unless page.active == 'upload' %}
+                <a href="/upload" class="btn btn-primary form-control nav-link nav-exit">Upload</a>
+                {% else %}
+                <button id="start-upload" class="btn btn-primary form-control nav-link">Upload Files</button>
+                {% endunless %}
+            </form>
 
         </div>
     </div>

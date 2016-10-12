@@ -110,7 +110,7 @@ class DBServer {
         function updateRecord(record) {
             return new Promise(function(resolve, reject) {
                 _this.server.tei.update(record).then(function() {
-                    resolve();
+                    resolve(record);
                 }).catch(function (err) {
                     reject(err);
                 });
@@ -217,6 +217,39 @@ class DBServer {
                 });
             } else {
                 resolve(clearAllRecords());
+            }
+        });
+    }
+
+
+    /**
+     * Remove a record, ensuring that a connection is established first.
+     */
+    remove(id) {
+        var _this = this;
+
+        function removeRecord(id) {
+            return new Promise(function(resolve, reject) {
+                _this.server.tei.remove(id).then(function(record) {
+                    if (typeof record === 'undefined') {
+                        reject(new Error('Record not found'));
+                    }
+                    resolve(record);
+                }).catch(function (err) {
+                    reject(err);
+                });
+            });
+        }
+
+        return new Promise(function(resolve, reject) {
+            if (_this.server === null) {
+                _this.connect().then(function() {
+                    resolve(removeRecord(id));
+                }).catch(function (err) {
+                    reject(err);
+                });
+            } else {
+                resolve(removeRecord(id));
             }
         });
     }

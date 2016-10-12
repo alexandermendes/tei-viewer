@@ -4,5 +4,18 @@ active: table
 ---
 
 <main id="table-view" style="display: none;">
-    <!-- Table loaded here -->
+    <table class="table table-bordered table-scroll nowrap">
+        <thead>
+            <tr>
+                <th class="bg-faded">#</th>
+                <th></th>
+                {% for heading in site.data.table.headings %}
+                <th>{{ heading }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            <!-- Table data loaded here -->
+        </tbody>
+    </table>
 </main>

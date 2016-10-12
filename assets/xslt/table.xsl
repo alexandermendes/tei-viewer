@@ -1,71 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0">
-<xsl:import href="assets/xslt/helpers.xsl" />
 <xsl:output method="html" />
 
-    <xsl:template match="MERGED-TEI">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Shelfmark</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Contents</th>
-                    <th>Language</th>
-                    <th>Decorations - Initial Words</th>
-                    <th>Decorations - Miniatures</th>
-                    <th>Decorations - Illustrations</th>
-                    <th>Decorations - Paratext</th>
-                    <th>Decorations - Borders</th>
-                    <th>Decorations - Other</th>
-                    <th>Colophon</th>
-                    <th>Comments</th>
-                    <th>Detailed Contents</th>
-                    <th>Scribes</th>
-                    <th>Physical Description</th>
-                    <th>Material</th>
-                    <th>Extent</th>
-                    <th>Collation</th>
-                    <th>Condition</th>
-                    <th>Layout</th>
-                    <th>Script</th>
-                    <th>Additions</th>
-                    <th>Binding</th>
-                    <th>Date</th>
-                    <th>Provenance</th>
-                    <th>Acquisition</th>
-                    <th>Related People</th>
-                    <th>Related Places</th>
-                    <th>Record History</th>
-                    <th>Margoliouth ID</th>
-                </tr>
-            </thead>
-            <tbody>
-                <xsl:apply-templates select="tei:TEI" />
-            </tbody>
-        </table>
-
-        <script type="text/javascript">
-            <xsl:text>
-                $.getScript( "assets/js/bl.js" );
-            </xsl:text>
-        </script>
+    <xsl:template name="recursiveCopy">
+        <xsl:param name="root" />
+        <xsl:param name="break-lines" />
+        <xsl:for-each select="$root">
+            <xsl:for-each select=".">
+                <xsl:element name="{name()}">
+                    <xsl:copy-of select="@*|node()" />
+                </xsl:element>
+            </xsl:for-each>
+            <xsl:if test="position() != last() and $break-lines = true()">
+                <xsl:text>; </xsl:text>
+                <br />
+            </xsl:if>
+        </xsl:for-each>
     </xsl:template>
 
     <xsl:template match="tei:TEI">
-        <tr>
-            <xsl:attribute name="id">
-                <xsl:value-of select=".//@id" />
-            </xsl:attribute>
-            <xsl:apply-templates select=".//tei:msDesc/tei:msIdentifier"/>
-            <xsl:apply-templates select=".//tei:msDesc/tei:msContents"/>
-            <xsl:call-template name="scribes"/>
-            <xsl:apply-templates select=".//tei:msDesc/tei:physDesc"/>
-            <xsl:apply-templates select=".//tei:msDesc/tei:history"/>
-            <xsl:call-template name="people"/>
-            <xsl:call-template name="places"/>
-            <xsl:apply-templates select=".//tei:msDesc/tei:additional"/>
-        </tr>
+        <table>
+            <tbody>
+                <tr>
+                    <td></td> <!-- Index -->
+                    <td></td> <!-- Select -->
+                    <xsl:apply-templates select=".//tei:msDesc/tei:msIdentifier"/>
+                    <xsl:apply-templates select=".//tei:msDesc/tei:msContents"/>
+                    <xsl:call-template name="scribes"/>
+                    <xsl:apply-templates select=".//tei:msDesc/tei:physDesc"/>
+                    <xsl:apply-templates select=".//tei:msDesc/tei:history"/>
+                    <xsl:call-template name="people"/>
+                    <xsl:call-template name="places"/>
+                    <xsl:apply-templates select=".//tei:msDesc/tei:additional"/>
+                </tr>
+            </tbody>
+        </table>
     </xsl:template>
 
     <xsl:template match="tei:msIdentifier">

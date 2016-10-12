@@ -74,7 +74,7 @@ $(document).ready(function() {
         });
 
         /** Handle completed upload. */
-        dz.on("queuecomplete", function(progress) {
+        dz.on("queuecomplete", function() {
             var nErrors = dz.files.filter(function(el) {
                 return el.status == "error";
             }).length;
@@ -90,10 +90,10 @@ $(document).ready(function() {
                     return el.status == "success";
                 });
                 for (var i = 0; i < success.length; i++) {
-                    dz.remove(success[i]);
+                    dz.removeFile(success[i]);
                 }
             } else {
-                window.location.href = '/table';
+                window.location.href = '/';
             }
         });
 
@@ -105,6 +105,7 @@ $(document).ready(function() {
             } else {
                 notify('Please choose some files to upload!', 'info');
             }
+            evt.preventDefault();
         });
 
         /** Hide form when a file is added. */

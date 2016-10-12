@@ -69,7 +69,15 @@ module.exports = function(grunt) {
                     'node_modules/pnotify/dist/pnotify.buttons.js',
                     'node_modules/pnotify/dist/pnotify.confirm.js',
                     'node_modules/urijs/src/URI.js',
-                    'node_modules/dropzone/dist/dropzone.js'
+                    'node_modules/dropzone/dist/dropzone.js',
+                    'node_modules/datatables.net/js/jquery.dataTables.js',
+                    'node_modules/datatables.net-buttons/js/dataTables.buttons.js',
+                    'node_modules/datatables.net-buttons/js/buttons.html5.js',
+                    'node_modules/datatables.net-buttons/js/buttons.colVis.js',
+                    'node_modules/datatables.net-select/js/dataTables.select.js',
+                    'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.js',
+                    'node_modules/jszip/dist/jszip.js',
+                    'node_modules/file-saver/FileSaver.js'
                 ],
                 dest: 'assets/dist/js/vendor.js',
                 nonull: true
@@ -83,7 +91,10 @@ module.exports = function(grunt) {
                     'node_modules/pnotify/dist/pnotify.brighttheme.css',
                     'node_modules/codemirror/lib/codemirror.css',
                     'node_modules/dropzone/dist/dropzone.css',
-                    'node_modules/animate.css/animate.css'
+                    'node_modules/animate.css/animate.css',
+                    'node_modules/datatables.net/css/jquery.dataTables.bootstrap.css',
+                    'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
+                    'node_modules/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.css'
                 ],
                 dest: 'assets/dist/css/vendor.css',
                 nonull: true

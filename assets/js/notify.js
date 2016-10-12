@@ -1,4 +1,4 @@
-window.notify = function(msg, type) {
+window.notify = function(msg, type, timeout=0) {
 
     var opts = {
         text: msg,
@@ -14,7 +14,7 @@ window.notify = function(msg, type) {
         case "success":
             opts.title = 'Success';
             opts.icon = 'fa fa-thumbs-up';
-            opts.delay = 3000;
+            opts.delay = 2500;
             opts.hide = true;
             break;
         case "error":
@@ -28,12 +28,17 @@ window.notify = function(msg, type) {
         default:
             opts.title = 'Info';
             opts.icon = 'fa fa-info-circle';
-            opts.delay = 3000;
+            opts.delay = 2500;
             opts.hide = true;
             break;
     }
 
-    new PNotify(opts);
+    setTimeout(function() {
+        var notice = new PNotify(opts);
+        notice.get().click(function(){
+            notice.remove();
+        });
+    }, timeout);
 };
 
 export default notify;

@@ -14,49 +14,12 @@ body {
 main {
     flex: 1;
     background-color: $white;
+    height: calc(100vh - 140px);
+    overflow-y: scroll;
 }
 
 a:hover,
 a:active,
 a:focus {
     text-decoration: none;
-}
-
-#pagination-text {
-    font-size: 0.8em;
-    float: right;
-    top: calc(25px + 0.8em);
-    right: 20px;
-    position: absolute;
-}
-
-#record-id {
-    display: none;
-}
-
-.CodeMirror {
-    height: 100%;
-}
-
-
-/** British Library Styles */
-
-#tei-table msItem,
-#tei-table deconote,
-#tei-table colophon,
-#tei-table summary {
-    margin: 0 0 10px;
-    display: block;
-}
-
-#tei-table dimensions {
-    display: block;
-}
-
-#tei-table title {
-    display: inline;
-}
-
-#tei-table msitem>title {
-    font-weight: 600;
 }
