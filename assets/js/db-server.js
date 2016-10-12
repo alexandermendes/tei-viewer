@@ -1,5 +1,5 @@
 /**
- * Global DB server class.
+ * Database server class.
  */
 class DBServer {
 
@@ -25,6 +25,9 @@ class DBServer {
     connect() {
         var _this = this;
         return new Promise(function(resolve, reject) {
+            if (_this.server !== null) {
+                resolve();
+            }
             db.open(_this.options).then(function(server) {
                 _this.server = server;
                 resolve();
@@ -38,219 +41,90 @@ class DBServer {
         });
     }
 
-
     /**
-     * Add a record, ensuring that a connection is established first.
+     * Add a record.
      */
     add(data) {
         var _this = this;
-
-        function addRecord(data) {
-            return new Promise(function(resolve, reject) {
-                _this.server.tei.add(data).then(function() {
-                    resolve();
-                }).catch(function (err) {
-                    reject(err);
-                });
-            });
-        }
-
         return new Promise(function(resolve, reject) {
-            if (_this.server === null) {
-                _this.connect().then(function() {
-                    resolve(addRecord(data));
-                }).catch(function (err) {
-                    reject(err);
-                });
-            } else {
-                resolve(addRecord(data));
-            }
+            _this.connect().then(function() {
+                return _this.server.tei.add(data);
+            }).then(function() {
+                resolve();
+            }).catch(function (err) {
+                reject(err);
+            });
         });
     }
 
     /**
-     * Return a record, ensuring that a connection is established first.
+     * Return a record.
      */
     get(id) {
         var _this = this;
-
-        function getRecord(id) {
-            return new Promise(function(resolve, reject) {
-                _this.server.tei.get(id).then(function(record) {
-                    if (typeof record === 'undefined') {
-                        reject(new Error('Record not found'));
-                    }
-                    resolve(record);
-                }).catch(function (err) {
-                    reject(err);
-                });
-            });
-        }
-
         return new Promise(function(resolve, reject) {
-            if (_this.server === null) {
-                _this.connect().then(function() {
-                    resolve(getRecord(id));
-                }).catch(function (err) {
-                    reject(err);
-                });
-            } else {
-                resolve(getRecord(id));
-            }
+            _this.connect().then(function() {
+                return _this.server.tei.get(id);
+            }).then(function(record) {
+                if (typeof record === 'undefined') {
+                    reject(new Error('Record not found'));
+                }
+                resolve(record);
+            }).catch(function (err) {
+                reject(err);
+            });
         });
     }
 
 
     /**
-     * Update a record, ensuring that a connection is established first.
+     * Update a record.
      */
     update(record) {
         var _this = this;
-
-        function updateRecord(record) {
-            return new Promise(function(resolve, reject) {
-                _this.server.tei.update(record).then(function() {
-                    resolve(record);
-                }).catch(function (err) {
-                    reject(err);
-                });
-            });
-        }
-
         return new Promise(function(resolve, reject) {
-            if (_this.server === null) {
-                _this.connect().then(function() {
-                    resolve(updateRecord(record));
-                }).catch(function (err) {
-                    reject(err);
-                });
-            } else {
-                resolve(updateRecord(record));
-            }
+            _this.connect().then(function() {
+                return _this.server.tei.update(record);
+            }).then(function(record) {
+                resolve(record);
+            }).catch(function (err) {
+                reject(err);
+            });
         });
     }
 
     /**
-     * Return multiple records, ensuring that a connection is established first.
+     * Return all records.
      */
     getAll() {
         var _this = this;
-
-        function getAllRecords(fromRecord, toRecord) {
-            return new Promise(function(resolve, reject) {
-                _this.server.tei.query()
-                                .all()
-                                .execute()
-                                .then(function(records) {
-                                    resolve(records);
-                }).catch(function (err) {
-                    reject(err);
-                });
-            });
-        }
-
         return new Promise(function(resolve, reject) {
-            if (_this.server === null) {
-                _this.connect().then(function() {
-                    resolve(getAllRecords());
-                }).catch(function (err) {
-                    reject(err);
-                });
-            } else {
-                resolve(getAllRecords());
-            }
-        });
-    }
-
-
-    /**
-     * Count records, ensuring that a connection is established first.
-     */
-    count() {
-        var _this = this;
-
-        function countRecords() {
-            return new Promise(function(resolve, reject) {
-                _this.server.tei.count().then(function (n) {
-                    resolve(n);
-                }).catch(function (err) {
-                    reject(err);
-                });
+            _this.connect().then(function() {
+                return _this.server.tei.query().all().execute();
+            }).then(function(records) {
+                resolve(records);
+            }).catch(function (err) {
+                reject(err);
             });
-        }
-
-        return new Promise(function(resolve, reject) {
-            if (_this.server === null) {
-                _this.connect().then(function() {
-                    resolve(countRecords());
-                }).catch(function (err) {
-                    reject(err);
-                });
-            } else {
-                resolve(countRecords());
-            }
         });
     }
 
     /**
-     * Clear all records, ensuring that a connection is established first.
-     */
-    clearAll() {
-        var _this = this;
-
-        function clearAllRecords() {
-            return new Promise(function(resolve, reject) {
-                _this.server.tei.clear().then(function () {
-                    resolve();
-                }).catch(function (err) {
-                    reject(err);
-                });
-            });
-        }
-
-        return new Promise(function(resolve, reject) {
-            if (_this.server === null) {
-                _this.connect().then(function() {
-                    resolve(clearAllRecords());
-                }).catch(function (err) {
-                    reject(err);
-                });
-            } else {
-                resolve(clearAllRecords());
-            }
-        });
-    }
-
-
-    /**
-     * Remove a record, ensuring that a connection is established first.
+     * Remove a record.
      */
     remove(id) {
         var _this = this;
-
-        function removeRecord(id) {
-            return new Promise(function(resolve, reject) {
-                _this.server.tei.remove(id).then(function(record) {
-                    if (typeof record === 'undefined') {
-                        reject(new Error('Record not found'));
-                    }
-                    resolve(record);
-                }).catch(function (err) {
-                    reject(err);
-                });
-            });
-        }
-
         return new Promise(function(resolve, reject) {
-            if (_this.server === null) {
-                _this.connect().then(function() {
-                    resolve(removeRecord(id));
-                }).catch(function (err) {
-                    reject(err);
-                });
-            } else {
-                resolve(removeRecord(id));
-            }
+            _this.connect().then(function() {
+                return _this.server.tei.remove(id);
+            }).then(function(record) {
+                if (typeof record === 'undefined') {
+                    reject(new Error('Record not found'));
+                }
+                resolve(record);
+            }).catch(function (err) {
+                reject(err);
+            });
         });
     }
 
