@@ -130,4 +130,4 @@ class DBServer {
 
 }
 
-export default window.dbServer = new DBServer();
+export default new DBServer();

@@ -1,7 +1,7 @@
 /**
  * Export zipped XML records.
  */
-var exportXML = function exportXML(records) {
+var exportXML = function(records) {
     var zip = new JSZip();
     for (var r of records) {
         zip.file(r.filename, r.xml);

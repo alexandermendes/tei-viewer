@@ -1,12 +1,15 @@
+import exportXML from '../utils/export-xml'
+import getUrlParameter from '../utils/get-url-parameter'
+import transformer from '../utils/transformer'
+import dbServer from '../model/db-server'
+
 var editor;
 
 /**
  * Save the record.
  */
 $("#xml-save").click(function(evt) {
-    var transformer = new Transformer();
     editor.record.xml = editor.getValue();
-
     transformer.loadXSLT().then(function() {
         return transformer.updateRecord(editor.record);
     }).then(function() {
@@ -17,7 +20,6 @@ $("#xml-save").click(function(evt) {
         notify(err.message, 'error');
         throw err;
     });
-
     $(this).blur();
     evt.preventDefault();
 });
@@ -34,9 +36,8 @@ $("#xml-export").click(function(evt) {
 $(document).ready(function() {
     if ($("#editor-view").length) {
         var id = null;
-
         try {
-            id = parseURL.getIntParameter('id', true);
+            id = getUrlParameter('id', 'int');
         } catch(err) {
             $('#editor').hide();
             loading.hide();

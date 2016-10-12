@@ -3,13 +3,18 @@
  */
 class Transformer {
 
+    /**
+     * Initialise.
+     */
     constructor() {
         this.xsltProc = new XSLTProcessor();
         this.xsltURL = "/assets/xslt/table.xsl";
         this.version = "0.0.3";
     }
 
-    /** Load the XSLT script. */
+    /**
+     * Load the XSLT script.
+     */
     loadXSLT() {
         var _this = this;
         return new Promise(function(resolve, reject) {
@@ -25,7 +30,9 @@ class Transformer {
         });
     }
 
-    /** Promise to update a record. */
+    /**
+     * Promise to update a record.
+     */
     updateRecord(record) {
         var xml  = $.parseXML(record.xml),
             frag = this.xsltProc.transformToDocument(xml);
@@ -38,13 +45,14 @@ class Transformer {
         return record;
     }
 
-    /** Update multiple records using the current XSLT script. */
+    /**
+     * Update multiple records.
+     */
     *updateRecordsGenerator(records) {
         for (var r of records) {
             yield this.updateRecord(r);
         }
     }
-
 }
 
-export default window.Transformer = Transformer;
+export default new Transformer();

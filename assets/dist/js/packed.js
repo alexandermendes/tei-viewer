@@ -50,13 +50,13 @@
 
 	var _dbServer2 = _interopRequireDefault(_dbServer);
 
-	var _parseUrl = __webpack_require__(72);
+	var _getUrlParameter = __webpack_require__(72);
 
-	var _parseUrl2 = _interopRequireDefault(_parseUrl);
+	var _getUrlParameter2 = _interopRequireDefault(_getUrlParameter);
 
-	var _html5Check = __webpack_require__(73);
+	var _checkHtml = __webpack_require__(73);
 
-	var _html5Check2 = _interopRequireDefault(_html5Check);
+	var _checkHtml2 = _interopRequireDefault(_checkHtml);
 
 	var _exportXml = __webpack_require__(74);
 
@@ -91,6 +91,12 @@
 	var _notify2 = _interopRequireDefault(_notify);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	try {
+	    (0, _checkHtml2.default)();
+	} catch (err) {
+	    (0, _notify2.default)(err.message, 'error');
+	}
 
 /***/ },
 /* 1 */
@@ -269,7 +275,7 @@
 	    return DBServer;
 	}();
 
-	exports.default = window.dbServer = new DBServer();
+	exports.default = new DBServer();
 
 /***/ },
 /* 2 */
@@ -1807,27 +1813,28 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	window.parseURL = { getIntParameter: null };
-
-	parseURL.getIntParameter = function (parameter) {
-	    var required = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
+	/**
+	 * Return a URL parameter.
+	 */
+	var getUrlParameter = function getUrlParameter(param, type) {
 	    var uri = new URI(document.location.href),
-	        query = URI.parseQuery(uri.query()),
-	        param = parseInt(query[parameter]);
+	        query = URI.parseQuery(uri.query());
 
-	    if (isNaN(param) && required) {
-	        throw new Error('Invalid parameters in URL');
+	    if (!uri.hasQuery(param)) {
+	        throw new Error('Parameter "' + param + '" missing from URL');
 	    }
 
-	    if (isNaN(param)) {
-	        return null;
+	    if (type == 'int') {
+	        if (isNaN(parseInt(query[param]))) {
+	            throw new Error('Parameter "' + param + '" must be an integer');
+	        }
+	        return parseInt(query[param]);
 	    }
 
-	    return parseInt(query[parameter]);
+	    return query[param];
 	};
 
-	exports.default = window.parseURL;
+	exports.default = getUrlParameter;
 
 /***/ },
 /* 73 */
@@ -1838,17 +1845,20 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	var html5Check;
+	/**
+	 * Check for requried HTML5 features.
+	 */
+	var checkHTML5 = function checkHTML5() {
+	    var required = [Modernizr.filereader, Modernizr.promises, Modernizr.indexeddb, Modernizr.blobconstructor, Modernizr.flexbox];
 
-	var required = [Modernizr.filereader, Modernizr.promises, Modernizr.indexeddb, Modernizr.blobconstructor, Modernizr.flexbox, Modernizr.webworkers, Modernizr.generators];
+	    $.each(required, function (i, v) {
+	        if (!v) {
+	            throw new Error('Your browser does not support the required ' + 'HTML5 features, please upgrade.');
+	        }
+	    });
+	};
 
-	$.each(required, function (i, v) {
-	    if (!v) {
-	        notify('Your browser does not support the required HTML5 features, ' + 'please upgrade.', 'error');
-	    }
-	});
-
-	exports.default = html5Check;
+	exports.default = checkHTML5;
 
 /***/ },
 /* 74 */
@@ -1965,6 +1975,10 @@
 	 * A class for handing XSLT transformations.
 	 */
 	var Transformer = function () {
+
+	    /**
+	     * Initialise.
+	     */
 	    function Transformer() {
 	        (0, _classCallCheck3.default)(this, Transformer);
 
@@ -1973,7 +1987,9 @@
 	        this.version = "0.0.3";
 	    }
 
-	    /** Load the XSLT script. */
+	    /**
+	     * Load the XSLT script.
+	     */
 
 
 	    (0, _createClass3.default)(Transformer, [{
@@ -1993,7 +2009,9 @@
 	            });
 	        }
 
-	        /** Promise to update a record. */
+	        /**
+	         * Promise to update a record.
+	         */
 
 	    }, {
 	        key: "updateRecord",
@@ -2009,7 +2027,9 @@
 	            return record;
 	        }
 
-	        /** Update multiple records using the current XSLT script. */
+	        /**
+	         * Update multiple records.
+	         */
 
 	    }, {
 	        key: "updateRecordsGenerator",
@@ -2086,7 +2106,7 @@
 	    return Transformer;
 	}();
 
-	exports.default = window.Transformer = Transformer;
+	exports.default = new Transformer();
 
 /***/ },
 /* 79 */
@@ -3047,33 +3067,49 @@
 
 /***/ },
 /* 85 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _exportXml = __webpack_require__(74);
+
+	var _exportXml2 = _interopRequireDefault(_exportXml);
+
+	var _getUrlParameter = __webpack_require__(72);
+
+	var _getUrlParameter2 = _interopRequireDefault(_getUrlParameter);
+
+	var _transformer = __webpack_require__(78);
+
+	var _transformer2 = _interopRequireDefault(_transformer);
+
+	var _dbServer = __webpack_require__(1);
+
+	var _dbServer2 = _interopRequireDefault(_dbServer);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var editor;
 
 	/**
 	 * Save the record.
 	 */
 	$("#xml-save").click(function (evt) {
-	    var transformer = new Transformer();
 	    editor.record.xml = editor.getValue();
-
-	    transformer.loadXSLT().then(function () {
-	        return transformer.updateRecord(editor.record);
+	    _transformer2.default.loadXSLT().then(function () {
+	        return _transformer2.default.updateRecord(editor.record);
 	    }).then(function () {
-	        return dbServer.update(editor.record);
+	        return _dbServer2.default.update(editor.record);
 	    }).then(function () {
 	        notify('Record saved!', 'success');
 	    }).catch(function (err) {
 	        notify(err.message, 'error');
 	        throw err;
 	    });
-
 	    $(this).blur();
 	    evt.preventDefault();
 	});
@@ -3082,7 +3118,7 @@
 	 * Download the record.
 	 */
 	$("#xml-export").click(function (evt) {
-	    exportXML([editor.record]);
+	    (0, _exportXml2.default)([editor.record]);
 	    $(this).blur();
 	    evt.preventDefault();
 	});
@@ -3090,9 +3126,8 @@
 	$(document).ready(function () {
 	    if ($("#editor-view").length) {
 	        var id = null;
-
 	        try {
-	            id = parseURL.getIntParameter('id', true);
+	            id = (0, _getUrlParameter2.default)('id', 'int');
 	        } catch (err) {
 	            $('#editor').hide();
 	            loading.hide();
@@ -3100,7 +3135,7 @@
 	            throw err;
 	        }
 
-	        dbServer.get(id).then(function (record) {
+	        _dbServer2.default.get(id).then(function (record) {
 	            $('#editor').text(record.xml);
 	            editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
 	                mode: 'text/xml',
@@ -3139,6 +3174,18 @@
 
 	var _promise2 = _interopRequireDefault(_promise);
 
+	var _exportXml = __webpack_require__(74);
+
+	var _exportXml2 = _interopRequireDefault(_exportXml);
+
+	var _transformer = __webpack_require__(78);
+
+	var _transformer2 = _interopRequireDefault(_transformer);
+
+	var _dbServer = __webpack_require__(1);
+
+	var _dbServer2 = _interopRequireDefault(_dbServer);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var tableView;
@@ -3176,7 +3223,7 @@
 	            for (var _iterator = (0, _getIterator3.default)(updateGen), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	                var r = _step.value;
 
-	                promises.push(dbServer.update(r));
+	                promises.push(_dbServer2.default.update(r));
 	            }
 	        } catch (err) {
 	            _didIteratorError = true;
@@ -3245,8 +3292,8 @@
 	                }, {
 	                    "text": "XML",
 	                    "action": function action(evt, dt, node, conf) {
-	                        dbServer.getAll().then(function (records) {
-	                            exportXML(records);
+	                        _dbServer2.default.getAll().then(function (records) {
+	                            (0, _exportXml2.default)(records);
 	                        });
 	                    }
 	                }]
@@ -3272,7 +3319,7 @@
 	                    "action": function action(evt, dt, node, conf) {
 	                        $.each($('tr.selected'), function (i, v) {
 	                            var id = parseInt($(this).attr('id'));
-	                            dbServer.remove(id).then(function () {
+	                            _dbServer2.default.remove(id).then(function () {
 	                                dt.rows('.selected').remove().draw();
 	                            });
 	                        });
@@ -3413,7 +3460,7 @@
 	        var transformer = new Transformer();
 
 	        loading.text('Loading records');
-	        dbServer.getAll().then(function (recs) {
+	        _dbServer2.default.getAll().then(function (recs) {
 	            records = recs;
 	            return loadXSLT(transformer);
 	        }).then(function () {
