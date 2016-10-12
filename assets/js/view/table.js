@@ -8,7 +8,7 @@ function editCode() {
     // Get selected row and go to editor
 }
 
-function loadXSLT(transformer) {
+function loadXSLT() {
     return new Promise(function(resolve, reject) {
         transformer.loadXSLT().then(function() {
             resolve();
@@ -18,13 +18,13 @@ function loadXSLT(transformer) {
     });
 }
 
-function filterRecordsToUpdate(transformer, records) {
+function filterRecordsToUpdate(records) {
     return records.filter(function(el) {
         return transformer.version !== el.version;
     });
 }
 
-function updateRecords(transformer, records) {
+function updateRecords(records) {
     loading.text('Updating records');
     return new Promise(function(resolve, reject) {
         var updateGen = transformer.updateRecordsGenerator(records);
@@ -271,16 +271,15 @@ function applyFixedHeaderFixes() {
 $(document).ready(function() {
     if($('#table-view').length) {
         var records = [];
-        var transformer = new Transformer();
 
         loading.text('Loading records');
         dbServer.getAll().then(function(recs) {
             records = recs;
-            return loadXSLT(transformer);
+            return loadXSLT();
         }).then(function() {
-            return filterRecordsToUpdate(transformer, records);
+            return filterRecordsToUpdate(records);
         }).then(function(recordsToUpdate) {
-            return updateRecords(transformer, recordsToUpdate);
+            return updateRecords(recordsToUpdate);
         }).then(function() {
             return loadTable(records);
         }).then(function() {
