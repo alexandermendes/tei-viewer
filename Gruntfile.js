@@ -23,7 +23,7 @@ module.exports = function(grunt) {
                 "dest": "assets/dist/js/custom-modernizr.min.js",
                 files: {
                     src: [
-                        'assets/js/html5-check.js',
+                        'assets/js/utils/check-html5.js',
                     ]
                 },
                 "uglify": true
