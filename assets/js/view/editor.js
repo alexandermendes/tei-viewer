@@ -26,7 +26,7 @@ $("#xml-save").click(function(evt) {
  * Download the record.
  */
 $("#xml-export").click(function(evt) {
-    download.xml([editor.record]);
+    exportXML([editor.record]);
     $(this).blur();
     evt.preventDefault();
 });

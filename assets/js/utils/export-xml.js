@@ -1,7 +1,7 @@
-window.download = {'xml': null};
-
-/** Download XML records, zipping if there more than one. */
-download.xml = function(records) {
+/**
+ * Export zipped XML records.
+ */
+var exportXML = function exportXML(records) {
     var zip = new JSZip();
     for (var r of records) {
         zip.file(r.filename, r.xml);
@@ -11,4 +11,4 @@ download.xml = function(records) {
     });
 }
 
-export default window.download;
+export default exportXML;

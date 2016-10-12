@@ -88,7 +88,7 @@ function loadTable(records) {
                             "text": "XML",
                             "action": function (evt, dt, node, conf) {
                                 dbServer.getAll().then(function(records) {
-                                    download.xml(records);
+                                    exportXML(records);
                                 });
                             }
                         }
@@ -214,6 +214,12 @@ function loadTable(records) {
             }
         });
 
+        // Apply fixes when table redrawn
+        table.on('draw.dt', function () {
+            console.log('page changed');
+            applyFixedHeaderFixes();
+        });
+
         resolve();
     });
 }
@@ -257,13 +263,6 @@ function applyFixedHeaderFixes() {
     $('tbody').css('height', 'calc(100vh - ' + offset + 'px)');
 }
 
-document.addEventListener('scroll', function(evt) {
-    applyFixedHeaderFixes();
-}, true);
-
-$(window).resize(function() {
-    applyFixedHeaderFixes();
-});
 
 $(document).ready(function() {
     if($('#table-view').length) {
