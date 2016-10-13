@@ -1,5 +1,6 @@
 .dataTables_wrapper {
-    overflow-x: auto;
+    overflow: auto;
+    height: 100%;
 }
 
 .dt-buttons {
@@ -59,11 +60,6 @@ table.dataTable .dataTables_empty {
     content: " )"
 }
 
-.dt-button-collection.dropdown-menu {
-    max-height: 260px;
-    overflow-x: hidden;
-}
-
 @media print {
     .dataTables_wrapper {
         overflow: visible;
@@ -90,8 +86,16 @@ table.dataTable .dataTables_empty {
     border-bottom-color: #cdcdcd;
 }
 
-#table-view {
-    overflow-x: auto;
+table.dataTable.DTCR_clonedTable {
+    position:absolute !important;
+    background-color: rgba($white, 0.7);
+    z-index:202
+}
+
+div.DTCR_pointer{
+    width:1px;
+    background-color: darken($blue, 10%);
+    z-index: 201
 }
 
 @media screen {
@@ -105,33 +109,48 @@ table.dataTable .dataTables_empty {
         position: relative;
         table-layout: fixed;
         height: 100%;
+        background-color: $white;
     }
 
     #table-view table thead {
         position: absolute;
+        display: block;
     }
 
     #table-view table tbody {
-        width: 100%;
+        width: auto;
         display: block;
         overflow-x: hidden;
-        height: calc(100% - 2.6rem);
-        margin-top: (2rem);
+        height: 100%;
+        position: absolute;
     }
 
-    #table-view .table th,
-    #table-view table.table td {
-        padding: 8px 20px;
+    table.table th {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-    #table-view table th:nth-child(n+2) {
-        background-color: $white;
-        height: 1rem;
-    }
-
-    table td:nth-child(-n+3),
-    table th:nth-child(-n+3) {
+    #table-view table.table th:nth-child(-n+2),
+    #table-view table.table td:nth-child(-n+2) {
+        padding: 6px 20px;
+        min-width: 10px;
+        max-width: 10px;
         text-align: center;
+    }
+
+    #table-view table.table th:nth-child(n+3),
+    #table-view table.table td:nth-child(n+3) {
+        padding: 6px 20px;
+        min-width: 300px;
+        max-width: 300px;
+    }
+
+    table td:nth-child(n+3),
+    table.dataTable thead>tr>th.sorting_asc,
+    table.dataTable thead>tr>th.sorting_desc,
+    table.dataTable thead>tr>th.sorting {
+        padding-right: 30px;
     }
 }
 

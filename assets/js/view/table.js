@@ -52,6 +52,8 @@ function loadTable(records) {
 
         var table = $('table').DataTable({
             "dom": "Bfrtip",
+            "colReorder": true,
+            "pageLength": 50,
             "columnDefs": [
                 {
                     "searchable": false,
@@ -149,7 +151,10 @@ function loadTable(records) {
                     "text": "View",
                     "buttons": [
                         "pageLength",
-                        "colvis"
+                        {
+                            extend: 'colvis',
+                            columns: ':gt(1)'
+                        }
                     ]
                 }
             ],
@@ -159,8 +164,7 @@ function loadTable(records) {
                 "selector": 'td:nth-child(2)'
             },
             //"keys": true,
-            //"processing": true,
-            "fixedHeader": true
+            //"processing": true
         });
 
         // Add index column
@@ -220,7 +224,7 @@ function loadTable(records) {
 
         // Apply fixes when table redrawn
         table.on('draw.dt', function () {
-            console.log('page changed');
+            console.log('drawing');
             applyFixedHeaderFixes();
         });
 
@@ -228,43 +232,19 @@ function loadTable(records) {
     });
 }
 
+document.addEventListener('scroll', function(evt) {
+    applyFixedHeaderFixes();
+}, true);
+
+$(window).resize(function() {
+    applyFixedHeaderFixes();
+});
+
 function applyFixedHeaderFixes() {
 
-    // Resize Columns
-    $('tbody tr:first-child td').each(function(i) {
-        var idx = i + 1;
-        var hWidth = $('thead th:nth-child(' + (i + 1) + ')').width();
-        var cWidth = $(this).width();
-        console.log(hWidth, cWidth);
-        if (cWidth > hWidth) {
-            $('thead th:nth-child(' + idx + ')').css('min-width', cWidth);
-        } else {
-            $('tbody td:nth-child(' + idx + ')').css('min-width', hWidth);
-        }
-    });
-
-    // Resize tbody to always show vertical scroll bar
-    var offset = $('.dataTables_wrapper').scrollLeft(),
-        width  = $('.dataTables_wrapper').width();
-    $('tbody').css('min-width', offset + width);
-
-    // Get the width of a scroll bar.
-    var $outer = $('<div>').css({
-        visibility: 'hidden',
-        width: 100,
-        overflow: 'scroll'
-    }).appendTo('body');
-    var widthWithScroll = $('<div>').css({
-        width: '100%'
-    }).appendTo($outer).outerWidth();
-    $outer.remove();
-    var scrollBarWidth = 100 - widthWithScroll;
-
-    var headerHeight = $('thead').height(),
-        footerHeight = $('footer').height();
-    offset = 100 + scrollBarWidth + footerHeight;
-    $('tbody').css('margin-top', headerHeight);
-    $('tbody').css('height', 'calc(100vh - ' + offset + 'px)');
+    // Set table body height
+    $('tbody').css('height', 'calc(100% - ' + $('thead').height() + 'px)');
+    $('tbody').css('top', $('thead').height() + 'px');
 }
 
 
