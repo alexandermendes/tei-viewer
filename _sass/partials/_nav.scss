@@ -53,3 +53,8 @@
     border: none;
     vertical-align: initial;
 }
+
+.navbar .nav .dropdown-menu {
+    max-height: 260px;
+    overflow-x: hidden;
+}
