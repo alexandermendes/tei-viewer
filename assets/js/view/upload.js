@@ -1,3 +1,5 @@
+import dbServer from '../model/db-server'
+
 var uploadView;
 
 Dropzone.autoDiscover = false;
