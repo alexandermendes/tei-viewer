@@ -3194,9 +3194,9 @@
 	    // Get selected row and go to editor
 	}
 
-	function loadXSLT(transformer) {
+	function loadXSLT() {
 	    return new _promise2.default(function (resolve, reject) {
-	        transformer.loadXSLT().then(function () {
+	        _transformer2.default.loadXSLT().then(function () {
 	            resolve();
 	        }).catch(function (err) {
 	            reject(err);
@@ -3204,16 +3204,16 @@
 	    });
 	}
 
-	function filterRecordsToUpdate(transformer, records) {
+	function filterRecordsToUpdate(records) {
 	    return records.filter(function (el) {
-	        return transformer.version !== el.version;
+	        return _transformer2.default.version !== el.version;
 	    });
 	}
 
-	function updateRecords(transformer, records) {
+	function updateRecords(records) {
 	    loading.text('Updating records');
 	    return new _promise2.default(function (resolve, reject) {
-	        var updateGen = transformer.updateRecordsGenerator(records);
+	        var updateGen = _transformer2.default.updateRecordsGenerator(records);
 	        var promises = [];
 	        var _iteratorNormalCompletion = true;
 	        var _didIteratorError = false;
@@ -3260,6 +3260,8 @@
 
 	        var table = $('table').DataTable({
 	            "dom": "Bfrtip",
+	            "colReorder": true,
+	            "pageLength": 50,
 	            "columnDefs": [{
 	                "searchable": false,
 	                "orderable": false,
@@ -3340,16 +3342,16 @@
 	            }, {
 	                "extend": "collection",
 	                "text": "View",
-	                "buttons": ["pageLength", "colvis"]
+	                "buttons": ["pageLength", {
+	                    extend: 'colvis',
+	                    columns: ':gt(1)'
+	                }]
 	            }],
 	            "order": [[2, 'asc']],
 	            "select": {
 	                "style": 'os',
 	                "selector": 'td:nth-child(2)'
-	            },
-	            //"keys": true,
-	            //"processing": true,
-	            "fixedHeader": true
+	            }
 	        });
 
 	        // Add index column
@@ -3407,7 +3409,7 @@
 
 	        // Apply fixes when table redrawn
 	        table.on('draw.dt', function () {
-	            console.log('page changed');
+	            console.log('drawing');
 	            applyFixedHeaderFixes();
 	        });
 
@@ -3415,58 +3417,33 @@
 	    });
 	}
 
+	document.addEventListener('scroll', function (evt) {
+	    applyFixedHeaderFixes();
+	}, true);
+
+	$(window).resize(function () {
+	    applyFixedHeaderFixes();
+	});
+
 	function applyFixedHeaderFixes() {
 
-	    // Resize Columns
-	    $('tbody tr:first-child td').each(function (i) {
-	        var idx = i + 1;
-	        var hWidth = $('thead th:nth-child(' + (i + 1) + ')').width();
-	        var cWidth = $(this).width();
-	        console.log(hWidth, cWidth);
-	        if (cWidth > hWidth) {
-	            $('thead th:nth-child(' + idx + ')').css('min-width', cWidth);
-	        } else {
-	            $('tbody td:nth-child(' + idx + ')').css('min-width', hWidth);
-	        }
-	    });
-
-	    // Resize tbody to always show vertical scroll bar
-	    var offset = $('.dataTables_wrapper').scrollLeft(),
-	        width = $('.dataTables_wrapper').width();
-	    $('tbody').css('min-width', offset + width);
-
-	    // Get the width of a scroll bar.
-	    var $outer = $('<div>').css({
-	        visibility: 'hidden',
-	        width: 100,
-	        overflow: 'scroll'
-	    }).appendTo('body');
-	    var widthWithScroll = $('<div>').css({
-	        width: '100%'
-	    }).appendTo($outer).outerWidth();
-	    $outer.remove();
-	    var scrollBarWidth = 100 - widthWithScroll;
-
-	    var headerHeight = $('thead').height(),
-	        footerHeight = $('footer').height();
-	    offset = 100 + scrollBarWidth + footerHeight;
-	    $('tbody').css('margin-top', headerHeight);
-	    $('tbody').css('height', 'calc(100vh - ' + offset + 'px)');
+	    // Set table body height
+	    $('tbody').css('height', 'calc(100% - ' + $('thead').height() + 'px)');
+	    $('tbody').css('top', $('thead').height() + 'px');
 	}
 
 	$(document).ready(function () {
 	    if ($('#table-view').length) {
 	        var records = [];
-	        var transformer = new Transformer();
 
 	        loading.text('Loading records');
 	        _dbServer2.default.getAll().then(function (recs) {
 	            records = recs;
-	            return loadXSLT(transformer);
+	            return loadXSLT();
 	        }).then(function () {
-	            return filterRecordsToUpdate(transformer, records);
+	            return filterRecordsToUpdate(records);
 	        }).then(function (recordsToUpdate) {
-	            return updateRecords(transformer, recordsToUpdate);
+	            return updateRecords(recordsToUpdate);
 	        }).then(function () {
 	            return loadTable(records);
 	        }).then(function () {
