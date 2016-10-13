@@ -36,6 +36,7 @@
         "datatables.net-fixedheader": "^3",
         "datatables.net-fixedheader-bs": "^3",
         "datatables.net-select": "^1",
+        "datatables.net-colreorder": "^1",
         "jszip": "^3",
         "file-saver": "^1"
     },

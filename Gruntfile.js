@@ -76,6 +76,7 @@ module.exports = function(grunt) {
                     'node_modules/datatables.net-buttons/js/buttons.colVis.js',
                     'node_modules/datatables.net-select/js/dataTables.select.js',
                     'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.js',
+                    'node_modules/datatables.net-colreorder/js/dataTables.colReorder.js',
                     'node_modules/jszip/dist/jszip.js',
                     'node_modules/file-saver/FileSaver.js'
                 ],
