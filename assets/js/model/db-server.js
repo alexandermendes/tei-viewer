@@ -23,13 +23,12 @@ class DBServer {
      * Connect to the database.
      */
     connect() {
-        var _this = this;
-        return new Promise(function(resolve, reject) {
-            if (_this.server !== null) {
+        return new Promise((resolve, reject)  => {
+            if (this.server !== null) {
                 resolve();
             }
-            db.open(_this.options).then(function(server) {
-                _this.server = server;
+            db.open(this.options).then(function(server) {
+                this.server = server;
                 resolve();
             }).catch(function (err) {
                 if (err.type === 'blocked') {
@@ -45,10 +44,9 @@ class DBServer {
      * Add a record.
      */
     add(data) {
-        var _this = this;
-        return new Promise(function(resolve, reject) {
-            _this.connect().then(function() {
-                return _this.server.tei.add(data);
+        return new Promise((resolve, reject)  => {
+            this.connect().then(function() {
+                return this.server.tei.add(data);
             }).then(function() {
                 resolve();
             }).catch(function (err) {
@@ -61,10 +59,9 @@ class DBServer {
      * Return a record.
      */
     get(id) {
-        var _this = this;
-        return new Promise(function(resolve, reject) {
-            _this.connect().then(function() {
-                return _this.server.tei.get(id);
+        return new Promise((resolve, reject)  => {
+            this.connect().then(function() {
+                return this.server.tei.get(id);
             }).then(function(record) {
                 if (typeof record === 'undefined') {
                     reject(new Error('Record not found'));
@@ -81,10 +78,9 @@ class DBServer {
      * Update a record.
      */
     update(record) {
-        var _this = this;
-        return new Promise(function(resolve, reject) {
-            _this.connect().then(function() {
-                return _this.server.tei.update(record);
+        return new Promise((resolve, reject)  => {
+            this.connect().then(function() {
+                return this.server.tei.update(record);
             }).then(function(record) {
                 resolve(record);
             }).catch(function (err) {
@@ -97,10 +93,9 @@ class DBServer {
      * Return all records.
      */
     getAll() {
-        var _this = this;
-        return new Promise(function(resolve, reject) {
-            _this.connect().then(function() {
-                return _this.server.tei.query().all().execute();
+        return new Promise((resolve, reject)  => {
+            this.connect().then(function() {
+                return this.server.tei.query().all().execute();
             }).then(function(records) {
                 resolve(records);
             }).catch(function (err) {
@@ -113,10 +108,9 @@ class DBServer {
      * Remove a record.
      */
     remove(id) {
-        var _this = this;
-        return new Promise(function(resolve, reject) {
-            _this.connect().then(function() {
-                return _this.server.tei.remove(id);
+        return new Promise((resolve, reject)  => {
+            this.connect().then(function() {
+                return this.server.tei.remove(id);
             }).then(function(record) {
                 if (typeof record === 'undefined') {
                     reject(new Error('Record not found'));
