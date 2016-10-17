@@ -56,6 +56,7 @@ module.exports = function(grunt) {
         concat: {
             js: {
                 src: [
+                    'node_modules/pace-progress/pace.js',
                     'node_modules/tether/dist/js/tether.js',
                     'node_modules/jquery/dist/jquery.js',
                     'node_modules/bootstrap/dist/js/bootstrap.js',
@@ -85,6 +86,7 @@ module.exports = function(grunt) {
             },
             css: {
                 src: [
+                    'node_modules/pace-progress/themes/white/pace-theme-big-counter.css',
                     'node_modules/bootstrap/dist/css/bootstrap.css',
                     'node_modules/font-awesome/css/font-awesome.css',
                     'node_modules/pnotify/dist/pnotify.css',
