@@ -1,9 +1,15 @@
 import exportXML from '../utils/export-xml'
 import getUrlParameter from '../utils/get-url-parameter'
 import transformer from '../utils/transformer'
+import notify from '../view/notify'
 import dbServer from '../model/db-server'
 
-var editor;
+let editor = CodeMirror(document.getElementById('editor-view'), {
+    mode:'text/xml',
+    lineNumbers: true,
+    autofocus: true,
+    lineWrapping: true,
+});
 
 /**
  * Save the record.
@@ -20,8 +26,6 @@ $("#xml-save").click(function(evt) {
         notify(err.message, 'error');
         throw err;
     });
-    $(this).blur();
-    evt.preventDefault();
 });
 
 /**
@@ -29,39 +33,25 @@ $("#xml-save").click(function(evt) {
  */
 $("#xml-export").click(function(evt) {
     exportXML([editor.record]);
-    $(this).blur();
-    evt.preventDefault();
 });
 
-$(document).ready(function() {
-    if ($("#editor-view").length) {
-        var id = null;
-        try {
-            id = getUrlParameter('id', 'int');
-        } catch(err) {
-            $('#editor').hide();
-            loading.hide();
-            notify(err.message, 'error', 1000)
-            throw err;
-        }
+if ($("#editor-view").length) {
+    let id = null;
+    try {
+        id = getUrlParameter('id', 'int');
+    } catch(err) {
+        notify(err.message, 'error');
+    }
 
+    if (id !== null) {
         dbServer.get(id).then(function(record) {
-            $('#editor').text(record.xml);
-            editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
-                mode:'text/xml',
-                lineNumbers: true,
-                autofocus: true,
-                lineWrapping: true,
-            });
+            editor.setValue(record.xml);
             editor.record = record;
-            loading.hide();
         }).catch(function (err) {
-            $('#editor').hide();
-            loading.hide();
-            notify(err.message, 'error', 1000)
+            notify(err.message, 'error');
             throw err;
         });
     }
-});
+}
 
 export default editor;
