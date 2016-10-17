@@ -7,9 +7,7 @@
 
         {% include nav.html %}
 
-        {% include loading.html %}
-
-        <main id="help-view" class="p-t-3 p-b-3" style="display: none;">
+        <main id="help-view" class="p-t-3 p-b-3 animated slideInRight">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-md-8 offset-md-2">
@@ -24,9 +22,6 @@
         <script src="{{ "/assets/dist/js/vendor.js" | prepend: site.url }}"></script>
         <script src="{{ "/assets/dist/js/custom-modernizr.min.js" | prepend: site.url }}"></script>
         <script src="{{ "/assets/dist/js/packed.js" | prepend: site.url }}"></script>
-        <script>
-            loading.hide();
-        </script>
 
     </body>
 
