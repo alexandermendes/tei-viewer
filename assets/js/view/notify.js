@@ -1,6 +1,10 @@
-window.notify = function(msg, type, timeout=0) {
+/*
+ * Display a notification.
+ */
+var notify = function(msg, type) {
 
     var opts = {
+        title: type.charAt(0).toUpperCase() + type.slice(1),
         text: msg,
         type: type,
         hide : false,
@@ -11,34 +15,25 @@ window.notify = function(msg, type, timeout=0) {
     };
 
     switch (type) {
+        case "error":
+        case "warning":
+            opts.icon = 'fa fa-exclamation-circle';
+            break;
         case "success":
-            opts.title = 'Success';
             opts.icon = 'fa fa-thumbs-up';
             opts.delay = 2500;
             opts.hide = true;
             break;
-        case "error":
-            opts.title = 'Error';
-            opts.icon = 'fa fa-exclamation-circle';
-            break;
-        case "warning":
-            opts.title = 'Warning';
-            opts.icon = 'fa fa-exclamation-circle';
-            break;
         default:
-            opts.title = 'Info';
             opts.icon = 'fa fa-info-circle';
             opts.delay = 2500;
             opts.hide = true;
             break;
     }
 
-    setTimeout(function() {
-        var notice = new PNotify(opts);
-        notice.get().click(function(){
-            notice.remove();
-        });
-    }, timeout);
+    new PNotify(opts).get().click(function(){
+        notice.remove();
+    });
 };
 
 export default notify;
