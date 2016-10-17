@@ -27,10 +27,10 @@ class DBServer {
             if (this.server !== null) {
                 resolve();
             }
-            db.open(this.options).then(function(server) {
+            db.open(this.options).then((server) => {
                 this.server = server;
                 resolve();
-            }).catch(function (err) {
+            }).catch(function(err) {
                 if (err.type === 'blocked') {
                     oldConnection.close();
                     return err.resume;
@@ -45,11 +45,11 @@ class DBServer {
      */
     add(data) {
         return new Promise((resolve, reject)  => {
-            this.connect().then(function() {
+            this.connect().then(() => {
                 return this.server.tei.add(data);
             }).then(function() {
                 resolve();
-            }).catch(function (err) {
+            }).catch(function(err) {
                 reject(err);
             });
         });
@@ -60,14 +60,14 @@ class DBServer {
      */
     get(id) {
         return new Promise((resolve, reject)  => {
-            this.connect().then(function() {
+            this.connect().then(() => {
                 return this.server.tei.get(id);
             }).then(function(record) {
                 if (typeof record === 'undefined') {
                     reject(new Error('Record not found'));
                 }
                 resolve(record);
-            }).catch(function (err) {
+            }).catch(function(err) {
                 reject(err);
             });
         });
@@ -79,11 +79,11 @@ class DBServer {
      */
     update(record) {
         return new Promise((resolve, reject)  => {
-            this.connect().then(function() {
+            this.connect().then(() => {
                 return this.server.tei.update(record);
             }).then(function(record) {
                 resolve(record);
-            }).catch(function (err) {
+            }).catch(function(err) {
                 reject(err);
             });
         });
@@ -94,11 +94,11 @@ class DBServer {
      */
     getAll() {
         return new Promise((resolve, reject)  => {
-            this.connect().then(function() {
+            this.connect().then(() => {
                 return this.server.tei.query().all().execute();
             }).then(function(records) {
                 resolve(records);
-            }).catch(function (err) {
+            }).catch(function(err) {
                 reject(err);
             });
         });
@@ -109,14 +109,14 @@ class DBServer {
      */
     remove(id) {
         return new Promise((resolve, reject)  => {
-            this.connect().then(function() {
+            this.connect().then(() => {
                 return this.server.tei.remove(id);
             }).then(function(record) {
                 if (typeof record === 'undefined') {
                     reject(new Error('Record not found'));
                 }
                 resolve(record);
-            }).catch(function (err) {
+            }).catch(function(err) {
                 reject(err);
             });
         });
