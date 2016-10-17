@@ -1,8 +1,10 @@
+import URI from 'urijs';
+
 /**
  * Return a URL parameter.
  */
-var getUrlParameter = function(param, type) {
-    var uri   = new URI(document.location.href),
+var getUrlParameter = function(url, param, type) {
+    var uri   = new URI(url),
         query = URI.parseQuery(uri.query());
 
     if (!uri.hasQuery(param)) {
