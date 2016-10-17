@@ -48,6 +48,11 @@
         "grunt-modernizr": "^1",
         "grunt-webpack": "^1",
         "grunt-contrib-watch": "^1",
-        "grunt-contrib-copy": "^1"
+        "grunt-contrib-copy": "^1",
+        "babel-tape-runner": "^1",
+        "tape": "^4"
+    },
+    "scripts": {
+        "test": "babel-tape-runner \"test/**.js\" | faucet"
     }
 }
