@@ -47,7 +47,7 @@ table.dataTable tr.selected .select-checkbox::after {
     content: "\f046";
 }
 
-table.dataTable .dataTables_empty {
+#table-view table.dataTable td.dataTables_empty {
     position: fixed;
     width: 100vw;
 }
@@ -134,8 +134,8 @@ div.DTCR_pointer{
     #table-view table.table th:nth-child(-n+2),
     #table-view table.table td:nth-child(-n+2) {
         padding: 6px 20px;
-        min-width: 10px;
-        max-width: 10px;
+        min-width: 20px;
+        max-width: 20px;
         text-align: center;
     }
 

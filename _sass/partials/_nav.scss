@@ -3,6 +3,7 @@
     border-radius: 0;
     padding: 0.7rem 1rem 0.6rem;
     z-index: 99;
+    display: none;
 }
 
 .navbar .nav-link:hover {
@@ -47,6 +48,10 @@
 .navbar .nav .nav-link:not(.form-control):focus::after {
     opacity: 1;
     transform: translateX(0px);
+}
+
+.pace-progress-inner {
+    display: none;
 }
 
 .navbar .nav .dropdown-toggle::after {
