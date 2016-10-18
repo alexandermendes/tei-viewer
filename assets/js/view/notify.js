@@ -31,9 +31,7 @@ var notify = function(msg, type) {
             break;
     }
 
-    new PNotify(opts).get().click(function(){
-        notice.remove();
-    });
+    new PNotify(opts);
 };
 
 export default notify;
