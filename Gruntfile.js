@@ -19,7 +19,7 @@ module.exports = function(grunt) {
         },
 
         webpack: {
-            js: {
+            build: {
                 entry: "./js/main.js",
                 output: {
                     path: "./assets/js",
@@ -109,7 +109,7 @@ module.exports = function(grunt) {
                 livereload: true
             },
             js: {
-                files: ['assets/js/**/*.js'],
+                files: ['./js/*.js', './js/**/*.js'],
                 tasks: ['webpack', 'modernizr']
             }
         },
