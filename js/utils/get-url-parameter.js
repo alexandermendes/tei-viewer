@@ -1,5 +1,3 @@
-import URI from 'urijs';
-
 /**
  * Return a URL parameter.
  */

@@ -7,11 +7,11 @@ module.exports = function(grunt) {
             dist: {
                 "parseFiles": true,
                 "customTests": [],
-                "devFile": "node_modules/modernizr/src/Modernizr.js",
-                "dest": "assets/dist/js/custom-modernizr.min.js",
+                "devFile": "./node_modules/modernizr/src/Modernizr.js",
+                "dest": "./assets/js/custom-modernizr.min.js",
                 files: {
                     src: [
-                        'assets/js/utils/check-html5.js',
+                        './js/utils/check-html5.js',
                     ]
                 },
                 "uglify": true
@@ -20,9 +20,9 @@ module.exports = function(grunt) {
 
         webpack: {
             js: {
-                entry: "./assets/js/main.js",
+                entry: "./js/main.js",
                 output: {
-                    path: "./assets/dist/js",
+                    path: "./assets/js",
                     filename: "bundle.js",
                 },
                 module: {
@@ -72,7 +72,7 @@ module.exports = function(grunt) {
                     'node_modules/jszip/dist/jszip.js',
                     'node_modules/file-saver/FileSaver.js'
                 ],
-                dest: 'assets/dist/js/vendor.bundle.js',
+                dest: 'assets/js/vendor.bundle.js',
                 nonull: true
             },
             css: {
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
                     'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
                     'node_modules/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.css'
                 ],
-                dest: 'assets/dist/css/vendor.bundle.css',
+                dest: 'assets/css/vendor.bundle.css',
                 nonull: true
             }
         },
@@ -100,7 +100,7 @@ module.exports = function(grunt) {
                 dot: true,
                 cwd: 'node_modules/font-awesome',
                 src: ['fonts/*.*'],
-                dest: 'assets/dist'
+                dest: 'assets/'
             }
         },
 
