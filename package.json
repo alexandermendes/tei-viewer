@@ -41,18 +41,23 @@
         "file-saver": "^1",
         "pace-progress": "^1"
     },
-    "devDependencies":{
+    "devDependencies": {
         "grunt":"^1",
-        "grunt-contrib-jshint":"^1",
         "grunt-contrib-concat":"^1",
         "grunt-modernizr": "^1",
         "grunt-webpack": "^1",
         "grunt-contrib-watch": "^1",
         "grunt-contrib-copy": "^1",
         "babel-tape-runner": "^1",
-        "tape": "^4"
+        "tape": "^4",
+        "jshint": "^2"
+    },
+    "jshintConfig": {
+        "jquery": true,
+        "esversion": 6
     },
     "scripts": {
+        "lint": "jshint assets/js/**/*.js",
         "test": "babel-tape-runner \"test/**.js\" | faucet"
     }
 }

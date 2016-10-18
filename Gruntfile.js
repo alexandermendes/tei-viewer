@@ -2,19 +2,6 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
 
-        jshint: {
-            files: [
-                'assets/js/**/*.js'
-            ],
-            options: {
-                boss: true,
-                globals: {
-                    jQuery: true
-                },
-                esversion: 6
-            }
-        },
-
         modernizr: {
             dist: {
                 "parseFiles": true,
@@ -136,6 +123,4 @@ module.exports = function(grunt) {
                                'watch']);
     grunt.registerTask('build', ['modernizr:dist', 'webpack', 'concat',
                                  'copy']);
-    grunt.registerTask('test', ['jshint'])
-
 };

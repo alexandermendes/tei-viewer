@@ -2,3 +2,5 @@ node_modules
 Gemfile.lock
 _site/
 .jekyll-metadata
+
+*.log
