@@ -38,7 +38,7 @@ $("#xml-export").click(function(evt) {
 if ($("#editor-view").length) {
     let id = null;
     try {
-        id = getUrlParameter('id', 'int');
+        id = getUrlParameter(document.location.href, 'id', 'int');
     } catch(err) {
         notify(err.message, 'error');
     }
