@@ -10,12 +10,12 @@ var checkHTML5 = function() {
         Modernizr.flexbox
     ];
 
-    $.each(required, function(i, v){
-        if (!v) {
+    for (let feature of required) {
+        if (!feature) {
             throw new Error(`Your browser does not support the required HTML5
                             features, please upgrade.`)
         }
-    });
+    }
 }
 
 export default checkHTML5;

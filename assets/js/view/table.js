@@ -1,13 +1,14 @@
 import exportXML from '../utils/export-xml'
 import transformer from '../utils/transformer'
+import notify from '../view/notify'
 import dbServer from '../model/db-server'
 
-var tableView;
 
-function editCode() {
-    // Get selected row and go to editor
-}
+var table;
 
+/**
+ *
+ */
 function loadXSLT() {
     return new Promise(function(resolve, reject) {
         transformer.loadXSLT().then(function() {
@@ -18,18 +19,23 @@ function loadXSLT() {
     });
 }
 
+/**
+ *
+ */
 function filterRecordsToUpdate(records) {
     return records.filter(function(el) {
         return transformer.version !== el.version;
     });
 }
 
+/**
+ * Update records to use latest transformation.
+ */
 function updateRecords(records) {
-    loading.text('Updating records');
     return new Promise(function(resolve, reject) {
-        var updateGen = transformer.updateRecordsGenerator(records);
-        var promises = [];
-        for (var r of updateGen) {
+        let updateGen = transformer.updateRecordsGenerator(records);
+        let promises = [];
+        for (let r of updateGen) {
             promises.push(dbServer.update(r));
         }
         Promise.all(promises).then(function(r) {
@@ -40,20 +46,22 @@ function updateRecords(records) {
     });
 }
 
-/** Load the table. */
+/**
+ * Load the table.
+ */
 function loadTable(records) {
-    loading.text('Building table');
     return new Promise(function(resolve, reject) {
 
+        console.log('concatenating records');
         var rows = records.map(function(el){
             return el.transformed.replace('<tr>', '<tr id="' + el.id + '">');
         }).join();
         $('#table-body').html(rows);
+        console.log('and on');
 
-        var table = $('table').DataTable({
+        table = $('table').DataTable({
             "dom": "Bfrtip",
             "colReorder": true,
-            "pageLength": 50,
             "columnDefs": [
                 {
                     "searchable": false,
@@ -76,7 +84,7 @@ function loadTable(records) {
                             "extend": "excelHtml5",
                             "title": "teiviewer-excel-export",
                             "exportOptions": {
-                                columns: function (idx, data, node) {
+                                "columns": function (idx, data, node) {
                                     return idx !== 0 && idx !== 1;
                                 }
                             }
@@ -85,7 +93,7 @@ function loadTable(records) {
                             "extend": "csvHtml5",
                             "title": "teiviewer-csv-export",
                             "exportOptions": {
-                                columns: function (idx, data, node) {
+                                "columns": function (idx, data, node) {
                                     return idx !== 0 && idx !== 1;
                                 }
                             }
@@ -95,6 +103,9 @@ function loadTable(records) {
                             "action": function (evt, dt, node, conf) {
                                 dbServer.getAll().then(function(records) {
                                     exportXML(records);
+                                }).catch(function(err) {
+                                    notify(err.message, 'error');
+                                    throw err;
                                 });
                             }
                         }
@@ -123,12 +134,19 @@ function loadTable(records) {
                         {
                             "text": "Delete",
                             "action": function (evt, dt, node, conf) {
-                                $.each($('tr.selected'), function(i, v) {
-                                    var id = parseInt($(this).attr('id'));
+                                let ids = [];
+                                $('tbody tr.selected').each(function() {
+                                    ids.push(parseInt($(this).attr('id')));
+                                });
+                                for (var id of ids) {
                                     dbServer.remove(id).then(function() {
                                         dt.rows('.selected').remove().draw();
-                                    })
-                                });
+                                    }).catch(function(err) {
+                                        console.log(id);
+                                        notify(err.message, 'error');
+                                        throw err;
+                                    });
+                                }
                                 $('nav').click();
                             }
                         },
@@ -136,7 +154,8 @@ function loadTable(records) {
                             "text": "XML Editor",
                             "action": function (evt, dt, node, conf) {
                                 if ($('tr.selected').length !== 1) {
-                                    notify('Please select a single record to edit', 'warning');
+                                    notify('Please select a single record to edit',
+                                           'warning');
                                     $('nav').click();
                                 } else {
                                     var id = parseInt($('tr.selected').eq(0).attr('id'));
@@ -222,57 +241,35 @@ function loadTable(records) {
             }
         });
 
-        // Apply fixes when table redrawn
-        table.on('draw.dt', function () {
-            console.log('drawing');
-            applyFixedHeaderFixes();
-        });
+        // Fix tbody position
+        $('tbody').css('height', 'calc(100% - ' + $('thead').height() + 'px)');
+        $('tbody').css('top', $('thead').height() + 'px');
 
         resolve();
     });
 }
 
-document.addEventListener('scroll', function(evt) {
-    applyFixedHeaderFixes();
-}, true);
-
-$(window).resize(function() {
-    applyFixedHeaderFixes();
-});
-
-function applyFixedHeaderFixes() {
-
-    // Set table body height
-    $('tbody').css('height', 'calc(100% - ' + $('thead').height() + 'px)');
-    $('tbody').css('top', $('thead').height() + 'px');
+if($('#table-view').length) {
+    var records = [];
+    console.log('retrieving records');
+    dbServer.getAll().then(function(recs) {
+        console.log('retrieved records');
+        records = recs;
+        console.log('loading XSLT');
+        return loadXSLT();
+    }).then(function() {
+        console.log('Filtering records to Update');
+        return filterRecordsToUpdate(records);
+    }).then(function(recordsToUpdate) {
+        console.log('Updating records');
+        return updateRecords(recordsToUpdate);
+    }).then(function() {
+        console.log('Loading table');
+        return loadTable(records);
+    }).catch(function(err) {
+        notify(err, 'error');
+        throw err;
+    });
 }
 
-
-$(document).ready(function() {
-    if($('#table-view').length) {
-        var records = [];
-
-        loading.text('Loading records');
-        dbServer.getAll().then(function(recs) {
-            records = recs;
-            return loadXSLT();
-        }).then(function() {
-            return filterRecordsToUpdate(records);
-        }).then(function(recordsToUpdate) {
-            return updateRecords(recordsToUpdate);
-        }).then(function() {
-            return loadTable(records);
-        }).then(function() {
-            loading.hide();
-            setTimeout(function() {
-                applyFixedHeaderFixes();
-            }, 500)
-        }).catch(function(err) {
-            loading.hide();
-            notify(err, 'error');
-            throw err;
-        });
-    }
-});
-
-export default tableView;
+export default table;
