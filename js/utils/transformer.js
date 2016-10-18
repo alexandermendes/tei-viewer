@@ -9,7 +9,7 @@ class Transformer {
     constructor() {
         this.xsltProc = new XSLTProcessor();
         this.xsltURL = "/assets/xslt/table.xsl";
-        this.version = "0.0.3";
+        this.version = "0.0.4";
     }
 
     /**

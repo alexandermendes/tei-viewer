@@ -23,7 +23,6 @@
             <tbody>
                 <tr>
                     <td></td> <!-- Index -->
-                    <td></td> <!-- Select -->
                     <xsl:apply-templates select=".//tei:msDesc/tei:msIdentifier"/>
                     <xsl:apply-templates select=".//tei:msDesc/tei:msContents"/>
                     <xsl:call-template name="scribes"/>

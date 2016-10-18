@@ -66,13 +66,8 @@ function loadTable(records) {
                 {
                     "searchable": false,
                     "orderable": false,
-                    "targets": 0
-                },
-                {
-                    "searchable": false,
-                    "orderable": false,
-                    "className": "select-checkbox",
-                    "targets": 1
+                    "targets": 0,
+                    "className": "bg-faded",
                 }
             ],
             "buttons": [
@@ -119,17 +114,11 @@ function loadTable(records) {
                     "buttons": [
                         {
                             "text": "Select All",
-                            "action": function (evt, dt, node, conf) {
-                                dt.rows().select();
-                                $('thead tr').addClass('selected');
-                            }
+                            "extend": "selectAll"
                         },
                         {
                             "text": "Deselect",
-                            "action": function (evt, dt, node, conf) {
-                                dt.rows().deselect();
-                                $('thead tr').removeClass('selected');
-                            }
+                            "extend": "selectNone"
                         },
                         {
                             "text": "Delete",
@@ -171,13 +160,11 @@ function loadTable(records) {
                     ]
                 }
             ],
-            "order": [[ 2, 'asc' ]],
+            "order": [[ 1, 'asc' ]],
             "select": {
-                "style":    'os',
-                "selector": 'td:nth-child(2)'
-            },
-            //"keys": true,
-            //"processing": true
+                "style": "os",
+                "selector": "td:first-child"
+            }
         });
 
         // Add index column
@@ -186,7 +173,6 @@ function loadTable(records) {
                  .nodes()
                  .each(function (cell, i) {
                     cell.innerHTML = i+1;
-                    cell.className += ' bg-faded';
             });
         }).draw();
 
@@ -201,43 +187,17 @@ function loadTable(records) {
         $('.dt-buttons>.buttons-collection').addClass('nav-link');
         $('.dt-buttons.btn-group').addClass('nav-item');
 
+        // Fix tbody position
+        $('tbody').css('height', 'calc(100% - ' + $('thead').height() + 'px)');
+        $('tbody').css('top', $('thead').height() + 'px');
+
         // Handle search
         $("#table-search").on("keyup search input paste cut", function() {
             table.search(this.value).draw();
          });
 
-        // Handle select checkboxes
-        $('thead .select-checkbox').on('click', function() {
-            var selected = $(this).parent().hasClass('selected');
-            if (selected) {
-                $(this).parent().removeClass('selected');
-                table.rows().deselect();
-            } else {
-                $(this).parent().addClass('selected');
-                table.rows().select();
-            }
-        });
-        table.on('select', function (evt, dt, type, indexes) {
-            var nRows = dt.rows().count();
-            var notSelected = dt.rows(':not(.selected)').count();
-            if (notSelected > 0 || nRows === 0) {
-                $('thead tr').removeClass('selected');
-            } else {
-                $('thead tr').addClass('selected');
-            }
-        }).on('deselect', function (evt, dt, type, indexes) {
-            var nRows = dt.rows().count();
-            var notSelected = dt.rows(':not(.selected)').count();
-            if (notSelected > 0 || nRows === 0) {
-                $('thead tr').removeClass('selected');
-            } else {
-                $('thead tr').addClass('selected');
-            }
-        });
-
-        // Fix tbody position
-        $('tbody').css('height', 'calc(100% - ' + $('thead').height() + 'px)');
-        $('tbody').css('top', $('thead').height() + 'px');
+        // Handle select all
+        $('.select-all').on('click', table.rows().select);
 
         resolve();
     });
