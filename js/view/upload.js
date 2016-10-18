@@ -1,4 +1,5 @@
 import dbServer from '../model/db-server';
+import notify from '../view/notify';
 import TEIDropzone from '../utils/tei-dropzone';
 
 var upload;
@@ -11,10 +12,10 @@ $("#start-upload").on('click', function(evt) {
     } else {
         notify('Please choose some files to upload!', 'info');
     }
+    evt.preventDefault();
 });
 
 if($('#upload-view').length) {
-
     var previewNode = document.querySelector("#template");
     previewNode.id = "";
     var previewTemplate = previewNode.parentNode.innerHTML;
