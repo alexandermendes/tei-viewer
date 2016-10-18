@@ -1,5 +1,6 @@
-module.exports = function(grunt) {
+var webpack = require('webpack');
 
+module.exports = function(grunt) {
     grunt.initConfig({
 
         modernizr: {
@@ -22,7 +23,7 @@ module.exports = function(grunt) {
                 entry: "./assets/js/main.js",
                 output: {
                     path: "./assets/dist/js",
-                    filename: "packed.js",
+                    filename: "bundle.js",
                 },
                 module: {
                     loaders: [
@@ -36,8 +37,15 @@ module.exports = function(grunt) {
                             }
                         }
                     ]
-                }
-            },
+                },
+                plugins: [
+                    new webpack.optimize.UglifyJsPlugin({
+                        compress: {
+                            warnings: false
+                        }
+                    })
+                ]
+            }
         },
 
         concat: {
@@ -47,15 +55,11 @@ module.exports = function(grunt) {
                     'node_modules/tether/dist/js/tether.js',
                     'node_modules/jquery/dist/jquery.js',
                     'node_modules/bootstrap/dist/js/bootstrap.js',
-                    'node_modules/mustache/mustache.js',
-                    'node_modules/js-cookie/src/js.cookie.js',
                     'node_modules/db.js/dist/db.min.js',
-                    'node_modules/bootpag/lib/jquery.bootpag.js',
                     'node_modules/codemirror/lib/codemirror.js',
                     'node_modules/codemirror/mode/xml/xml.js',
                     'node_modules/pnotify/dist/pnotify.js',
                     'node_modules/pnotify/dist/pnotify.buttons.js',
-                    'node_modules/pnotify/dist/pnotify.confirm.js',
                     'node_modules/urijs/src/URI.js',
                     'node_modules/dropzone/dist/dropzone.js',
                     'node_modules/datatables.net/js/jquery.dataTables.js',
@@ -68,7 +72,7 @@ module.exports = function(grunt) {
                     'node_modules/jszip/dist/jszip.js',
                     'node_modules/file-saver/FileSaver.js'
                 ],
-                dest: 'assets/dist/js/vendor.js',
+                dest: 'assets/dist/js/vendor.bundle.js',
                 nonull: true
             },
             css: {
@@ -82,11 +86,10 @@ module.exports = function(grunt) {
                     'node_modules/codemirror/lib/codemirror.css',
                     'node_modules/dropzone/dist/dropzone.css',
                     'node_modules/animate.css/animate.css',
-                    'node_modules/datatables.net/css/jquery.dataTables.bootstrap.css',
                     'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
                     'node_modules/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.css'
                 ],
-                dest: 'assets/dist/css/vendor.css',
+                dest: 'assets/dist/css/vendor.bundle.css',
                 nonull: true
             }
         },
