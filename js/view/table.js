@@ -79,6 +79,7 @@ function loadTable(records) {
                 {
                     "extend": "collection",
                     "text": "Export",
+                    "autoClose": true,
                     "buttons": [
                         {
                             "extend": "excelHtml5",
@@ -114,13 +115,13 @@ function loadTable(records) {
                 {
                     "extend": "collection",
                     "text": "Edit",
+                    "autoClose": true,
                     "buttons": [
                         {
                             "text": "Select All",
                             "action": function (evt, dt, node, conf) {
                                 dt.rows().select();
                                 $('thead tr').addClass('selected');
-                                $('nav').click();
                             }
                         },
                         {
@@ -128,7 +129,6 @@ function loadTable(records) {
                             "action": function (evt, dt, node, conf) {
                                 dt.rows().deselect();
                                 $('thead tr').removeClass('selected');
-                                $('nav').click();
                             }
                         },
                         {
@@ -151,9 +151,8 @@ function loadTable(records) {
                                 if ($('tr.selected').length !== 1) {
                                     notify('Please select a single record to edit',
                                            'warning');
-                                    $('nav').click();
                                 } else {
-                                    var id = parseInt($('tr.selected').eq(0).attr('id'));
+                                    var id = parseInt($('tr.selected').attr('id'));
                                     window.location = 'editor?id=' + id;
                                 }
                             }
