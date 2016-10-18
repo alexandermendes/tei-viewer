@@ -8,11 +8,12 @@ repository: alexandermendes/tei-viewer
 # Build settings
 incremental: true
 exclude:
-  - js/
-  - test/
-  - vendor/
-  - node_modules/
-  - Gruntfile.js
-  - package.json
+  - 'js/'
+  - 'test/'
+  - 'vendor/'
+  - 'node_modules/'
+  - 'Gruntfile.js'
+  - 'package.json'
+  - 'LICENSE'
 sass:
   style: :compressed
