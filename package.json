@@ -57,7 +57,7 @@
         "esversion": 6
     },
     "scripts": {
-        "lint": "jshint assets/js/**/*.js",
+        "lint": "jshint js/**/*.js",
         "test": "babel-tape-runner \"test/**.js\" | faucet"
     }
 }

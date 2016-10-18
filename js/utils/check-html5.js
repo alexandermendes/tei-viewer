@@ -13,9 +13,9 @@ var checkHTML5 = function() {
     for (let feature of required) {
         if (!feature) {
             throw new Error(`Your browser does not support the required HTML5
-                            features, please upgrade.`)
+                            features, please upgrade.`);
         }
     }
-}
+};
 
 export default checkHTML5;

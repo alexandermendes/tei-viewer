@@ -9,6 +9,6 @@ var exportXML = function(records) {
     zip.generateAsync({type:"blob"}).then(function(blob) {
         saveAs(blob, "teiviewer-xml-export.zip");
     });
-}
+};
 
 export default exportXML;

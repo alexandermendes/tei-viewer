@@ -1,7 +1,7 @@
-import exportXML from '../utils/export-xml'
-import transformer from '../utils/transformer'
-import notify from '../view/notify'
-import dbServer from '../model/db-server'
+import exportXML from '../utils/export-xml';
+import transformer from '../utils/transformer';
+import notify from '../view/notify';
+import dbServer from '../model/db-server';
 
 
 var table;
@@ -134,20 +134,15 @@ function loadTable(records) {
                         {
                             "text": "Delete",
                             "action": function (evt, dt, node, conf) {
-                                let ids = [];
                                 $('tbody tr.selected').each(function() {
-                                    ids.push(parseInt($(this).attr('id')));
-                                });
-                                for (var id of ids) {
+                                    let id = $(this).attr('id');
                                     dbServer.remove(id).then(function() {
-                                        dt.rows('.selected').remove().draw();
+                                        dt.rows('#' + id).remove().draw();
                                     }).catch(function(err) {
-                                        console.log(id);
                                         notify(err.message, 'error');
                                         throw err;
                                     });
-                                }
-                                $('nav').click();
+                                });
                             }
                         },
                         {
@@ -226,7 +221,7 @@ function loadTable(records) {
         table.on('select', function (evt, dt, type, indexes) {
             var nRows = dt.rows().count();
             var notSelected = dt.rows(':not(.selected)').count();
-            if (notSelected > 0 || nRows == 0) {
+            if (notSelected > 0 || nRows === 0) {
                 $('thead tr').removeClass('selected');
             } else {
                 $('thead tr').addClass('selected');
@@ -234,7 +229,7 @@ function loadTable(records) {
         }).on('deselect', function (evt, dt, type, indexes) {
             var nRows = dt.rows().count();
             var notSelected = dt.rows(':not(.selected)').count();
-            if (notSelected > 0 || nRows == 0) {
+            if (notSelected > 0 || nRows === 0) {
                 $('thead tr').removeClass('selected');
             } else {
                 $('thead tr').addClass('selected');

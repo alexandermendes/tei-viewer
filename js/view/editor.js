@@ -1,8 +1,8 @@
-import exportXML from '../utils/export-xml'
-import getUrlParameter from '../utils/get-url-parameter'
-import transformer from '../utils/transformer'
-import notify from '../view/notify'
-import dbServer from '../model/db-server'
+import exportXML from '../utils/export-xml';
+import getUrlParameter from '../utils/get-url-parameter';
+import transformer from '../utils/transformer';
+import notify from '../view/notify';
+import dbServer from '../model/db-server';
 
 let editor = CodeMirror(document.getElementById('editor-view'), {
     mode:'text/xml',

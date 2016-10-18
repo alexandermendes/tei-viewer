@@ -17,6 +17,6 @@ var getUrlParameter = function(url, param, type) {
     }
 
     return query[param];
-}
+};
 
 export default getUrlParameter;

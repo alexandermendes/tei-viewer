@@ -1,4 +1,4 @@
-import dbServer from '../model/db-server'
+import dbServer from '../model/db-server';
 import TEIDropzone from '../utils/tei-dropzone';
 
 var upload;

@@ -1,5 +1,5 @@
-import dbServer from '../model/db-server'
-import transformer from '../utils/transformer'
+import dbServer from '../model/db-server';
+import transformer from '../utils/transformer';
 
 /**
  * Subclass of Dropzone that transforms XML records and persists to IndexedDB.
