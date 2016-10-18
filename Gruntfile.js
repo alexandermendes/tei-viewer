@@ -8,7 +8,7 @@ module.exports = function(grunt) {
                 "parseFiles": true,
                 "customTests": [],
                 "devFile": "./node_modules/modernizr/src/Modernizr.js",
-                "dest": "./assets/js/custom-modernizr.min.js",
+                "dest": "./assets/js/custom-modernizr.js",
                 files: {
                     src: [
                         './js/utils/check-html5.js',
