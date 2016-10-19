@@ -7,22 +7,25 @@ class Transformer {
      * Initialise.
      */
     constructor() {
+        this.version = "0.0.16";
         this.xsltProc = new XSLTProcessor();
         this.xsltURL = "/assets/xslt/table.xsl";
-        this.version = "0.0.4";
+        this.xsltLoaded = false;
     }
 
     /**
      * Load the XSLT script.
      */
     loadXSLT() {
-        var _this = this;
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
+            if (this.xsltLoaded) {
+                resolve();
+            }
             $.ajax({
-                url: _this.xsltURL,
-                cache: false
-            }).done(function(data) {
-                _this.xsltProc.importStylesheet(data);
+                url: this.xsltURL,
+            }).done((data) => {
+                this.xsltProc.importStylesheet(data);
+                this.xsltLoaded = true;
                 resolve();
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 reject('Error loading XSLT: ' + jqXHR.statusText);
@@ -31,27 +34,47 @@ class Transformer {
     }
 
     /**
-     * Promise to update a record.
+     * Update a record.
      */
     updateRecord(record) {
-        var xml  = $.parseXML(record.xml),
-            frag = this.xsltProc.transformToDocument(xml);
-        if (frag === null) {
-            throw new Error("XSLT transformation failed with " + this.xsltURL);
-        }
-        record.transformed = frag.getElementsByTagName('tbody')[0].innerHTML;
-        record.xsltURL = this.xsltURL;
+        let x2js = new X2JS(),
+            xml  = $.parseXML(record.xml),
+            doc  = this.xsltProc.transformToDocument(xml),
+            json = x2js.xml2js(doc.querySelector('record').outerHTML);
+
+        record.transformed = json.record;
         record.version = this.version;
         return record;
     }
 
     /**
-     * Update multiple records.
+     * Return the updated record.
      */
-    *updateRecordsGenerator(records) {
-        for (var r of records) {
-            yield this.updateRecord(r);
-        }
+    transform(record) {
+        return new Promise((resolve, reject) => {
+            this.loadXSLT().then(() => {
+                resolve(this.updateRecord(record))
+            }).catch(function(err) {
+                reject(err.message);
+            });
+        });
+    }
+
+    /**
+     * Yield multiple updated records.
+     */
+    transformMultiple(records) {
+        let promises = [];
+        return new Promise((resolve, reject) => {
+            this.loadXSLT().then(() => {
+                for (var r of records) {
+                    promises.push(this.transform(r));
+                }
+                resolve(Promise.all(promises));
+            }).catch(function(err) {
+                reject(err.message);
+            });
+        });
     }
 }
 

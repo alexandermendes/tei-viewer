@@ -19,12 +19,8 @@
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Transform</a>
                     <div class="dropdown-menu" id="select-xslt">
-                        {% for file in site.static_files %}
-                            {% if file.path contains 'xslt/' %}
-                                {% unless file.path contains 'xslt/helpers.xsl' %}
-                                    <a href="#" class="dropdown-item">{{ file.path | remove_first: "/assets/xslt/" }}</a>
-                                {% endunless %}
-                            {% endif %}
+                        {% for table in site.posts %}
+                        <a href="{{ table.permalink }}" class="dropdown-item nav-exit">{{ table.title }}</a>
                         {% endfor %}
                     </div>
                 </li>

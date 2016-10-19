@@ -3,21 +3,7 @@ import transformer from '../utils/transformer';
 import notify from '../view/notify';
 import dbServer from '../model/db-server';
 
-
 var table;
-
-/**
- *
- */
-function loadXSLT() {
-    return new Promise(function(resolve, reject) {
-        transformer.loadXSLT().then(function() {
-            resolve();
-        }).catch(function(err) {
-            reject(err);
-        });
-    });
-}
 
 /**
  *
@@ -32,13 +18,14 @@ function filterRecordsToUpdate(records) {
  * Update records to use latest transformation.
  */
 function updateRecords(records) {
+    let promises = [];
     return new Promise(function(resolve, reject) {
-        let updateGen = transformer.updateRecordsGenerator(records);
-        let promises = [];
-        for (let r of updateGen) {
-            promises.push(dbServer.update(r));
-        }
-        Promise.all(promises).then(function(r) {
+        transformer.transformMultiple(records).then(function(updatedRecords) {
+            for (let r of updatedRecords) {
+                promises.push(dbServer.update(r));
+            }
+            return Promise.all(promises);
+        }).then(function() {
             resolve();
         }).catch(function(err) {
             reject(err);
@@ -51,17 +38,22 @@ function updateRecords(records) {
  */
 function loadTable(records) {
     return new Promise(function(resolve, reject) {
+        let dataSet = records.map(function(el) {
+            return el.transformed;
+        });
 
-        console.log('concatenating records');
-        var rows = records.map(function(el){
-            return el.transformed.replace('<tr>', '<tr id="' + el.id + '">');
-        }).join();
-        $('#table-body').html(rows);
-        console.log('and on');
+        let columns = [];
+        $('thead th').each(function() {
+            columns.push({"data": $(this).data('tag')});
+        });
 
         table = $('table').DataTable({
+            "data": dataSet,
             "dom": "Bfrtip",
-            "colReorder": true,
+            "deferRender": true,
+            "colReorder": {
+                "fixedColumnsLeft": 1,
+            },
             "columnDefs": [
                 {
                     "searchable": false,
@@ -70,6 +62,7 @@ function loadTable(records) {
                     "className": "bg-faded",
                 }
             ],
+            "columns": columns,
             "buttons": [
                 {
                     "extend": "collection",
@@ -138,10 +131,9 @@ function loadTable(records) {
                             "text": "XML Editor",
                             "action": function (evt, dt, node, conf) {
                                 if ($('tr.selected').length !== 1) {
-                                    notify('Please select a single record to edit',
-                                           'warning');
+                                    notify('Please select a single row to edit', 'info');
                                 } else {
-                                    var id = parseInt($('tr.selected').attr('id'));
+                                    let id = parseInt($('tr.selected').attr('id'));
                                     window.location = 'editor?id=' + id;
                                 }
                             }
@@ -203,22 +195,14 @@ function loadTable(records) {
     });
 }
 
-if($('#table-view').length) {
-    var records = [];
-    console.log('retrieving records');
+if ($('#table-view').length) {
+    let records = [];
     dbServer.getAll().then(function(recs) {
-        console.log('retrieved records');
         records = recs;
-        console.log('loading XSLT');
-        return loadXSLT();
-    }).then(function() {
-        console.log('Filtering records to Update');
         return filterRecordsToUpdate(records);
     }).then(function(recordsToUpdate) {
-        console.log('Updating records');
         return updateRecords(recordsToUpdate);
     }).then(function() {
-        console.log('Loading table');
         return loadTable(records);
     }).catch(function(err) {
         notify(err, 'error');

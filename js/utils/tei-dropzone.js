@@ -25,14 +25,16 @@ class TEIDropzone extends Dropzone {
                     return;
                 }
 
-                dbServer.add({
+                transformer.transform({
                     xml: evt.target.result,
                     filename: theFile.name
-                }).catch(function (error) {
+                }).then(function(record) {
+                    return dbServer.add(record);
+                }).then(function() {
+                    _this._finished([theFile], 'Success');
+                }).catch(function(error) {
                     _this._errorProcessing([theFile], error.message);
-                    return;
                 });
-                _this._finished([theFile], 'Success');
             };
         }
 

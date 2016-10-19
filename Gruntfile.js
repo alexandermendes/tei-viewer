@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
 
         modernizr: {
-            dist: {
+            build: {
                 "parseFiles": true,
                 "customTests": [],
                 "devFile": "./node_modules/modernizr/src/Modernizr.js",
@@ -19,6 +19,26 @@ module.exports = function(grunt) {
         },
 
         webpack: {
+            dev: {
+                entry: "./js/main.js",
+                output: {
+                    path: "./assets/js",
+                    filename: "bundle.js",
+                },
+                module: {
+                    loaders: [
+                        {
+                            test: /\.js$/,
+                            exclude: /node_modules/,
+                            loader: 'babel-loader',
+                            query: {
+                                presets: ['es2015'],
+                                plugins: ['transform-runtime']
+                            }
+                        }
+                    ]
+                }
+            },
             build: {
                 entry: "./js/main.js",
                 output: {
@@ -70,7 +90,8 @@ module.exports = function(grunt) {
                     'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.js',
                     'node_modules/datatables.net-colreorder/js/dataTables.colReorder.js',
                     'node_modules/jszip/dist/jszip.js',
-                    'node_modules/file-saver/FileSaver.js'
+                    'node_modules/file-saver/FileSaver.js',
+                    'node_modules/x2js/x2js.js'
                 ],
                 dest: 'assets/js/vendor.bundle.js',
                 nonull: true
@@ -110,7 +131,7 @@ module.exports = function(grunt) {
             },
             js: {
                 files: ['./js/*.js', './js/**/*.js'],
-                tasks: ['webpack', 'modernizr']
+                tasks: ['webpack:dev', 'modernizr']
             }
         },
     });
@@ -122,8 +143,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('dev', ['modernizr:dist', 'webpack', 'concat', 'copy',
-                               'watch']);
-    grunt.registerTask('build', ['modernizr:dist', 'webpack', 'concat',
-                                 'copy']);
+    grunt.registerTask('dev', ['modernizr:build', 'webpack:dev', 'concat', 'copy', 'watch']);
+    grunt.registerTask('build', ['modernizr:build', 'webpack:build', 'concat', 'copy']);
 };

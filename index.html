@@ -11,12 +11,12 @@ permalink: /
         <thead>
             <tr>
                 <th class="bg-faded select-all">#</th>
-                {% for heading in site.data.table.headings %}
+                {% for tf_hash in site.data.transformations %}
                 <th>{{ heading }}</th>
                 {% endfor %}
             </tr>
         </thead>
-        <tbody id="table-body">
+        <tbody>
             <!-- Table data loaded here -->
         </tbody>
     </table>

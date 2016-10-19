@@ -38,7 +38,8 @@
         "datatables.net-colreorder": "^1",
         "jszip": "^3",
         "file-saver": "^1",
-        "pace-progress": "^1"
+        "pace-progress": "^1",
+        "x2js": "^3"
     },
     "devDependencies": {
         "grunt":"^1",
