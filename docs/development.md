@@ -39,12 +39,12 @@ layout.
 
 ### Adding a layout
 
-Layouts are stored in the `table` folder and should be created using the
-following template:
+Layouts are stored in the [`table`]({{ site.github.repository_url}}/table) folder
+and should be created using the following template:
 
 ```html
 <main id="table-view">
-    <table class="table table-bordered">
+    <table class="table table-bordered" data-xslt="{{ site.main-xslt }}">
         <thead>
             <tr>
                 <th class="bg-faded select-all">#</th>
@@ -64,12 +64,10 @@ are specified as follows:
 <th data-tag="idno">Shelfmark</th>
 ```
 
-The `data-tag` attribute identifies the location of the data in the XML document
-and can be one of the following
+The `data-tag` attribute identifies the location of the data in the XML documents.
+The available tags can be seen in the [`table.xsl`]({{ site.github.repository_url}}{{ site.main-xslt }})
+file (e.g. `<idno>`, `<title>`, `<author>`).
 
-**ADD TABLE**
-
-The following classes can also be added to each header cell.
 
 #### select-all
 
@@ -89,7 +87,14 @@ tab, for example:
 
 ### Updating the XSLT
 
-To transform ... edit `table.xsl` then update the version attribute of Transformer in `transformer.js`.
+To retrieve additional data from the TEI documents, not yet available via the
+existing `data-tag` options, you can edit [`table.xsl`]({{ site.github.repository_url}}{{ site.main-xslt }})
+directly. The following example shows how the title is currently retrieved:
 
+```xml
+<title>
+    <xsl:value-of select="tei:msItem[1]/tei:title" />
+</title>
+```
 
-###
+Any stored records will be updated to apply the new transformation the next time a table view is refreshed.
