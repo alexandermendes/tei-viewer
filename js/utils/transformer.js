@@ -55,7 +55,7 @@ class Transformer {
             this.loadXSLT().then(() => {
                 resolve(this.updateRecord(record))
             }).catch(function(err) {
-                reject(err.message);
+                reject(err);
             });
         });
     }
@@ -72,7 +72,7 @@ class Transformer {
                 }
                 resolve(Promise.all(promises));
             }).catch(function(err) {
-                reject(err.message);
+                reject(err);
             });
         });
     }

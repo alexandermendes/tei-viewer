@@ -1,5 +1,7 @@
 import test from 'tape';
+import _ from '../assets/dist/js/vendor.bundle.js'
 import getUrlParameter from '../assets/js/utils/get-url-parameter';
+import exportXML from '../assets/js/utils/export-xml';
 
 test('get url paramter test', function(t) {
     t.throws(
@@ -24,6 +26,16 @@ test('get url paramter test', function(t) {
         getUrlParameter('http://example.com?msg=hello', 'msg'),
         'hello',
         'should return the parameter as a string'
+    );
+
+    t.end();
+});
+
+test('export xml test', function(t) {
+    t.doesNotThrow(
+        function() { exportXML([]); },
+        Error,
+        'should throw an error when the required parameter is missing'
     );
 
     t.end();

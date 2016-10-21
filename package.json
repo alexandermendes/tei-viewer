@@ -39,7 +39,9 @@
         "jszip": "^3",
         "file-saver": "^1",
         "pace-progress": "^1",
-        "x2js": "^3"
+        "x2js": "^3",
+        "pygments-css": "^1",
+        "vkbeautify": "^0"
     },
     "devDependencies": {
         "grunt":"^1",

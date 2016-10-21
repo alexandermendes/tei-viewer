@@ -1,23 +1,130 @@
 ---
-layout: default
+layout: landing
 title: TEI Viewer
 active: table
 description: An application for viewing and manipulating TEI XML documents in table form.
 permalink: /
 ---
 
-<main id="table-view">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th class="bg-faded select-all">#</th>
-                {% for tf_hash in site.data.transformations %}
-                <th>{{ heading }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Table data loaded here -->
-        </tbody>
-    </table>
+<main id="landing-view" class="bg-faded" data-animate-out="zoomOut">
+    <div class="container">
+
+        <header class="m-t-3 m-b-3">
+            <div class="row text-xs-center">
+                <div class="col-xs-12">
+                    <img src="{{ site.url }}/assets/img/logo.png" class-"img-fluid" />
+                    <p class="lead m-t-2">View and manipulate TEI XML documents in table form.</p>
+                    <a href="/upload" class="btn btn-outline-danger m-t-3 animate-out">Get Started</a>
+                </div>
+            </div>
+        </header>
+
+        <hr>
+
+        <section id="demo" class="m-t-3 m-b-3">
+            <div class="row">
+                <div class="col-xs-12 text-xs-center">
+                    <p><strong>Demo</strong></p>
+                    <a href="#demo"><span class="fa fa-arrow-down"></span></a>
+                </div>
+            </div>
+            <span id="sample-data" class="hidden-xs-up">
+                {{ site.data.sample-records|jsonify }}
+            </span>
+
+            <div class="row m-t-3">
+                <div class="col-xs-12 col-md-6">
+                    <div id="landing-editor">
+                        <div class="loading-overlay">
+                            <span class="fa fa-spinner fa-spin fa-2x"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div id="landing-table">
+                        <div class="loading-overlay">
+                            <span class="fa fa-spinner fa-spin fa-2x"></span>
+                        </div>
+                        <nav class="navbar navbar-light navbar-static-top bg-faded">
+                            <div class="container-fluid">
+                                <ul class="nav navbar-nav"></ul>
+                                <form class="form-inline pull-lg-right"></form>
+                            </div>
+                        </nav>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="bg-faded select-all">#</th>
+                                    <th data-tag="title">Title</th>
+                                    <th data-tag="author">Author</th>
+                                    <th data-tag="pubStmt">Publication Statement</th>
+                                    <th data-tag="source">Source</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Table data loaded here -->
+                            </tbody>
+                        </table>
+                        <footer class="bg-faded text-xs-center">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <span id="table-pagination"></span>
+                                        <span id="table-info"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="m-t-3 p-t-3 p-b-3">
+            <div class="row text-xs-center">
+                <div class="col-xs-12 col-md-4">
+                    <span class="fa fa-table fa-4x p-b-1"></span>
+                    <h3>Analyse</h3>
+                    <p>
+                        Transform all of your TEI documents to table form, using the included features to help you to
+                        quickly identify key information. Your data is stored locally, within your browser, so there
+                        is no need to log in for it to remain available between uses.
+                    </p>
+                </div>
+
+                <div class="col-xs-12 col-md-4">
+                    <span class="fa fa-file-excel-o fa-4x p-b-1"></span>
+                    <h3>Export</h3>
+                    <p>
+                        For more advanced operations you can export all tables created with TEI Viewer in Excel or CSV
+                        formats. You can also export any XML documents that you might edit using the built-in XML editor.
+                    </p>
+                </div>
+
+                <div class="col-xs-12 col-md-4">
+                    <span class="fa fa-github fa-4x p-b-1"></span>
+                    <h3>Customise</h3>
+                    <p>
+                        Design new table layouts by editing the <a href="{{ site.github.repository_url }}" target="_blank">source code</a>
+                        directly...
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="row p-b-1">
+            <div class="col-xs-12 text-xs-center">
+                <strong>See the <a href="/docs/development" target="_blank">documentation</a> for more details.</strong>
+            </div>
+        </div>
+
+        <section id="author" class="p-t-1 p-b-1">
+            <div class="row text-xs-center">
+                <div class="col-xs-12">
+                    <p><small>Created by <a href="{{ site.author-url }}" target="_blank">{{ site.author }}</a></small></p>
+                </div>
+            </div>
+        </section>
+
+    </div>
 </main>

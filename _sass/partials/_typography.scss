@@ -14,8 +14,8 @@ nav .navbar-nav .nav-link,
 nav .form-inline .form-control  {
     font-family: $heading-font-stack;
     font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.7px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
     text-transform: uppercase;
 }
 
@@ -37,14 +37,6 @@ footer,
 footer li.paginate_button.page-link,
 footer select.form-control.input-sm {
     font-size: 0.85em;
-}
-
-#loading {
-    font-family: $heading-font-stack;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.7px;
-    text-transform: uppercase;
 }
 
 #editor-view {

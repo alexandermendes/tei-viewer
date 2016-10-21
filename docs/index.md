@@ -3,7 +3,7 @@ layout: docs
 title: Documentation
 active: docs
 description: The TEI Viewer documentation.
-permalink: /docs/development
+permalink: /docs
 ---
 
 # Development

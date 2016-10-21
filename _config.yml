@@ -1,9 +1,12 @@
 # Site settings
 title: TEI Viewer
 author: Alexander Mendes
+author-url: https://github.com/alexandermendes
 email: alexanderhmendes@gmail.com
 description: An HTML5 application for viewing and manipulating TEI XML documents in table form.
 repository: alexandermendes/tei-viewer
+markdown: kramdown
+highlighter: pygments
 
 # Build settings
 incremental: true

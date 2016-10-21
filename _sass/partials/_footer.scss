@@ -1,9 +1,8 @@
 footer {
     width: 100%;
-    height: 85px;
-    border-top: 1px solid rgba(0,0,0,.125);
+    height: $footer-height;
+    border-top: $border-light;
     bottom: 0;
-    visibility: hidden;
 }
 
 footer .container-fluid {

@@ -12,16 +12,19 @@ body {
 }
 
 main {
-    flex: 1;
-    height: 100%;
-    visibility: hidden;
+    flex: 1 1 auto;
+    overflow-y: scroll;
     position: relative;
-    overflow: auto;
     background-color: $white;
+}
+
+a {
+    color: $red;
 }
 
 a:hover,
 a:active,
 a:focus {
+    color: darken($red, 10%);
     text-decoration: none;
 }

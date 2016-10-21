@@ -71,13 +71,14 @@ module.exports = function(grunt) {
         concat: {
             js: {
                 src: [
+                    'node_modules/jquery/dist/jquery.js',
                     'node_modules/pace-progress/pace.js',
                     'node_modules/tether/dist/js/tether.js',
-                    'node_modules/jquery/dist/jquery.js',
                     'node_modules/bootstrap/dist/js/bootstrap.js',
                     'node_modules/db.js/dist/db.min.js',
                     'node_modules/codemirror/lib/codemirror.js',
                     'node_modules/codemirror/mode/xml/xml.js',
+                    'node_modules/codemirror/addon/hint/xml-hint.js',
                     'node_modules/pnotify/dist/pnotify.js',
                     'node_modules/pnotify/dist/pnotify.buttons.js',
                     'node_modules/urijs/src/URI.js',
@@ -87,11 +88,11 @@ module.exports = function(grunt) {
                     'node_modules/datatables.net-buttons/js/buttons.html5.js',
                     'node_modules/datatables.net-buttons/js/buttons.colVis.js',
                     'node_modules/datatables.net-select/js/dataTables.select.js',
-                    'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.js',
                     'node_modules/datatables.net-colreorder/js/dataTables.colReorder.js',
                     'node_modules/jszip/dist/jszip.js',
                     'node_modules/file-saver/FileSaver.js',
-                    'node_modules/x2js/x2js.js'
+                    'node_modules/x2js/x2js.js',
+                    'node_modules/vkbeautify/index.js'
                 ],
                 dest: 'assets/js/vendor.bundle.js',
                 nonull: true
@@ -108,7 +109,7 @@ module.exports = function(grunt) {
                     'node_modules/dropzone/dist/dropzone.css',
                     'node_modules/animate.css/animate.css',
                     'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
-                    'node_modules/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.css'
+                    'node_modules/pygments-css/default.css'
                 ],
                 dest: 'assets/css/vendor.bundle.css',
                 nonull: true

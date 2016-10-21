@@ -1,0 +1,13 @@
+#docs-view h1,
+#docs-view h2,
+#docs-view h3,
+#docs-view h4,
+#docs-view h5,
+#docs-view h6 {
+    margin-top: 2rem;
+}
+
+pre.highlight {
+    padding: 1rem;
+    background-color: lighten($grey, 30%);
+}
