@@ -1,17 +1,20 @@
 import test from 'tape';
-import _ from '../assets/dist/js/vendor.bundle.js'
-import getUrlParameter from '../assets/js/utils/get-url-parameter';
-import exportXML from '../assets/js/utils/export-xml';
+import getUrlParameter from '../js/utils/get-url-parameter';
+import exportXML from '../js/utils/export-xml';
 
 test('get url paramter test', function(t) {
     t.throws(
-        function() { getUrlParameter('http://example.com', 'id'); },
+        function() {
+            getUrlParameter('http://example.com', 'id');
+        },
         Error,
         'should throw an error when the required parameter is missing'
     );
 
     t.throws(
-        function() { getUrlParameter('http://example.com?id=no', 'id', 'int'); },
+        function() {
+            getUrlParameter('http://example.com?id=no', 'id', 'int');
+        },
         Error,
         'should throw an error when the required parameter is the wrong type'
     );
@@ -33,7 +36,9 @@ test('get url paramter test', function(t) {
 
 test('export xml test', function(t) {
     t.doesNotThrow(
-        function() { exportXML([]); },
+        function() {
+            exportXML([]);
+        },
         Error,
         'should throw an error when the required parameter is missing'
     );
