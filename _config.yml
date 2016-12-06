@@ -7,6 +7,9 @@ description: An HTML5 application for viewing and manipulating TEI XML documents
 repository: alexandermendes/tei-viewer
 markdown: kramdown
 highlighter: pygments
+collections:
+  tables:
+    output: true
 
 # Build settings
 incremental: true

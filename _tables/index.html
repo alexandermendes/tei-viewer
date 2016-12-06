@@ -1,0 +1,25 @@
+---
+layout: default
+title: Select a Table
+active: tables
+description: Select a table in which to display your TEI records.
+---
+
+<main class="p-t-2 p-b-2 invisible" data-animate-in="slideInRight" data-animate-out="slideOutLeft">
+    <div class="container-fluid">
+        <div class="col-xs-12 col-md-8 offset-md-2">
+            <h2>Select a table</h2>
+            <hr>
+            <div class="list-group">
+            {% for table in site.tables %}
+                {% if table.title != page.title %}
+                <a href="{{ table.url }}" class="list-group-item list-group-item-action">
+                    <h5 class="list-group-item-heading">{{ table.title }}</h5>
+                    <p class="list-group-item-text">{{ table.description }}</p>
+                </a>
+                {% endif %}
+            {% endfor %}
+           </div>
+        </div>
+    </div>
+</main>
