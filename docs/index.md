@@ -1,9 +1,8 @@
 ---
-layout: docs
+layout: contained
 title: Documentation
 active: docs
 description: The TEI Viewer documentation.
-permalink: /docs
 ---
 
 # Development
