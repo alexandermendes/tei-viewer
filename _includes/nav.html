@@ -1,26 +1,23 @@
 <nav id="main-nav" class="navbar navbar-light navbar-static-top bg-faded">
     <div class="container-fluid">
-
         <a class="navbar-brand" href="/">Tei Viewer</a>
-
-        <button class="navbar-toggler hidden-lg-up pull-xs-right" type="button" data-toggle="collapse" data-target="#main-navbar">
-            &#9776;
+        <button class="navbar-toggler hidden-lg-up float-xs-right" type="button" data-toggle="collapse"
+                data-target="#main-navbar">
         </button>
-
         <div id="main-navbar" class="collapse navbar-toggleable-md">
             <ul class="nav navbar-nav">
-                {% unless page.active == 'table' %}
+                {% unless page.active == 'tables' %}
                 <li class="nav-item">
-                    <a href="/" class="nav-link animate-out">View Table</a>
+                    <a href="/tables" class="nav-link">View Table</a>
                 </li>
                 {% endunless %}
 
-                {% if page.active == 'table' %}
+                {% if page.active == 'tables' %}
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Transform</a>
                     <div class="dropdown-menu" id="select-xslt">
                         {% for table in site.posts %}
-                        <a href="{{ table.permalink }}" class="dropdown-item animate-out">{{ table.title }}</a>
+                        <a href="{{ table.permalink }}" class="dropdown-item">{{ table.title }}</a>
                         {% endfor %}
                     </div>
                 </li>
@@ -39,19 +36,21 @@
 
                 {% unless page.active == 'docs' %}
                 <li class="nav-item">
-                    <a href="/docs" class="nav-link animate-out">Help</a>
+                    <a href="/docs" class="nav-link">Help</a>
                 </li>
                 {% endunless %}
             </ul>
 
-            <form class="form-inline pull-lg-right">
+            <form class="form-inline float-lg-right">
 
-                {% if page.active == 'table' %}
-                <input id="table-search" type="search" class="form-control" placeholder="Search">
+                {% if page.active == 'tables' %}
+                    {% unless page.path contains "index.html" %}
+                    <input id="table-search" type="search" class="form-control" placeholder="Search">
+                    {% endunless %}
                 {% endif %}
 
                 {% unless page.active == 'upload' %}
-                <a href="/upload" class="btn btn-primary form-control nav-link animate-out">Upload</a>
+                <a href="/upload" class="btn btn-primary form-control nav-link">Upload</a>
                 {% else %}
                 <button id="start-upload" class="btn btn-primary form-control nav-link">Upload Files</button>
                 {% endunless %}
