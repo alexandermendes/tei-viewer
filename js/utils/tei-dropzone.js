@@ -1,8 +1,7 @@
 import dbServer from '../model/db-server';
-import transformer from '../utils/transformer';
 
 /**
- * Subclass of Dropzone that transforms XML records and persists to IndexedDB.
+ * Subclass of Dropzone that uploads records to IndexedDB.
  */
 class TEIDropzone extends Dropzone {
 
@@ -15,25 +14,23 @@ class TEIDropzone extends Dropzone {
         var _this = this;
         var reader = {};
 
-        function saveFile(theFile) {
+        function saveFile(f) {
             return function(evt) {
 
                 try {
                     $.parseXML(evt.target.result);
                 } catch(error) {
-                    _this._errorProcessing([theFile], "Invalid XML");
+                    _this._errorProcessing([f], "Invalid XML");
                     return;
                 }
 
-                transformer.transform({
+                dbServer.add({
                     xml: evt.target.result,
-                    filename: theFile.name
-                }).then(function(record) {
-                    return dbServer.add(record);
+                    filename: f.name
                 }).then(function() {
-                    _this._finished([theFile], 'Success');
+                    _this._finished([f], 'Success');
                 }).catch(function(error) {
-                    _this._errorProcessing([theFile], error.message);
+                    _this._errorProcessing([f], error.message);
                 });
             };
         }
