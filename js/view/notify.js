@@ -1,9 +1,9 @@
 /*
  * Display a notification.
  */
-var notify = function(msg, type) {
+const notify = function(msg, type) {
 
-    var opts = {
+    const opts = {
         title: type.charAt(0).toUpperCase() + type.slice(1),
         text: msg,
         type: type,
@@ -31,7 +31,7 @@ var notify = function(msg, type) {
             break;
     }
 
-    new PNotify(opts);
+    return new PNotify(opts);
 };
 
 export default notify;
