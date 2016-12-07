@@ -6,15 +6,10 @@
     <xsl:output method="text" encoding="UTF-8" media-type="text/plain" />
     <xsl:strip-space elements="*" />
 
-    <!-- Increment this when the transformation is updated -->
-    <xsl:variable name="version" select="'1'" />
-
-    <xsl:template match="tei:TEI">
-        <xsl:text>{"version": "</xsl:text>
-        <xsl:value-of select="$version" />
-        <xsl:text>", "data": {</xsl:text>
-        <xsl:apply-templates select="tei:teiHeader" />
-        <xsl:text>}}</xsl:text>
+    <xsl:template match="/">
+        <xsl:text>{</xsl:text>
+	    <xsl:apply-templates/>
+	<xsl:text>}</xsl:text>
     </xsl:template>
 
     <xsl:template match="tei:teiHeader">
