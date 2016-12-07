@@ -1,3 +1,5 @@
+import JSZip from 'jszip';
+
 /**
  * Export zipped XML records.
  */
