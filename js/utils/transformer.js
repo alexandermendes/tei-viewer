@@ -9,22 +9,18 @@ class Transformer {
     constructor(xsltFilename) {
         this.xsltFilename = xsltFilename;
         this.xsltProc = new XSLTProcessor();
-        this.xsltLoaded = false;
     }
 
     /**
-     * Load the XSLT script.
+     * Load the XSLT stylesheet.
      */
     loadXSLT() {
         return new Promise((resolve, reject) => {
-            if (this.xsltLoaded) {
-                resolve();
-            }
             $.ajax({
                 url: `/assets/xslt/${this.xsltFilename}`,
             }).done((data) => {
+                console.log('XSLT loaded');
                 this.xsltProc.importStylesheet(data);
-                this.xsltLoaded = true;
                 resolve();
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 reject('Error loading XSLT: ' + jqXHR.statusText);
@@ -36,11 +32,11 @@ class Transformer {
      * Update a record.
      */
     updateRecord(record) {
-        const xml      = $.parseXML(record.xml),
-              fragment = this.xsltProc.transformToFragment(xml, document);
+        const xml = $.parseXML(record.xml),
+              doc = this.xsltProc.transformToFragment(xml, document);
 
         let div = document.createElement('div');
-        div.appendChild(fragment.cloneNode(true));
+        div.appendChild(doc.cloneNode(true));
         let json = $.parseJSON(div.innerHTML);
 
         json.DT_RowId = record.id;  // Used to set DataTables row ID
@@ -69,7 +65,7 @@ class Transformer {
         return new Promise((resolve, reject) => {
             this.loadXSLT().then(() => {
                 for (var r of records) {
-                    promises.push(this.transform(r));
+                    promises.push(this.updateRecord(r));
                 }
                 resolve(Promise.all(promises));
             }).catch(function(err) {
