@@ -6,22 +6,10 @@
         </button>
         <div id="main-navbar" class="collapse navbar-toggleable-md">
             <ul class="nav navbar-nav">
-                {% unless page.active == 'tables' %}
                 <li class="nav-item">
-                    <a href="/tables" class="nav-link">View Table</a>
+                    <a href="/tables" class="nav-link">Tables</a>
                 </li>
-                {% endunless %}
-
-                {% if page.active == 'tables' %}
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Transform</a>
-                    <div class="dropdown-menu" id="select-xslt">
-                        {% for table in site.posts %}
-                        <a href="{{ table.permalink }}" class="dropdown-item">{{ table.title }}</a>
-                        {% endfor %}
-                    </div>
-                </li>
-                {% elsif page.active == 'editor' %}
+                {% if page.active == 'editor' %}
                 <li class="nav-item">
                     <a class="nav-link" id="xml-save">Save</a>
                 </li>
