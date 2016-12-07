@@ -67,7 +67,7 @@ if($('#upload-view').length) {
                 dz.removeFile(success[i]);
             }
         } else {
-            window.location.href = '/';
+            window.location.href = '/tables';
         }
     });
 
