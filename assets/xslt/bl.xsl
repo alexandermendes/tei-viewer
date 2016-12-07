@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 		xmlns:tei="http://www.tei-c.org/ns/1.0"
 		version="1.0">
-    <xsl:import href="helpers.xsl" />
+    <xsl:import href="/assets/xslt/helpers.xsl" />
     <xsl:output method="text" encoding="UTF-8" media-type="text/plain" />
     <xsl:strip-space elements="*" />
 
