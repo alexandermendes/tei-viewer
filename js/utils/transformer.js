@@ -6,10 +6,9 @@ class Transformer {
     /**
      * Initialise.
      */
-    constructor() {
-        this.version = "0.0.16";
+    constructor(xsltFilename) {
+        this.xsltFilename = xsltFilename;
         this.xsltProc = new XSLTProcessor();
-        this.xsltURL = "/assets/xslt/table.xsl";
         this.xsltLoaded = false;
     }
 
@@ -22,7 +21,7 @@ class Transformer {
                 resolve();
             }
             $.ajax({
-                url: this.xsltURL,
+                url: `/assets/xslt/${this.xsltFilename}`,
             }).done((data) => {
                 this.xsltProc.importStylesheet(data);
                 this.xsltLoaded = true;
@@ -37,13 +36,15 @@ class Transformer {
      * Update a record.
      */
     updateRecord(record) {
-        let x2js = new X2JS(),
-            xml  = $.parseXML(record.xml),
-            doc  = this.xsltProc.transformToDocument(xml),
-            json = x2js.xml2js(doc.querySelector('record').outerHTML);
+        const xml      = $.parseXML(record.xml),
+              fragment = this.xsltProc.transformToFragment(xml, document);
 
-        record.transformed = json.record;
-        record.version = this.version;
+        let div = document.createElement('div');
+        div.appendChild(fragment.cloneNode(true));
+        let json = $.parseJSON(div.innerHTML);
+
+        json.DT_RowId = record.id;  // Used to set DataTables row ID
+        record[this.xsltFilename] = json;
         return record;
     }
 
@@ -78,4 +79,4 @@ class Transformer {
     }
 }
 
-export default new Transformer();
+export default Transformer;
