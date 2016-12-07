@@ -1,51 +1,71 @@
-import transformer from '../utils/transformer';
+import Transformer from '../utils/transformer';
 import buildTable from '../utils/build-table';
 import notify from '../view/notify';
 import dbServer from '../model/db-server';
 
-var table;
+var tableView;
+
 
 /**
- *
+ * Return the dataset.
  */
-function filterRecordsToUpdate(records) {
+function getDataset(xslt, records) {
+    return records.map(function(el) {
+        return el[xslt];
+    })
+}
+
+
+/**
+ * Return the records transformed before the latest release.
+ */
+function filterRecordsToUpdate(xslt, records) {
     return records.filter(function(el) {
-        return transformer.version !== el.version;
+        return !(xslt in el);
     });
 }
 
+
 /**
- * Update records to use latest transformation.
+ * Ensure all records were transformed using the XSLT for the current table.
  */
-function updateRecords(records) {
-    let promises = [];
+function updateRecords(xslt, records) {
     return new Promise(function(resolve, reject) {
-        transformer.transformMultiple(records).then(function(updatedRecords) {
+        const recordsToUpdate = filterRecordsToUpdate(xslt, records),
+              transformer     = new Transformer(xslt),
+              updatePromises  = [];
+
+        if(recordsToUpdate.length) {
+            notify(`Transforming ${recordsToUpdate.length} records,
+                   please wait...`, 'info');
+        }
+
+        transformer.transformMultiple(recordsToUpdate).then(function(updatedRecords) {
             for (let r of updatedRecords) {
-                promises.push(dbServer.update(r));
+                updatePromises.push(dbServer.update(r));
             }
-            return Promise.all(promises);
+            return Promise.all(updatePromises);
         }).then(function() {
-            resolve();
+            resolve(records);
         }).catch(function(err) {
             reject(err);
         });
     });
 }
 
+
 if ($('#table-view').length) {
-    let records = [];
-    dbServer.getAll().then(function(recs) {
-        records = recs;
-        return filterRecordsToUpdate(records);
-    }).then(function(recordsToUpdate) {
-        return updateRecords(recordsToUpdate);
-    }).then(function() {
-        return buildTable($('table'), records);
+    const tableElem = $('table'),
+          xslt      = tableElem.data('xslt');
+    dbServer.getAll().then(function(records) {
+        return updateRecords(xslt, records);
+    }).then(function(records) {
+        return buildTable(tableElem, getDataset(xslt, records));
     }).catch(function(err) {
         notify(err, 'error');
         throw err;
     });
 }
 
-export default table;
+
+export default tableView;

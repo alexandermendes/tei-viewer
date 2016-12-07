@@ -2,22 +2,24 @@ import dbServer from '../model/db-server';
 import exportXML from '../utils/export-xml';
 import notify from '../view/notify';
 
+
 /**
- * Load the table.
+ * Return the table columns.
  */
-var buildTable = function(tableElem, records) {
+function getColumns() {
+    return $('th:not(:first-child)').map(function() {
+        return {data: $(this).text()};
+    }).get();
+}
+
+
+/**
+ * Build the table.
+ */
+const buildTable = function(tableElem, dataSet) {
     return new Promise(function(resolve, reject) {
-        let dataSet = records.map(function(el) {
-            el.transformed.DT_RowId = el.id;  // Add database ID to tr
-            return el.transformed;
-        });
-
-        let columns = [{"data": null}];
-        $('thead th:not(:first-child)').each(function() {
-            columns.push({"data": $(this).data('tag')});
-        });
-
-        let table = tableElem.DataTable({
+        const columns = getColumns();
+        const table = tableElem.DataTable({
             "data": dataSet,
             "dom": "Bfrtip",
             "deferRender": true,
