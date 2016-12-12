@@ -14,10 +14,13 @@
 
     <xsl:template match="tei:teiHeader">
 
-        <xsl:call-template name="tojson">
-            <xsl:with-param name="key" select="'Shelfmark'" />
-            <xsl:with-param name="nodeset" select=".//tei:msIdentifier/tei:idno" />
-        </xsl:call-template>
+	<xsl:text>"Shelfmark": "</xsl:text>
+            <xsl:text>&lt;a href=\"http://www.bl.uk/manuscripts/FullDisplay.aspx?ref=</xsl:text>
+	    <xsl:value-of select=".//tei:msIdentifier/tei:idno" />
+	    <xsl:text>\" target=\"_blank\"&gt;</xsl:text>
+            <xsl:value-of select=".//tei:msIdentifier/tei:idno" />
+            <xsl:text>&lt;\/a&gt;</xsl:text>
+        <xsl:text>" ,</xsl:text>
 
         <xsl:call-template name="tojson">
             <xsl:with-param name="key" select="'Title'" />
@@ -142,9 +145,9 @@
         <xsl:text>"Date": "</xsl:text>
         <xsl:for-each select=".//tei:history/tei:origin/@*">
             <xsl:value-of select="name(.)" />
-            <xsl:text>:</xsl:text>
+            <xsl:text>: </xsl:text>
             <xsl:value-of select="." />
-            <xsl:text>\\n</xsl:text>
+            <xsl:text>&lt;br&gt;</xsl:text>
         </xsl:for-each>
         <xsl:text>" ,</xsl:text>
 

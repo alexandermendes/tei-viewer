@@ -39,7 +39,8 @@
         "jszip": "^3",
         "file-saver": "^1",
         "pace-progress": "^1",
-        "pygments-css": "^1"
+        "pygments-css": "^1",
+        "he": "^1"
     },
     "devDependencies": {
         "webpack": "^1",

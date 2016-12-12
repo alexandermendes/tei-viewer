@@ -1,3 +1,5 @@
+import he from 'he';
+
 import dbServer from '../model/db-server';
 import Editor from '../utils/editor';
 import exportXML from '../utils/export-xml';
@@ -39,6 +41,12 @@ const buildTable = function(tableElem, records, xsltFilename) {
                 "fixedColumnsLeft": 1,
             },
             "columnDefs": [
+                {
+                    "targets": "_all",
+                    "render": function (data, type, full, meta) {
+                        return he.decode(data.toString());  // Decode HTML entities
+                    }
+                },
                 {
                     "searchable": false,
                     "orderable": false,

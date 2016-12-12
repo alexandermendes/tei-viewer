@@ -18,7 +18,7 @@
                 </xsl:with-param>
             </xsl:call-template>
             <xsl:if test="position() != last()">
-                <xsl:text>\\n\\n</xsl:text>
+                <xsl:text>&lt;br&gt;&lt;br&gt;</xsl:text>
             </xsl:if>
         </xsl:for-each>
         <xsl:text>"</xsl:text>
