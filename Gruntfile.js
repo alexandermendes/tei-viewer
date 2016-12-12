@@ -76,12 +76,8 @@ module.exports = function(grunt) {
                     'node_modules/tether/dist/js/tether.js',
                     'node_modules/bootstrap/dist/js/bootstrap.js',
                     'node_modules/db.js/dist/db.min.js',
-                    'node_modules/codemirror/lib/codemirror.js',
-                    'node_modules/codemirror/mode/xml/xml.js',
-                    'node_modules/codemirror/addon/hint/xml-hint.js',
                     'node_modules/pnotify/dist/pnotify.js',
                     'node_modules/pnotify/dist/pnotify.buttons.js',
-                    'node_modules/urijs/src/URI.js',
                     'node_modules/dropzone/dist/dropzone.js',
                     'node_modules/datatables.net/js/jquery.dataTables.js',
                     'node_modules/datatables.net-buttons/js/dataTables.buttons.js',
@@ -89,17 +85,14 @@ module.exports = function(grunt) {
                     'node_modules/datatables.net-buttons/js/buttons.colVis.js',
                     'node_modules/datatables.net-select/js/dataTables.select.js',
                     'node_modules/datatables.net-colreorder/js/dataTables.colReorder.js',
-                    'node_modules/jszip/dist/jszip.js',
-                    'node_modules/file-saver/FileSaver.js',
-                    'node_modules/x2js/x2js.js',
-                    'node_modules/vkbeautify/index.js'
+                    'node_modules/file-saver/FileSaver.js'
                 ],
                 dest: 'assets/js/vendor.bundle.js',
                 nonull: true
             },
             css: {
                 src: [
-                    'node_modules/pace-progress/themes/white/pace-theme-big-counter.css',
+                    'node_modules/pace-progress/themes/blue/pace-theme-minimal.css',
                     'node_modules/bootstrap/dist/css/bootstrap.css',
                     'node_modules/font-awesome/css/font-awesome.css',
                     'node_modules/pnotify/dist/pnotify.css',
