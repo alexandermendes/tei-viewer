@@ -29,6 +29,15 @@ class Transformer {
     }
 
     /**
+     * Return the records that need to be transformed.
+     */
+    filterRecordsToUpdate(records) {
+        return records.filter((el) => {
+            return !(this.xsltFilename in el);
+        });
+    }
+
+    /**
      * Update a record.
      */
     updateRecord(record) {
