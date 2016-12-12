@@ -28,34 +28,29 @@
     content: "\f00c";
 }
 
-#table-view table,
-#table-view table thead {
+table.dataTable,
+table.dataTable thead {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
     border-collapse: collapse!important;
 }
 
-#table-view table tbody tr.selected td:not(:first-child) {
+table.dataTable tbody tr.selected td:not(:first-child) {
     background-color: $blue;
     color: $white;
 }
 
-#table-view table tr .select-checkbox::after {
+table.dataTable tr .select-checkbox::after {
     font-family: "FontAwesome";
     content: "\f096";
 }
 
-#table-view table tr.selected .select-checkbox::after {
+table.dataTable tr.selected .select-checkbox::after {
     content: "\f046";
 }
 
-#table-view table td.dataTables_empty {
-    position: fixed;
-    width: 100vw;
-}
-
-#table-view table th.focus,
-#table-view table td.focus {
+table.dataTable th.focus,
+table.dataTable td.focus {
     outline: 3px solid $blue;
     outline-offset: -1px;
 }
@@ -74,7 +69,7 @@
     }
 }
 
-#table-view table.DTCR_clonedTable {
+table.dataTable.DTCR_clonedTable {
     position:absolute !important;
     background-color: rgba($white, 0.7);
     z-index:202
@@ -92,7 +87,7 @@ div.DTCR_pointer{
         overflow-y: hidden;
     }
 
-    #table-view table  {
+    table.dataTable  {
         border: none;
         position: relative;
         table-layout: fixed;
@@ -100,12 +95,12 @@ div.DTCR_pointer{
         background-color: $white;
     }
 
-    #table-view table thead {
+    table.dataTable thead {
         position: absolute;
         display: block;
     }
 
-    #table-view table tbody {
+    table.dataTable tbody {
         width: auto;
         display: block;
         overflow-x: hidden;
@@ -113,39 +108,40 @@ div.DTCR_pointer{
         position: absolute;
     }
 
-    #table-view table th {
+    table.dataTable th {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    #table-view table th:first-child,
-    #table-view table td:first-child {
+    table.dataTable th:first-child,
+    table.dataTable td:first-child {
         padding: 6px 0px;
         min-width: 60px;
         max-width: 60px;
         text-align: center;
     }
 
-    #table-view table td:first-child {
+    table.dataTable td:first-child {
         cursor: e-resize;
     }
 
-    #table-view table th:first-child {
+    table.dataTable th:first-child {
         cursor: se-resize;
     }
 
-    #table-view table th:nth-child(n+2),
-    #table-view table td:nth-child(n+2) {
+    table.dataTable th:not(:first-child),
+    table.dataTable td:not(:first-child) {
+        overflow: hidden;
         padding: 6px 20px;
         min-width: 300px;
         max-width: 300px;
     }
 
-    #table-view table td:nth-child(n+2),
-    #table-view table thead>tr>th.sorting_asc,
-    #table-view table thead>tr>th.sorting_desc,
-    #table-view table thead>tr>th.sorting {
+    table.dataTable td:not(:first-child),
+    table.dataTable thead>tr>th.sorting_asc,
+    table.dataTable thead>tr>th.sorting_desc,
+    table.dataTable thead>tr>th.sorting {
         padding-right: 30px;
     }
 }
