@@ -31,16 +31,7 @@ description: An application for viewing and manipulating TEI XML documents in ta
             </span>
 
             <div class="row mt-3">
-                <div class="col-xs-12 col-md-6">
-                    <div id="landing-editor">
-
-                        <div class="loading-overlay">
-                            <span class="fa fa-spinner fa-spin fa-2x"></span>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-xs-12 col-md-6">
+                <div class="col-xs-12">
                     <div id="landing-table">
 
                         <div class="loading-overlay">
@@ -56,10 +47,7 @@ description: An application for viewing and manipulating TEI XML documents in ta
                             </div>
                         </nav>
 
-                        <table class="table table-bordered"
-                            {% if jekyll.environment == "production" %}
-                                data-latest-release="{{ site.github.releases[0].published_at }}"
-                            {% endif %}>
+                        <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th class="bg-faded select-all">#</th>

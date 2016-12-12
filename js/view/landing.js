@@ -1,28 +1,34 @@
 import buildTable from '../utils/build-table';
+import transformer from '../utils/transformer';
+
+var jsxml = require('jsxml');
 
 var landing;
+var sampleRecords = [];
 
 /**
- * Create sample records using the sample JSON data.
+ * Create records using the sample JSON data.
  */
 function createSampleRecords(sampleJson) {
     let records = [];
-    let x2js = new X2JS({stripWhitespaces:false});
+
     $.each(sampleJson, function(i, record) {
-        let xml = x2js.js2xml(record);
+        let json_string = JSON.stringify(record);
+        let xml = jsxml.toXml(json_string);
         records.push({
             id: i + 1,
             filename: `sample-record-${i}.xml`,
-            xml: new vkbeautify().xml(xml, 1),
-            transformed: {
-                title: record.TEI.teiHeader.fileDesc.titleStmt.title,
-                author: record.TEI.teiHeader.fileDesc.titleStmt.author,
-                pubStmt: record.TEI.teiHeader.fileDesc.publicationStmt.p,
-                source: record.TEI.teiHeader.fileDesc.sourceDesc.p
-            }
+            xml: xml
         });
     });
-    return records;
+
+    return new Promise(function(resolve, reject) {
+        transformer.transformMultiple(records).then(function() {
+            resolve(records);
+        }).catch(function(err) {
+            reject(err);
+        });
+    });
 }
 
 /**
@@ -36,10 +42,14 @@ function setupDemoEditor(record) {
         autofocus: true,
         lineWrapping: true,
     });
+    editor.record = record;
 
     // Update the sample data and reload the table
     editor.on('change', function() {
-        console.log('changed');
+        record.xml = editor.getValue();
+        transformer.transform(record).then(function() {
+            updateTable(sampleRecords);
+        });
     });
 }
 
@@ -69,7 +79,7 @@ function setupDemoTable(records) {
  * Update the table.
  */
 function updateTable(dataSet) {
-    let table = $('#landing-table table').dataTable();
+    let table = $('#landing-table table').DataTable();
     table.clear();
     table.rows.add(dataSet);
     table.draw();
@@ -94,9 +104,14 @@ function setSelectedRecord(sampleRecords) {
 
 if ($('#landing-view').length) {
     let sampleJson = JSON.parse($('#sample-data').html());
-    let sampleRecords = createSampleRecords(sampleJson);
-    setupDemoEditor(sampleRecords[0]);
-    setupDemoTable(sampleRecords)
+    createSampleRecords(sampleJson).then(function(records) {
+        sampleRecords = records;
+        setupDemoEditor(sampleRecords[0]);
+        setupDemoTable(sampleRecords)
+    }).catch(function(err) {
+        notify(err.message, 'error');
+        throw err;
+    });
 }
 
 export default landing;
