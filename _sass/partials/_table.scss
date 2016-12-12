@@ -28,34 +28,34 @@
     content: "\f00c";
 }
 
-table.dataTable,
-table.dataTable thead {
+#table-view table,
+#table-view table thead {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
     border-collapse: collapse!important;
 }
 
-table.dataTable tbody tr.selected td:not(:first-child) {
+#table-view table tbody tr.selected td:not(:first-child) {
     background-color: $blue;
     color: $white;
 }
 
-table.dataTable tr .select-checkbox::after {
+#table-view table tr .select-checkbox::after {
     font-family: "FontAwesome";
     content: "\f096";
 }
 
-table.dataTable tr.selected .select-checkbox::after {
+#table-view table tr.selected .select-checkbox::after {
     content: "\f046";
 }
 
-table.dataTable td.dataTables_empty {
+#table-view table td.dataTables_empty {
     position: fixed;
     width: 100vw;
 }
 
-table.dataTable th.focus,
-table.dataTable td.focus {
+#table-view table th.focus,
+#table-view table td.focus {
     outline: 3px solid $blue;
     outline-offset: -1px;
 }
@@ -65,7 +65,7 @@ table.dataTable td.focus {
 }
 
 .dataTables_info .select-info::after {
-    content: " )"
+    content: ")"
 }
 
 @media print {
@@ -74,27 +74,7 @@ table.dataTable td.focus {
     }
 }
 
-
-/** table */
-
-.dataTables_wrapper title {
-    display: inline;
-}
-
-.dataTables_wrapper quote {
-    font-style: italic;
-}
-
-.dataTables_wrapper [data-toggle=tooltip] {
-    border-bottom: 1px dashed #999;
-    display: inline;
-}
-
-.dataTables_wrapper [data-toggle=tooltip]:hover {
-    border-bottom-color: #cdcdcd;
-}
-
-table.dataTable.DTCR_clonedTable {
+#table-view table.DTCR_clonedTable {
     position:absolute !important;
     background-color: rgba($white, 0.7);
     z-index:202
@@ -112,7 +92,7 @@ div.DTCR_pointer{
         overflow-y: hidden;
     }
 
-    table.dataTable  {
+    #table-view table  {
         border: none;
         position: relative;
         table-layout: fixed;
@@ -120,12 +100,12 @@ div.DTCR_pointer{
         background-color: $white;
     }
 
-    table.dataTable thead {
+    #table-view table thead {
         position: absolute;
         display: block;
     }
 
-    table.dataTable tbody {
+    #table-view table tbody {
         width: auto;
         display: block;
         overflow-x: hidden;
@@ -133,82 +113,39 @@ div.DTCR_pointer{
         position: absolute;
     }
 
-    table.dataTable th {
+    #table-view table th {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    table.dataTable th:first-child,
-    table.dataTable td:first-child {
-        padding: 6px 20px;
-        min-width: 20px;
-        max-width: 20px;
+    #table-view table th:first-child,
+    #table-view table td:first-child {
+        padding: 6px 0px;
+        min-width: 60px;
+        max-width: 60px;
         text-align: center;
     }
 
-    table.dataTable td:first-child {
+    #table-view table td:first-child {
         cursor: e-resize;
     }
 
-    table.dataTable th:first-child {
+    #table-view table th:first-child {
         cursor: se-resize;
     }
 
-    table.dataTable th:nth-child(n+2),
-    table.dataTable td:nth-child(n+2) {
+    #table-view table th:nth-child(n+2),
+    #table-view table td:nth-child(n+2) {
         padding: 6px 20px;
         min-width: 300px;
         max-width: 300px;
     }
 
-    table.dataTable td:nth-child(n+2),
-    table.dataTable thead>tr>th.sorting_asc,
-    table.dataTable thead>tr>th.sorting_desc,
-    table.dataTable thead>tr>th.sorting {
+    #table-view table td:nth-child(n+2),
+    #table-view table thead>tr>th.sorting_asc,
+    #table-view table thead>tr>th.sorting_desc,
+    #table-view table thead>tr>th.sorting {
         padding-right: 30px;
     }
-}
-
-
-/** TEI */
-
-#table-view title {
-    display: inline;
-}
-
-#table-view quote {
-    font-style: italic;
-}
-
-#table-view [data-toggle=tooltip] {
-    border-bottom: 1px dashed #999;
-    display: inline;
-}
-
-#table-view [data-toggle=tooltip]:hover {
-    border-bottom-color: #cdcdcd;
-}
-
-
-/** British Library Styles */
-
-.dataTables_wrapper msItem,
-.dataTables_wrapper deconote,
-.dataTables_wrapper colophon,
-.dataTables_wrapper summary {
-    margin: 0 0 10px;
-    display: block;
-}
-
-.dataTables_wrapper dimensions {
-    display: block;
-}
-
-.dataTables_wrapper title {
-    display: inline;
-}
-
-.dataTables_wrapper msitem>title {
-    font-weight: 600;
 }
