@@ -9,24 +9,9 @@
                 <li class="nav-item">
                     <a href="/tables" class="nav-link">Tables</a>
                 </li>
-                {% if page.active == 'editor' %}
-                <li class="nav-item">
-                    <a class="nav-link" id="xml-save">Save</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="xml-export">Export XML</a>
-                </li>
-                {% elsif page.active == 'upload' %}
-                <li class="nav-item">
-                    <a href="#" class="nav-link add-files">Add Files</a>
-                </li>
-                {% endif %}
-
-                {% unless page.active == 'docs' %}
                 <li class="nav-item">
                     <a href="/docs" class="nav-link">Help</a>
                 </li>
-                {% endunless %}
             </ul>
 
             <form class="form-inline float-lg-right">

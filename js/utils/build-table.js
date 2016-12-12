@@ -178,7 +178,7 @@ const buildTable = function(tableElem, records, xsltFilename) {
         $("footer #table-pagination").html($(".dataTables_paginate"));
         $("footer #table-info").append($(".dataTables_info"));
         $(".dataTables_filter").remove();
-        $('.navbar-nav').prepend($('.dt-buttons'));
+        $('.navbar-nav').append($('.dt-buttons'));
 
         // Fix styles
         $('.dt-buttons>.buttons-collection').removeClass('btn-secondary');
