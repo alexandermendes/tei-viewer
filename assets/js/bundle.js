@@ -1944,7 +1944,7 @@
 	                "autoClose": true,
 	                "buttons": [{
 	                    "extend": "excelHtml5",
-	                    "title": "teiviewer-excel-export",
+	                    "title": "buttons-excel-export",
 	                    "exportOptions": {
 	                        "columns": function columns(idx, data, node) {
 	                            return idx !== 0 && idx !== 1;
@@ -1952,7 +1952,7 @@
 	                    }
 	                }, {
 	                    "extend": "csvHtml5",
-	                    "title": "teiviewer-csv-export",
+	                    "title": "buttons-csv-export",
 	                    "exportOptions": {
 	                        "columns": function columns(idx, data, node) {
 	                            return idx !== 0 && idx !== 1;
@@ -1985,6 +1985,20 @@
 	                    "className": "buttons-delete",
 	                    "action": function action(evt, dt, node, conf) {
 	                        $('tbody tr.selected').each(function () {
+	                            var id = $(this).attr('id');
+	                            _dbServer2.default.remove(id).then(function () {
+	                                dt.rows('#' + id).remove().draw();
+	                            }).catch(function (err) {
+	                                (0, _notify2.default)(err.message, 'error');
+	                                throw err;
+	                            });
+	                        });
+	                    }
+	                }, {
+	                    "text": "Delete All",
+	                    "className": "buttons-delete-all",
+	                    "action": function action(evt, dt, node, conf) {
+	                        $('tbody tr').each(function () {
 	                            var id = $(this).attr('id');
 	                            _dbServer2.default.remove(id).then(function () {
 	                                dt.rows('#' + id).remove().draw();
@@ -30453,6 +30467,7 @@
 	    (0, _buildTable2.default)(tableElem, records, 'example.xsl').then(function (table) {
 	        table.buttons('.buttons-xml-export').disable();
 	        table.buttons('.buttons-delete').disable();
+	        table.buttons('.buttons-delete-all').disable();
 	        table.buttons('.buttons-xml-editor').disable();
 	        $('.loading-overlay').hide();
 	    });

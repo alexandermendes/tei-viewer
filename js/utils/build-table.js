@@ -63,7 +63,7 @@ const buildTable = function(tableElem, records, xsltFilename) {
                     "buttons": [
                         {
                             "extend": "excelHtml5",
-                            "title": "teiviewer-excel-export",
+                            "title": "buttons-excel-export",
                             "exportOptions": {
                                 "columns": function (idx, data, node) {
                                     return idx !== 0 && idx !== 1;
@@ -72,7 +72,7 @@ const buildTable = function(tableElem, records, xsltFilename) {
                         },
                         {
                             "extend": "csvHtml5",
-                            "title": "teiviewer-csv-export",
+                            "title": "buttons-csv-export",
                             "exportOptions": {
                                 "columns": function (idx, data, node) {
                                     return idx !== 0 && idx !== 1;
@@ -111,6 +111,21 @@ const buildTable = function(tableElem, records, xsltFilename) {
                             "className": "buttons-delete",
                             "action": function (evt, dt, node, conf) {
                                 $('tbody tr.selected').each(function() {
+                                    let id = $(this).attr('id');
+                                    dbServer.remove(id).then(function() {
+                                        dt.rows('#' + id).remove().draw();
+                                    }).catch(function(err) {
+                                        notify(err.message, 'error');
+                                        throw err;
+                                    });
+                                });
+                            }
+                        },
+                        {
+                            "text": "Delete All",
+                            "className": "buttons-delete-all",
+                            "action": function (evt, dt, node, conf) {
+                                $('tbody tr').each(function() {
                                     let id = $(this).attr('id');
                                     dbServer.remove(id).then(function() {
                                         dt.rows('#' + id).remove().draw();
