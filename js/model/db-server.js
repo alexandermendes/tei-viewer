@@ -90,6 +90,19 @@ class DBServer {
     }
 
     /**
+     * Update multiple records.
+     */
+    updateAll(records) {
+        let updatePromises = [];
+        return new Promise((resolve, reject)  => {
+            for (let r of records) {
+                updatePromises.push(this.update(r));
+            }
+            resolve(Promise.all(updatePromises));
+        });
+    }
+
+    /**
      * Return all records.
      */
     getAll() {
