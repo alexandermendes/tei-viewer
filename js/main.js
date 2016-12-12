@@ -1,5 +1,4 @@
-import editor from './view/editor';
-import tableView from './view/table';
+import table from './view/table';
 import upload from './view/upload';
 import notify from './view/notify';
 import docs from './view/docs';
@@ -13,7 +12,3 @@ try {
     notify(err.message, 'error');
     throw err;
 }
-
-Pace.on('done', function() {
-    editor.refresh();
-});
