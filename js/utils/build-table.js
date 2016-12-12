@@ -1,25 +1,37 @@
 import dbServer from '../model/db-server';
+import Editor from '../utils/editor';
 import exportXML from '../utils/export-xml';
 import notify from '../view/notify';
 
+/**
+ * Return the dataset.
+ */
+function getDataset(records, xsltFilename) {
+    return records.map(function(el) {
+        return el[xsltFilename];
+    })
+}
 
 /**
  * Return the table columns.
  */
 function getColumns() {
-    return $('th:not(:first-child)').map(function() {
-        return {data: $(this).text()};
-    }).get();
+    let columns = [{data: null}];
+    $('th:not(:first-child)').each(function() {
+        columns.push({data: $(this).text()});
+    });
+    return columns;
 }
 
 
 /**
  * Build the table.
  */
-const buildTable = function(tableElem, dataSet) {
+const buildTable = function(tableElem, records, xsltFilename) {
     return new Promise(function(resolve, reject) {
-        const columns = getColumns();
-        const table = tableElem.DataTable({
+        const columns = getColumns(),
+              dataSet = getDataset(records, xsltFilename),
+              table   = tableElem.DataTable({
             "data": dataSet,
             "dom": "Bfrtip",
             "deferRender": true,
@@ -109,7 +121,26 @@ const buildTable = function(tableElem, dataSet) {
                                     notify('Please select a single row to edit', 'info');
                                 } else {
                                     let id = parseInt($('tr.selected').attr('id'));
-                                    window.location = `http://${window.location.host}/editor?id=${id}`;
+
+                                    // Load the record into the editor modal
+                                    dbServer.get(id).then(function(record) {
+                                        let container = $('#editor-modal .modal-body')[0];
+                                        let editor = new Editor(container, record, xsltFilename);
+                                        $('#editor-modal .modal-title').html(`Editing ${record.filename}`)
+                                        $('#editor-modal').modal('show');
+                                        editor.refresh();
+
+                                        // Handle save button click event
+                                        $('#editor-modal #save-xml').on('click', function(evt){
+                                            editor.save();
+                                            dt.rows('#' + id).data(record[xsltFilename]).draw();
+                                            $('#editor-modal').modal('hide');
+                                            notify('Record saved!', 'success');
+                                        });
+                                    }).catch(function (err) {
+                                        notify(err.message, 'error');
+                                        throw err;
+                                    });
                                 }
                             }
                         },
