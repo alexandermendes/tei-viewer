@@ -40,7 +40,7 @@ class Editor {
      * Refresh the editor.
      */
     refresh() {
-        this.editor.refresh();
+        setTimeout(this.editor.refresh(), 0);
     }
 }
 

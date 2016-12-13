@@ -11,7 +11,7 @@ module.exports = function(grunt) {
                 "dest": "./assets/js/custom-modernizr.js",
                 files: {
                     src: [
-                        './js/utils/check-html5.js',
+                        './_js/utils/check-html5.js',
                     ]
                 },
                 "uglify": true
@@ -20,7 +20,7 @@ module.exports = function(grunt) {
 
         webpack: {
             dev: {
-                entry: "./js/main.js",
+                entry: "./_js/main.js",
                 output: {
                     path: "./assets/js",
                     filename: "bundle.js",
@@ -40,7 +40,7 @@ module.exports = function(grunt) {
                 }
             },
             build: {
-                entry: "./js/main.js",
+                entry: "./_js/main.js",
                 output: {
                     path: "./assets/js",
                     filename: "bundle.js",
@@ -124,7 +124,7 @@ module.exports = function(grunt) {
                 livereload: true
             },
             js: {
-                files: ['./js/*.js', './js/**/*.js'],
+                files: ['./_js/*.js', './_js/**/*.js'],
                 tasks: ['webpack:dev', 'modernizr']
             }
         },
