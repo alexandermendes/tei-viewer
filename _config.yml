@@ -22,3 +22,5 @@ sass:
 collections:
   tables:
     output: true
+  docs:
+    output: true
