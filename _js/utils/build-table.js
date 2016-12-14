@@ -3,6 +3,7 @@ import he from 'he';
 import dbServer from '../model/db-server';
 import Editor from '../utils/editor';
 import exportXML from '../utils/export-xml';
+import exportJSON from '../utils/export-json';
 import notify from '../view/notify';
 
 /**
@@ -85,6 +86,18 @@ const buildTable = function(tableElem, records, xsltFilename) {
                             "action": function (evt, dt, node, conf) {
                                 dbServer.getAll().then(function(records) {
                                     exportXML(records);
+                                }).catch(function(err) {
+                                    notify(err.message, 'error');
+                                    throw err;
+                                });
+                            }
+                        },
+                        {
+                            "text": "JSON",
+                            "className": "buttons-json-export",
+                            "action": function (evt, dt, node, conf) {
+                                dbServer.getAll().then(function(records) {
+                                    exportJSON(records, xsltFilename);
                                 }).catch(function(err) {
                                     notify(err.message, 'error');
                                     throw err;
