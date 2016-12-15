@@ -124,7 +124,7 @@ const buildTable = function(tableElem, records, xsltFilename) {
                             "className": "buttons-delete",
                             "action": function (evt, dt, node, conf) {
                                 $('tbody tr.selected').each(function() {
-                                    let id = $(this).attr('id');
+                                    const id = $(this).attr('id');
                                     dbServer.remove(id).then(function() {
                                         dt.rows('#' + id).remove().draw();
                                     }).catch(function(err) {
@@ -139,7 +139,7 @@ const buildTable = function(tableElem, records, xsltFilename) {
                             "className": "buttons-delete-all",
                             "action": function (evt, dt, node, conf) {
                                 $('tbody tr').each(function() {
-                                    let id = $(this).attr('id');
+                                    const id = $(this).attr('id');
                                     dbServer.remove(id).then(function() {
                                         dt.rows('#' + id).remove().draw();
                                     }).catch(function(err) {
@@ -156,12 +156,12 @@ const buildTable = function(tableElem, records, xsltFilename) {
                                 if ($('tr.selected').length !== 1) {
                                     notify('Please select a single row to edit', 'info');
                                 } else {
-                                    let id = parseInt($('tr.selected').attr('id'));
+                                    const id = parseInt($('tr.selected').attr('id'));
 
                                     // Load the record into the editor modal
                                     dbServer.get(id).then(function(record) {
-                                        let container = $('#editor-modal .modal-body')[0];
-                                        let editor = new Editor(container, record, xsltFilename);
+                                        const container = $('#editor-modal .modal-body')[0],
+                                              editor    = new Editor(container, record, xsltFilename);
                                         $('#editor-modal .modal-title').html(`Editing ${record.filename}`)
                                         $('#editor-modal').modal('show');
                                         editor.refresh();

@@ -2035,8 +2035,8 @@
 
 	                                // Load the record into the editor modal
 	                                _dbServer2.default.get(id).then(function (record) {
-	                                    var container = $('#editor-modal .modal-body')[0];
-	                                    var editor = new _editor2.default(container, record, xsltFilename);
+	                                    var container = $('#editor-modal .modal-body')[0],
+	                                        editor = new _editor2.default(container, record, xsltFilename);
 	                                    $('#editor-modal .modal-title').html('Editing ' + record.filename);
 	                                    $('#editor-modal').modal('show');
 	                                    editor.refresh();
@@ -29639,7 +29639,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var upload;
+	var upload = void 0;
 
 	/** Start the upload. */
 	$("#start-upload").on('click', function (evt) {
@@ -29653,71 +29653,73 @@
 	});
 
 	if ($('#upload-view').length) {
-	    var previewNode = document.querySelector("#template");
-	    previewNode.id = "";
-	    var previewTemplate = previewNode.parentNode.innerHTML;
-	    previewNode.parentNode.removeChild(previewNode);
+	    (function () {
+	        var previewNode = document.querySelector("#template");
+	        previewNode.id = "";
+	        var previewTemplate = previewNode.parentNode.innerHTML;
+	        previewNode.parentNode.removeChild(previewNode);
 
-	    var addButtons = [];
-	    $('.add-files').each(function () {
-	        addButtons.push($(this)[0]);
-	    });
+	        var addButtons = [];
+	        $('.add-files').each(function () {
+	            addButtons.push($(this)[0]);
+	        });
 
-	    $('.add-files').on('click', function (evt) {
-	        evt.preventDefault();
-	    });
+	        $('.add-files').on('click', function (evt) {
+	            evt.preventDefault();
+	        });
 
-	    var dz = new _teiDropzone2.default("#upload-form", {
-	        url: '/upload',
-	        acceptedFiles: 'text/xml',
-	        createImageThumbnails: false,
-	        accept: function accept(file, done) {
-	            if (file.type !== 'text/xml') {
-	                done('Invalid XML file');
+	        var dz = new _teiDropzone2.default("#upload-form", {
+	            url: '/upload',
+	            acceptedFiles: 'text/xml',
+	            createImageThumbnails: false,
+	            accept: function accept(file, done) {
+	                if (file.type !== 'text/xml') {
+	                    done('Invalid XML file');
+	                }
+	                done();
+	            },
+	            clickable: addButtons,
+	            autoQueue: false,
+	            previewsContainer: "#previews",
+	            previewTemplate: previewTemplate,
+	            parallelUploads: 1
+	        });
+
+	        /** Handle completed upload. */
+	        dz.on("queuecomplete", function () {
+	            var nErrors = dz.files.filter(function (el) {
+	                return el.status == "error";
+	            }).length;
+
+	            if (nErrors > 0) {
+	                $('#total-progress').attr('value', 0);
+	                (0, _notify2.default)(nErrors + ' file' + (nErrors == 1 ? '' : 's') + ' could not be uploaded, please correct the errors' + ' and try again', 'warning');
+
+	                // Remove successfully uploaded files
+	                var success = dz.files.filter(function (el) {
+	                    return el.status == "success";
+	                });
+	                for (var f in success) {
+	                    dz.removeFile(f);
+	                }
+	            } else {
+	                window.location.href = '/tables';
 	            }
-	            done();
-	        },
-	        clickable: addButtons,
-	        autoQueue: false,
-	        previewsContainer: "#previews",
-	        previewTemplate: previewTemplate,
-	        parallelUploads: 1
-	    });
+	        });
 
-	    /** Handle completed upload. */
-	    dz.on("queuecomplete", function () {
-	        var nErrors = dz.files.filter(function (el) {
-	            return el.status == "error";
-	        }).length;
+	        /** Hide form when a file is added. */
+	        dz.on("addedfile", function (file) {
+	            $("#upload-form").hide();
+	        });
 
-	        if (nErrors > 0) {
-	            $('#total-progress').attr('value', 0);
-	            (0, _notify2.default)(nErrors + ' file' + (nErrors == 1 ? '' : 's') + ' could not be uploaded, please correct the errors' + ' and try again', 'warning');
-
-	            // Remove successfully uploaded files
-	            var success = dz.files.filter(function (el) {
-	                return el.status == "success";
-	            });
-	            for (var i = 0; i < success.length; i++) {
-	                dz.removeFile(success[i]);
-	            }
-	        } else {
-	            window.location.href = '/tables';
-	        }
-	    });
-
-	    /** Hide form when a file is added. */
-	    dz.on("addedfile", function (file) {
-	        $("#upload-form").hide();
-	    });
-
-	    /** Update progress. */
-	    dz.on("updateprogress", function () {
-	        var total = dz.files.length,
-	            processed = total - dz.getActiveFiles().length,
-	            progress = 100 * processed / total;
-	        $('#total-progress').attr('value', progress);
-	    });
+	        /** Update progress. */
+	        dz.on("updateprogress", function () {
+	            var total = dz.files.length,
+	                processed = total - dz.getActiveFiles().length,
+	                progress = 100 * processed / total;
+	            $('#total-progress').attr('value', progress);
+	        });
+	    })();
 	}
 
 	exports.default = upload;
@@ -29731,6 +29733,10 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _getIterator2 = __webpack_require__(3);
+
+	var _getIterator3 = _interopRequireDefault(_getIterator2);
 
 	var _getPrototypeOf = __webpack_require__(190);
 
@@ -29800,11 +29806,32 @@
 	                };
 	            }
 
-	            for (var i = 0; i < files.length; i++) {
-	                reader = new FileReader();
-	                reader.onload = saveFile(files[i]);
-	                reader.readAsText(files[i]);
-	                _this.emit("updateprogress");
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+
+	            try {
+	                for (var _iterator = (0, _getIterator3.default)(files), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var f = _step.value;
+
+	                    reader = new FileReader();
+	                    reader.onload = saveFile(f);
+	                    reader.readAsText(f);
+	                    _this.emit("updateprogress");
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
 	            }
 	        }
 	    }]);
@@ -30500,7 +30527,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var docs;
+	var docs = void 0;
 
 	/**
 	 * Add class for syntax highlighting.
@@ -30525,7 +30552,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var landing;
+	var landing = void 0;
 
 	if ($('#landing-view').length) {
 	    var tableElem = $('#landing-table table'),

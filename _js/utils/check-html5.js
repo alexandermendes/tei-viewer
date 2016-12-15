@@ -1,8 +1,8 @@
 /**
  * Check for requried HTML5 features.
  */
-var checkHTML5 = function() {
-    var required = [
+const checkHTML5 = function() {
+    const required = [
         Modernizr.filereader,
         Modernizr.promises,
         Modernizr.indexeddb,

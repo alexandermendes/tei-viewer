@@ -11,8 +11,8 @@ class TEIDropzone extends Dropzone {
     }
 
     uploadFiles(files) {
-        var _this = this;
-        var reader = {};
+        const _this = this;
+        let reader = {};
 
         function saveFile(f) {
             return function(evt) {
@@ -35,10 +35,10 @@ class TEIDropzone extends Dropzone {
             };
         }
 
-        for (var i = 0; i < files.length; i++) {
+        for (let f of files) {
             reader = new FileReader();
-            reader.onload = saveFile(files[i]);
-            reader.readAsText(files[i]);
+            reader.onload = saveFile(f);
+            reader.readAsText(f);
             _this.emit("updateprogress");
         }
     }

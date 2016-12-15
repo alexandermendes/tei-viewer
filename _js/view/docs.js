@@ -1,4 +1,4 @@
-var docs;
+let docs;
 
 /**
  * Add class for syntax highlighting.

@@ -44,9 +44,9 @@ class Transformer {
         const xml = $.parseXML(record.xml),
               doc = this.xsltProc.transformToFragment(xml, document);
 
-        let div = document.createElement('div');
+        const div = document.createElement('div');
         div.appendChild(doc.cloneNode(true));
-        let json = $.parseJSON(div.innerHTML);
+        const json = $.parseJSON(div.innerHTML);
 
         json.DT_RowId = record.id;  // Used to set DataTables row ID
         record[this.xsltFilename] = json;
@@ -73,7 +73,7 @@ class Transformer {
         let promises = [];
         return new Promise((resolve, reject) => {
             this.loadXSLT().then(() => {
-                for (var r of records) {
+                for (let r of records) {
                     promises.push(this.updateRecord(r));
                 }
                 resolve(Promise.all(promises));

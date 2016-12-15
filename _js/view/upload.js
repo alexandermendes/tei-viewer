@@ -2,7 +2,7 @@ import dbServer from '../model/db-server';
 import notify from '../view/notify';
 import TEIDropzone from '../utils/tei-dropzone';
 
-var upload;
+let upload;
 
 /** Start the upload. */
 $("#start-upload").on('click', function(evt) {
@@ -16,12 +16,12 @@ $("#start-upload").on('click', function(evt) {
 });
 
 if($('#upload-view').length) {
-    var previewNode = document.querySelector("#template");
+    const previewNode = document.querySelector("#template");
     previewNode.id = "";
-    var previewTemplate = previewNode.parentNode.innerHTML;
+    const previewTemplate = previewNode.parentNode.innerHTML;
     previewNode.parentNode.removeChild(previewNode);
 
-    var addButtons = [];
+    let addButtons = [];
     $('.add-files').each(function(){
         addButtons.push($(this)[0]);
     });
@@ -30,7 +30,7 @@ if($('#upload-view').length) {
         evt.preventDefault();
     });
 
-    var dz = new TEIDropzone("#upload-form", {
+    let dz = new TEIDropzone("#upload-form", {
         url: '/upload',
         acceptedFiles: 'text/xml',
         createImageThumbnails: false,
@@ -49,7 +49,7 @@ if($('#upload-view').length) {
 
     /** Handle completed upload. */
     dz.on("queuecomplete", function() {
-        var nErrors = dz.files.filter(function(el) {
+        const nErrors = dz.files.filter(function(el) {
             return el.status == "error";
         }).length;
 
@@ -60,11 +60,11 @@ if($('#upload-view').length) {
                    ' and try again', 'warning');
 
             // Remove successfully uploaded files
-            var success = dz.files.filter(function(el) {
+            const success = dz.files.filter(function(el) {
                 return el.status == "success";
             });
-            for (var i = 0; i < success.length; i++) {
-                dz.removeFile(success[i]);
+            for (let f in success) {
+                dz.removeFile(f);
             }
         } else {
             window.location.href = '/tables';
@@ -78,9 +78,9 @@ if($('#upload-view').length) {
 
     /** Update progress. */
     dz.on("updateprogress", function() {
-        var total     = dz.files.length,
-            processed = total - dz.getActiveFiles().length,
-            progress  = (100 * processed) / total;
+        const total     = dz.files.length,
+              processed = total - dz.getActiveFiles().length,
+              progress  = (100 * processed) / total;
         $('#total-progress').attr('value', progress);
     });
 }

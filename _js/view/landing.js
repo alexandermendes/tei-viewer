@@ -1,6 +1,6 @@
 import buildTable from '../utils/build-table';
 
-var landing;
+let landing;
 
 if ($('#landing-view').length) {
     const tableElem = $('#landing-table table'),
