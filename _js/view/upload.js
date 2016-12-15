@@ -6,7 +6,8 @@ let upload;
 
 /** Start the upload. */
 $("#start-upload").on('click', function(evt) {
-    let nFiles = dz.getFilesWithStatus(Dropzone.ADDED).length;
+    const dz     =  Dropzone.forElement("#upload-form"),
+          nFiles = dz.getFilesWithStatus(Dropzone.ADDED).length;
     if (nFiles > 0) {
         dz.enqueueFiles(dz.getFilesWithStatus(Dropzone.ADDED));
     } else {
