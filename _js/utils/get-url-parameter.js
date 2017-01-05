@@ -8,7 +8,7 @@ const getUrlParameter = function(url, param, type) {
         query = URI.parseQuery(uri.query());
 
     if (!uri.hasQuery(param)) {
-        throw new Error(`Parameter "${param}" missing from URL`);
+        return null;
     }
 
     if (type == 'int') {
