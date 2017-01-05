@@ -1,16 +1,17 @@
 import Transformer from '../utils/transformer';
-import buildTable from '../utils/build-table';
+import TableBuilder from '../utils/table-builder';
 import notify from '../view/notify';
 import dbServer from '../model/db-server';
+import getUrlParameter from '../utils/get-url-parameter';
 
 let tableView;
 
-
-if ($('#table-view').length) {
+function loadFromDB() {
     const tableElem    = $('table'),
           xsltFilename = tableElem.data('xslt'),
-          transformer  = new Transformer(xsltFilename);
-    let allRecords  = [];
+          transformer  = new Transformer(xsltFilename),
+          tableBuilder = new TableBuilder(tableElem);
+    let allRecords = [];
 
     dbServer.getAll().then(function(records) {
         allRecords = records;
@@ -24,11 +25,43 @@ if ($('#table-view').length) {
     }).then(function(transformedRecords) {
         return dbServer.updateAll(transformedRecords);
     }).then(function() {
-        return buildTable(tableElem, allRecords, xsltFilename);
+        return tableBuilder.buildFromDB(allRecords, xsltFilename);
     }).catch(function(err) {
         notify(err, 'error');
         throw err;
     });
+}
+
+
+function loadFromJSONP(url) {
+    const tableElem    = $('table'),
+          tableBuilder = new TableBuilder(tableElem);
+
+    new Promise(function(resolve, reject) {
+        $.ajax({
+            url: url,
+            jsonp: 'callback',
+            jsonpCallback: 'callback',
+            dataType: 'jsonp',
+        }).done(function(dataSet) {
+            return tableBuilder.build(dataSet);
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            reject(`Error loading dataset: ${textStatus}`);
+        });
+    }).catch(function(err) {
+        notify(err, 'error');
+        throw err;
+    });
+}
+
+
+if ($('#table-view').length) {
+    const datasetURL = getUrlParameter(document.location.href, 'dataset');
+    if (datasetURL) {
+        loadFromJSONP(datasetURL);
+    } else {
+        loadFromDB();
+    }
 }
 
 
