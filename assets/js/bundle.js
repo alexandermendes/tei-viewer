@@ -121,7 +121,7 @@
 	    var tableElem = $('table'),
 	        xsltFilename = tableElem.data('xslt'),
 	        transformer = new _transformer2.default(xsltFilename),
-	        tableBuilder = new _tableBuilder2.default(tableElem);
+	        tableBuilder = new _tableBuilder2.default(tableElem, xsltFilename);
 	    var allRecords = [];
 
 	    _dbServer2.default.getAll().then(function (records) {
@@ -135,7 +135,7 @@
 	    }).then(function (transformedRecords) {
 	        return _dbServer2.default.updateAll(transformedRecords);
 	    }).then(function () {
-	        return tableBuilder.buildFromDB(allRecords, xsltFilename);
+	        return tableBuilder.buildFromDB(allRecords);
 	    }).catch(function (err) {
 	        (0, _notify2.default)(err, 'error');
 	        throw err;
@@ -144,7 +144,8 @@
 
 	function loadFromJSONP(url) {
 	    var tableElem = $('table'),
-	        tableBuilder = new _tableBuilder2.default(tableElem);
+	        xsltFilename = tableElem.data('xslt'),
+	        tableBuilder = new _tableBuilder2.default(tableElem, xsltFilename);
 
 	    new _promise2.default(function (resolve, reject) {
 	        $.ajax({
@@ -1945,10 +1946,11 @@
 	    /**
 	     * Initialise.
 	     */
-	    function TableBuilder(tableElem) {
+	    function TableBuilder(tableElem, xsltFilename) {
 	        (0, _classCallCheck3.default)(this, TableBuilder);
 
 	        this.tableElem = tableElem;
+	        this.xsltFilename = xsltFilename;
 	    }
 
 	    /**
@@ -1958,9 +1960,9 @@
 
 	    (0, _createClass3.default)(TableBuilder, [{
 	        key: 'getDataset',
-	        value: function getDataset(records, xsltFilename) {
+	        value: function getDataset(records) {
 	            return records.map(function (el) {
-	                return el[xsltFilename];
+	                return el[this.xsltFilename];
 	            });
 	        }
 
@@ -2044,7 +2046,18 @@
 	                            "className": "buttons-json-export",
 	                            "action": function action(evt, dt, node, conf) {
 	                                _dbServer2.default.getAll().then(function (records) {
-	                                    (0, _exportJson2.default)(records, xsltFilename);
+	                                    (0, _exportJson2.default)(dataSet, false);
+	                                }).catch(function (err) {
+	                                    (0, _notify2.default)(err.message, 'error');
+	                                    throw err;
+	                                });
+	                            }
+	                        }, {
+	                            "text": "JSONP",
+	                            "className": "buttons-jsonp-export",
+	                            "action": function action(evt, dt, node, conf) {
+	                                _dbServer2.default.getAll().then(function (records) {
+	                                    (0, _exportJson2.default)(dataSet, true);
 	                                }).catch(function (err) {
 	                                    (0, _notify2.default)(err.message, 'error');
 	                                    throw err;
@@ -2102,7 +2115,7 @@
 	                                        // Load the record into the editor modal
 	                                        _dbServer2.default.get(id).then(function (record) {
 	                                            var container = $('#editor-modal .modal-body')[0],
-	                                                editor = new _editor2.default(container, record, xsltFilename);
+	                                                editor = new _editor2.default(container, record, this.xsltFilename);
 	                                            $('#editor-modal .modal-title').html('Editing ' + record.filename);
 	                                            $('#editor-modal').modal('show');
 	                                            editor.refresh();
@@ -2110,7 +2123,7 @@
 	                                            // Handle save button click event
 	                                            $('#editor-modal #save-xml').on('click', function (evt) {
 	                                                editor.save();
-	                                                dt.rows('#' + id).data(record[xsltFilename]).draw();
+	                                                dt.rows('#' + id).data(record[this.xsltFilename]).draw();
 	                                                $('#editor-modal').modal('hide');
 	                                                (0, _notify2.default)('Record saved!', 'success');
 	                                            });
@@ -2172,8 +2185,8 @@
 	        }
 	    }, {
 	        key: 'buildFromDB',
-	        value: function buildFromDB(records, xsltFilename) {
-	            var dataSet = this.getDataset(records, xsltFilename);
+	        value: function buildFromDB(records) {
+	            var dataSet = this.getDataset(records);
 	            this.build(dataSet);
 	        }
 	    }]);
@@ -29614,12 +29627,15 @@
 	/**
 	 * Export JSON transformed records.
 	 */
-	var exportJSON = function exportJSON(records, xsltFilename) {
+	var exportJSON = function exportJSON(dataSet, wrapJSON) {
 	    var zip = new _jszip2.default();
-	    var json = (0, _stringify2.default)(records.map(function (el) {
-	        return el[xsltFilename];
-	    }), null, 2);
-	    zip.file(xsltFilename + '-data.json', json);
+	    var json = (0, _stringify2.default)(dataSet, null, 2);
+
+	    if (wrapJSON) {
+	        json = 'callback(' + json + ')';
+	    }
+
+	    zip.file('data.json', json);
 	    zip.generateAsync({ type: 'blob' }).then(function (blob) {
 	        saveAs(blob, 'teiviewer-json-export.zip');
 	    });

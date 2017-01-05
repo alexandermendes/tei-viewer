@@ -12,16 +12,17 @@ class TableBuilder {
     /**
      * Initialise.
      */
-    constructor(tableElem) {
+    constructor(tableElem, xsltFilename) {
         this.tableElem = tableElem;
+        this.xsltFilename = xsltFilename
     }
 
     /**
      * Return the dataset.
      */
-    getDataset(records, xsltFilename) {
+    getDataset(records) {
         return records.map(function(el) {
-            return el[xsltFilename];
+            return el[this.xsltFilename];
         })
     }
 
@@ -105,7 +106,19 @@ class TableBuilder {
                                 "className": "buttons-json-export",
                                 "action": function (evt, dt, node, conf) {
                                     dbServer.getAll().then(function(records) {
-                                        exportJSON(records, xsltFilename);
+                                        exportJSON(dataSet, false);
+                                    }).catch(function(err) {
+                                        notify(err.message, 'error');
+                                        throw err;
+                                    });
+                                }
+                            },
+                            {
+                                "text": "JSONP",
+                                "className": "buttons-jsonp-export",
+                                "action": function (evt, dt, node, conf) {
+                                    dbServer.getAll().then(function(records) {
+                                        exportJSON(dataSet, true);
                                     }).catch(function(err) {
                                         notify(err.message, 'error');
                                         throw err;
@@ -169,7 +182,7 @@ class TableBuilder {
                                         // Load the record into the editor modal
                                         dbServer.get(id).then(function(record) {
                                             const container = $('#editor-modal .modal-body')[0],
-                                                  editor    = new Editor(container, record, xsltFilename);
+                                                  editor    = new Editor(container, record, this.xsltFilename);
                                             $('#editor-modal .modal-title').html(`Editing ${record.filename}`)
                                             $('#editor-modal').modal('show');
                                             editor.refresh();
@@ -177,7 +190,7 @@ class TableBuilder {
                                             // Handle save button click event
                                             $('#editor-modal #save-xml').on('click', function(evt){
                                                 editor.save();
-                                                dt.rows('#' + id).data(record[xsltFilename]).draw();
+                                                dt.rows('#' + id).data(record[this.xsltFilename]).draw();
                                                 $('#editor-modal').modal('hide');
                                                 notify('Record saved!', 'success');
                                             });
@@ -245,8 +258,8 @@ class TableBuilder {
         });
     }
 
-    buildFromDB(records, xsltFilename) {
-        const dataSet = this.getDataset(records, xsltFilename);
+    buildFromDB(records) {
+        const dataSet = this.getDataset(records);
         this.build(dataSet);
     }
 }

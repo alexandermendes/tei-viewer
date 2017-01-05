@@ -10,7 +10,7 @@ function loadFromDB() {
     const tableElem    = $('table'),
           xsltFilename = tableElem.data('xslt'),
           transformer  = new Transformer(xsltFilename),
-          tableBuilder = new TableBuilder(tableElem);
+          tableBuilder = new TableBuilder(tableElem, xsltFilename);
     let allRecords = [];
 
     dbServer.getAll().then(function(records) {
@@ -25,7 +25,7 @@ function loadFromDB() {
     }).then(function(transformedRecords) {
         return dbServer.updateAll(transformedRecords);
     }).then(function() {
-        return tableBuilder.buildFromDB(allRecords, xsltFilename);
+        return tableBuilder.buildFromDB(allRecords);
     }).catch(function(err) {
         notify(err, 'error');
         throw err;
@@ -35,7 +35,8 @@ function loadFromDB() {
 
 function loadFromJSONP(url) {
     const tableElem    = $('table'),
-          tableBuilder = new TableBuilder(tableElem);
+          xsltFilename = tableElem.data('xslt'),
+          tableBuilder = new TableBuilder(tableElem, xsltFilename);
 
     new Promise(function(resolve, reject) {
         $.ajax({
