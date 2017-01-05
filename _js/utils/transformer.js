@@ -19,7 +19,6 @@ class Transformer {
             $.ajax({
                 url: `/assets/xslt/${this.xsltFilename}`,
             }).done((data) => {
-                console.log('XSLT loaded');
                 this.xsltProc.importStylesheet(data);
                 resolve();
             }).fail(function(jqXHR, textStatus, errorThrown) {
