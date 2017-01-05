@@ -165,9 +165,9 @@
 	}
 
 	if ($('#table-view').length) {
-	    var datasetURL = (0, _getUrlParameter2.default)(document.location.href, 'dataset');
-	    if (datasetURL) {
-	        loadFromJSONP(datasetURL);
+	    var jsonpURL = (0, _getUrlParameter2.default)(document.location.href, 'jsonp');
+	    if (jsonpURL) {
+	        loadFromJSONP(jsonpURL);
 	    } else {
 	        loadFromDB();
 	    }

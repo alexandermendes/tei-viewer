@@ -57,9 +57,9 @@ function loadFromJSONP(url) {
 
 
 if ($('#table-view').length) {
-    const datasetURL = getUrlParameter(document.location.href, 'dataset');
-    if (datasetURL) {
-        loadFromJSONP(datasetURL);
+    const jsonpURL = getUrlParameter(document.location.href, 'jsonp');
+    if (jsonpURL) {
+        loadFromJSONP(jsonpURL);
     } else {
         loadFromDB();
     }
