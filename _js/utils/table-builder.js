@@ -262,6 +262,19 @@ class TableBuilder {
         const dataSet = this.getDataset(records);
         this.build(dataSet);
     }
+
+    buildFromJSONP(dataSet) {
+        return new Promise((resolve, reject) => {
+            return this.build(dataSet);
+        }).then(function(table) {
+            table.buttons('.buttons-xml-export').disable();
+            table.buttons('.buttons-delete').disable();
+            table.buttons('.buttons-delete-all').disable();
+            table.buttons('.buttons-xml-editor').disable();
+        }).catch(function(err) {
+            throw err;
+        });
+    }
 }
 
 export default TableBuilder;

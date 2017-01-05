@@ -2189,6 +2189,22 @@
 	            var dataSet = this.getDataset(records);
 	            this.build(dataSet);
 	        }
+	    }, {
+	        key: 'buildFromJSONP',
+	        value: function buildFromJSONP(dataSet) {
+	            var _this2 = this;
+
+	            return new _promise2.default(function (resolve, reject) {
+	                return _this2.build(dataSet);
+	            }).then(function (table) {
+	                table.buttons('.buttons-xml-export').disable();
+	                table.buttons('.buttons-delete').disable();
+	                table.buttons('.buttons-delete-all').disable();
+	                table.buttons('.buttons-xml-editor').disable();
+	            }).catch(function (err) {
+	                throw err;
+	            });
+	        }
 	    }]);
 	    return TableBuilder;
 	}();
