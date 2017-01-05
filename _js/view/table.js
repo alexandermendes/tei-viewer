@@ -33,33 +33,16 @@ function loadFromDB() {
 }
 
 
-function loadFromJSONP(url) {
+if ($('#table-view').length) {
     const tableElem    = $('table'),
           xsltFilename = tableElem.data('xslt'),
-          tableBuilder = new TableBuilder(tableElem, xsltFilename);
+          tableBuilder = new TableBuilder(tableElem, xsltFilename),
+          jsonpURL     = getUrlParameter(document.location.href, 'jsonp');
 
-    new Promise(function(resolve, reject) {
-        $.ajax({
-            url: url,
-            jsonp: 'callback',
-            jsonpCallback: 'callback',
-            dataType: 'jsonp',
-        }).done(function(dataSet) {
-            return tableBuilder.build(dataSet);
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            reject(`Error loading dataset: ${textStatus}`);
-        });
-    }).catch(function(err) {
-        notify(err, 'error');
-        throw err;
-    });
-}
-
-
-if ($('#table-view').length) {
-    const jsonpURL = getUrlParameter(document.location.href, 'jsonp');
     if (jsonpURL) {
-        loadFromJSONP(jsonpURL);
+        tableBuilder.buildFromJSONP(jsonpURL).catch(function(err) {
+            notify(err, 'error');
+        });
     } else {
         loadFromDB();
     }

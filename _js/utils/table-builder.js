@@ -263,8 +263,20 @@ class TableBuilder {
         this.build(dataSet);
     }
 
-    buildFromJSONP(dataSet) {
+    /** Build the table with data loaded from a JSONP URL. */
+    buildFromJSONP(url) {
         return new Promise((resolve, reject) => {
+            $.ajax({
+                url: url,
+                jsonp: 'callback',
+                jsonpCallback: 'callback',
+                dataType: 'jsonp',
+            }).done((dataSet) => {
+                return this.build(dataSet);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                reject(`Error loading dataset: ${textStatus}`);
+            });
+        }).then(function(table) {
             return this.build(dataSet);
         }).then(function(table) {
             table.buttons('.buttons-xml-export').disable();
