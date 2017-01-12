@@ -37,7 +37,7 @@ if ($('#table-view').length) {
     const tableElem    = $('table'),
           xsltFilename = tableElem.data('xslt'),
           tableBuilder = new TableBuilder(tableElem, xsltFilename),
-          jsonpURL     = getUrlParameter(document.location.href, 'jsonp');
+          jsonpURL     = getUrlParameter(document.location.href, 'dataset');
 
     if (jsonpURL) {
         tableBuilder.buildFromJSONP(jsonpURL).catch(function(err) {
