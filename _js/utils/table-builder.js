@@ -21,8 +21,8 @@ class TableBuilder {
      * Return the dataset.
      */
     getDataset(records) {
-        return records.map(function(el) {
-            return el[this.xsltFilename];
+        return records.map((el) => {
+            return el[this.xsltFilename].TEI;
         })
     }
 
@@ -32,7 +32,7 @@ class TableBuilder {
     getColumns() {
         let columns = [{data: null}];
         $('th:not(:first-child)').each(function() {
-            columns.push({data: $(this).text()});
+            columns.push({data: $(this).text().replace(/\s/g, "")});
         });
         return columns;
     }

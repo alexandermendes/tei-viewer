@@ -40,7 +40,8 @@
         "file-saver": "^1",
         "pace-progress": "^1",
         "pygments-css": "^1",
-        "he": "^1"
+        "he": "^1",
+        "xml2js": "0.4"
     },
     "devDependencies": {
         "webpack": "^1",

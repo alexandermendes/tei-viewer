@@ -1,3 +1,5 @@
+import xml2js from 'xml2js';
+
 /**
  * A class for handing XSLT transformations.
  */
@@ -22,7 +24,7 @@ class Transformer {
                 this.xsltProc.importStylesheet(data);
                 resolve();
             }).fail(function(jqXHR, textStatus, errorThrown) {
-                reject('Error loading XSLT: ' + jqXHR.statusText);
+                reject(`Error loading XSLT: ${errorThrown}`);
             });
         });
     }
@@ -37,18 +39,27 @@ class Transformer {
     }
 
     /**
+     * Extract the text from a document fragment.
+     */
+    fragmentToText(fragment) {
+        const div   = document.createElement('div'),
+              clone = fragment.cloneNode(true);
+        div.appendChild(clone);
+        return div.innerHTML
+    }
+
+    /**
      * Update a record.
      */
     updateRecord(record) {
         const xml = $.parseXML(record.xml),
-              doc = this.xsltProc.transformToFragment(xml, document);
+              doc = this.xsltProc.transformToFragment(xml, document),
+              txt = this.fragmentToText(doc);
 
-        const div = document.createElement('div');
-        div.appendChild(doc.cloneNode(true));
-        const json = $.parseJSON(div.innerHTML);
-
-        json.DT_RowId = record.id;  // Used to set DataTables row ID
-        record[this.xsltFilename] = json;
+        xml2js.parseString(txt, (err, result) => {
+            result.TEI.DT_RowId = record.id; // Set DataTables row ID
+            record[this.xsltFilename] = result;
+        });
         return record;
     }
 
@@ -66,7 +77,7 @@ class Transformer {
     }
 
     /**
-     * Yield multiple updated records.
+     * Return multiple updated records.
      */
     transformMultiple(records) {
         let promises = [];
