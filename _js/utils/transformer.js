@@ -21,7 +21,12 @@ class Transformer {
             $.ajax({
                 url: `/assets/xslt/${this.xsltFilename}`,
             }).done((data) => {
-                this.xsltProc.importStylesheet(data);
+                try {
+                    this.xsltProc.importStylesheet(data);
+                } catch(err) {
+                    // Error not always specified so throw a new one
+                    reject(new Error(`Couldn't loading ${this.xsltFilename}`));
+                }
                 resolve();
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 reject(`Error loading XSLT: ${errorThrown}`);
