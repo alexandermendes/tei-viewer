@@ -135,6 +135,21 @@ class DBServer {
         });
     }
 
+    /**
+     * Clear all records.
+     */
+    clear(id) {
+        return new Promise((resolve, reject)  => {
+            this.connect().then(() => {
+                return this.server.tei.clear();
+            }).then(function(record) {
+                resolve(record);
+            }).catch(function(err) {
+                reject(err);
+            });
+        });
+    }
+
 }
 
 export default new DBServer();
