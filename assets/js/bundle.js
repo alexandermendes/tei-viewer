@@ -16043,6 +16043,26 @@
 	                });
 	            });
 	        }
+
+	        /**
+	         * Count records.
+	         */
+
+	    }, {
+	        key: 'count',
+	        value: function count(id) {
+	            var _this9 = this;
+
+	            return new _promise2.default(function (resolve, reject) {
+	                _this9.connect().then(function () {
+	                    return _this9.server.tei.count();
+	                }).then(function (n) {
+	                    resolve(n);
+	                }).catch(function (err) {
+	                    reject(err);
+	                });
+	            });
+	        }
 	    }]);
 	    return DBServer;
 	}();
@@ -42267,9 +42287,26 @@
 
 	var _notify2 = _interopRequireDefault(_notify);
 
+	var _dbServer = __webpack_require__(254);
+
+	var _dbServer2 = _interopRequireDefault(_dbServer);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var landing = void 0;
+
+	/**
+	 * Handle Get Started button click.
+	 */
+	$('#get-started').on('click', function () {
+	    _dbServer2.default.count().then(function (n) {
+	        if (n > 0) {
+	            window.location.href = '/tables';
+	        } else {
+	            window.location.href = '/upload';
+	        }
+	    });
+	});
 
 	if ($('#landing-view').length) {
 	    var tableElem = $('#landing-table table'),

@@ -150,6 +150,21 @@ class DBServer {
         });
     }
 
+    /**
+     * Count records.
+     */
+    count(id) {
+        return new Promise((resolve, reject)  => {
+            this.connect().then(() => {
+                return this.server.tei.count();
+            }).then(function(n) {
+                resolve(n);
+            }).catch(function(err) {
+                reject(err);
+            });
+        });
+    }
+
 }
 
 export default new DBServer();
