@@ -258,6 +258,21 @@ class TableBuilder {
         });
     }
 
+    downloadDataset(url) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: url,
+                jsonp: 'callback',
+                jsonpCallback: 'callback',
+                dataType: 'jsonp',
+            }).done((dataSet) => {
+                resolve(dataSet)
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                reject(`Error loading dataset: ${errorThrown}`);
+            });
+        });
+    }
+
     buildFromDB(records) {
         const dataSet = this.getDataset(records);
         this.build(dataSet);
@@ -266,25 +281,17 @@ class TableBuilder {
     /** Build the table with data loaded from a JSONP URL. */
     buildFromJSONP(url) {
         return new Promise((resolve, reject) => {
-            $.ajax({
-                url: url,
-                jsonp: 'callback',
-                jsonpCallback: 'callback',
-                dataType: 'jsonp',
-            }).done((dataSet) => {
-                return this.build(dataSet);
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                reject(`Error loading dataset: ${errorThrown}`);
+            this.downloadDataset(url).then((dataset) => {
+                return this.build(dataset);
+            }).then(function(table) {
+                table.buttons('.buttons-xml-export').disable();
+                table.buttons('.buttons-delete').disable();
+                table.buttons('.buttons-delete-all').disable();
+                table.buttons('.buttons-xml-editor').disable();
+                resolve(table);
+            }).catch(function(err) {
+                throw err;
             });
-        }).then(function(table) {
-            return this.build(dataSet);
-        }).then(function(table) {
-            table.buttons('.buttons-xml-export').disable();
-            table.buttons('.buttons-delete').disable();
-            table.buttons('.buttons-delete-all').disable();
-            table.buttons('.buttons-xml-editor').disable();
-        }).catch(function(err) {
-            throw err;
         });
     }
 }

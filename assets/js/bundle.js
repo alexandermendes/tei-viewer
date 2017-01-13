@@ -15404,6 +15404,22 @@
 	            });
 	        }
 	    }, {
+	        key: 'downloadDataset',
+	        value: function downloadDataset(url) {
+	            return new _promise2.default(function (resolve, reject) {
+	                $.ajax({
+	                    url: url,
+	                    jsonp: 'callback',
+	                    jsonpCallback: 'callback',
+	                    dataType: 'jsonp'
+	                }).done(function (dataSet) {
+	                    resolve(dataSet);
+	                }).fail(function (jqXHR, textStatus, errorThrown) {
+	                    reject('Error loading dataset: ' + errorThrown);
+	                });
+	            });
+	        }
+	    }, {
 	        key: 'buildFromDB',
 	        value: function buildFromDB(records) {
 	            var dataSet = this.getDataset(records);
@@ -15418,25 +15434,17 @@
 	            var _this3 = this;
 
 	            return new _promise2.default(function (resolve, reject) {
-	                $.ajax({
-	                    url: url,
-	                    jsonp: 'callback',
-	                    jsonpCallback: 'callback',
-	                    dataType: 'jsonp'
-	                }).done(function (dataSet) {
-	                    return _this3.build(dataSet);
-	                }).fail(function (jqXHR, textStatus, errorThrown) {
-	                    reject('Error loading dataset: ' + errorThrown);
+	                _this3.downloadDataset(url).then(function (dataset) {
+	                    return _this3.build(dataset);
+	                }).then(function (table) {
+	                    table.buttons('.buttons-xml-export').disable();
+	                    table.buttons('.buttons-delete').disable();
+	                    table.buttons('.buttons-delete-all').disable();
+	                    table.buttons('.buttons-xml-editor').disable();
+	                    resolve(table);
+	                }).catch(function (err) {
+	                    throw err;
 	                });
-	            }).then(function (table) {
-	                return this.build(dataSet);
-	            }).then(function (table) {
-	                table.buttons('.buttons-xml-export').disable();
-	                table.buttons('.buttons-delete').disable();
-	                table.buttons('.buttons-delete-all').disable();
-	                table.buttons('.buttons-xml-editor').disable();
-	            }).catch(function (err) {
-	                throw err;
 	            });
 	        }
 	    }]);
