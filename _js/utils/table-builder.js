@@ -161,8 +161,8 @@ class TableBuilder {
                                 "action": function (evt, dt, node, conf) {
                                     $('tbody tr').each(function() {
                                         const id = $(this).attr('id');
-                                        dbServer.remove(id).then(function() {
-                                            dt.rows('#' + id).remove().draw();
+                                        dbServer.clear().then(function() {
+                                            dt.rows().remove().draw();
                                         }).catch(function(err) {
                                             notify(err.message, 'error');
                                             throw err;
