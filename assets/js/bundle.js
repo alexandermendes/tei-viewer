@@ -216,7 +216,12 @@
 	                $.ajax({
 	                    url: '/assets/xslt/' + _this.xsltFilename
 	                }).done(function (data) {
-	                    _this.xsltProc.importStylesheet(data);
+	                    try {
+	                        _this.xsltProc.importStylesheet(data);
+	                    } catch (err) {
+	                        // Error not always specified so throw a new one
+	                        reject(new Error('Couldn\'t loading ' + _this.xsltFilename));
+	                    }
 	                    resolve();
 	                }).fail(function (jqXHR, textStatus, errorThrown) {
 	                    reject('Error loading XSLT: ' + errorThrown);
@@ -15309,8 +15314,8 @@
 	                            "action": function action(evt, dt, node, conf) {
 	                                $('tbody tr').each(function () {
 	                                    var id = $(this).attr('id');
-	                                    _dbServer2.default.remove(id).then(function () {
-	                                        dt.rows('#' + id).remove().draw();
+	                                    _dbServer2.default.clear().then(function () {
+	                                        dt.rows().remove().draw();
 	                                    }).catch(function (err) {
 	                                        (0, _notify2.default)(err.message, 'error');
 	                                        throw err;
@@ -15421,7 +15426,7 @@
 	                }).done(function (dataSet) {
 	                    return _this3.build(dataSet);
 	                }).fail(function (jqXHR, textStatus, errorThrown) {
-	                    reject('Error loading dataset: ' + textStatus);
+	                    reject('Error loading dataset: ' + errorThrown);
 	                });
 	            }).then(function (table) {
 	                return this.build(dataSet);
@@ -16004,6 +16009,26 @@
 	                    if (typeof record === 'undefined') {
 	                        reject(new Error('Record not found'));
 	                    }
+	                    resolve(record);
+	                }).catch(function (err) {
+	                    reject(err);
+	                });
+	            });
+	        }
+
+	        /**
+	         * Clear all records.
+	         */
+
+	    }, {
+	        key: 'clear',
+	        value: function clear(id) {
+	            var _this8 = this;
+
+	            return new _promise2.default(function (resolve, reject) {
+	                _this8.connect().then(function () {
+	                    return _this8.server.tei.clear();
+	                }).then(function (record) {
 	                    resolve(record);
 	                }).catch(function (err) {
 	                    reject(err);
@@ -42230,6 +42255,10 @@
 
 	var _tableBuilder2 = _interopRequireDefault(_tableBuilder);
 
+	var _notify = __webpack_require__(340);
+
+	var _notify2 = _interopRequireDefault(_notify);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var landing = void 0;
@@ -42237,14 +42266,12 @@
 	if ($('#landing-view').length) {
 	    var tableElem = $('#landing-table table'),
 	        tableBuilder = new _tableBuilder2.default(tableElem),
-	        dataSet = JSON.parse($('#sample-data').text());
+	        sampleUrl = $('#sample-data').data('url');
 
-	    tableBuilder.build(dataSet).then(function (table) {
-	        table.buttons('.buttons-xml-export').disable();
-	        table.buttons('.buttons-delete').disable();
-	        table.buttons('.buttons-delete-all').disable();
-	        table.buttons('.buttons-xml-editor').disable();
-	        $('.loading-overlay').hide();
+	    tableBuilder.buildFromJSONP(sampleUrl).then(function (table) {
+	        $('#landing-table .loading-overlay').hide();
+	    }).catch(function (err) {
+	        (0, _notify2.default)(err, 'error');
 	    });
 	}
 
