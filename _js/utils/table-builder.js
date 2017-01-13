@@ -274,7 +274,7 @@ class TableBuilder {
             }).done((dataSet) => {
                 return this.build(dataSet);
             }).fail(function(jqXHR, textStatus, errorThrown) {
-                reject(`Error loading dataset: ${textStatus}`);
+                reject(`Error loading dataset: ${errorThrown}`);
             });
         }).then(function(table) {
             return this.build(dataSet);
