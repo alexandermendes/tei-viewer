@@ -15240,8 +15240,7 @@
 	                            "exportOptions": {
 	                                "columns": function columns(idx, data, node) {
 	                                    return idx !== 0 && idx !== 1;
-	                                },
-	                                "stripNewlines": false
+	                                }
 	                            }
 	                        }, {
 	                            "extend": "csvHtml5",
