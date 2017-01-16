@@ -4,6 +4,7 @@ import dbServer from '../model/db-server';
 import Editor from '../utils/editor';
 import exportXML from '../utils/export-xml';
 import exportJSON from '../utils/export-json';
+import Transformer from '../utils/transformer';
 import notify from '../view/notify';
 
 
@@ -273,9 +274,27 @@ class TableBuilder {
         });
     }
 
-    buildFromDB(records) {
-        const dataSet = this.getDataset(records);
-        this.build(dataSet);
+    buildFromDB() {
+        let transformer = new Transformer(this.xsltFilename),
+            allRecords  = [];
+
+        dbServer.getAll().then(function(records) {
+            allRecords = records;
+            return transformer.filterRecordsToUpdate(allRecords);
+        }).then(function(recordsToUpdate) {
+            if(recordsToUpdate.length) {
+                notify(`Transforming ${recordsToUpdate.length} records,
+                       please wait...`, 'info');
+            }
+            return transformer.transformMultiple(recordsToUpdate);
+        }).then(function(transformedRecords) {
+            return dbServer.updateAll(transformedRecords);
+        }).then(function() {
+            resolve(this.build(this.getDataset(allRecords)));
+        }).catch(function(err) {
+            notify(err, 'error');
+            throw err;
+        });
     }
 
     /** Build the table with data loaded from a JSONP URL. */
