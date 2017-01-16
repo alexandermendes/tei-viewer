@@ -14,7 +14,7 @@ class TableBuilder {
      */
     constructor(tableElem, xsltFilename) {
         this.tableElem = tableElem;
-        this.xsltFilename = xsltFilename
+        this.xsltFilename = xsltFilename;
     }
 
     /**
@@ -23,7 +23,7 @@ class TableBuilder {
     getDataset(records) {
         return records.map((el) => {
             return el[this.xsltFilename].TEI;
-        })
+        });
     }
 
     /**
@@ -183,7 +183,7 @@ class TableBuilder {
                                         dbServer.get(id).then(function(record) {
                                             const container = $('#editor-modal .modal-body')[0],
                                                   editor    = new Editor(container, record, this.xsltFilename);
-                                            $('#editor-modal .modal-title').html(`Editing ${record.filename}`)
+                                            $('#editor-modal .modal-title').html(`Editing ${record.filename}`);
                                             $('#editor-modal').modal('show');
                                             editor.refresh();
 
@@ -266,7 +266,7 @@ class TableBuilder {
                 jsonpCallback: 'callback',
                 dataType: 'jsonp',
             }).done((dataSet) => {
-                resolve(dataSet)
+                resolve(dataSet);
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 reject(`Error loading dataset: ${errorThrown}`);
             });

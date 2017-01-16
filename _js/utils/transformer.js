@@ -50,7 +50,7 @@ class Transformer {
         const div   = document.createElement('div'),
               clone = fragment.cloneNode(true);
         div.appendChild(clone);
-        return div.innerHTML
+        return div.innerHTML;
     }
 
     /**
@@ -74,7 +74,7 @@ class Transformer {
     transform(record) {
         return new Promise((resolve, reject) => {
             this.loadXSLT().then(() => {
-                resolve(this.updateRecord(record))
+                resolve(this.updateRecord(record));
             }).catch(function(err) {
                 reject(err);
             });

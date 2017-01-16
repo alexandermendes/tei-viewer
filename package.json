@@ -60,7 +60,7 @@
         "esversion": 6
     },
     "scripts": {
-        "lint": "jshint js/*.js js/**/*.js",
+        "lint": "jshint _js/*.js _js/**/*.js",
         "test": "babel-tape-runner test/**.js | tap-spec"
     }
 }
