@@ -28,6 +28,14 @@
     content: "\f00c";
 }
 
+table.dataTable thead .sorting:before,
+table.dataTable thead .sorting_asc:before,
+table.dataTable thead .sorting_desc:before,
+table.dataTable thead .sorting_asc_disabled:before,
+table.dataTable thead .sorting_desc_disabled:before {
+    content: "\f077";
+}
+
 table.dataTable,
 table.dataTable thead {
     margin-top: 0px !important;
@@ -35,18 +43,10 @@ table.dataTable thead {
     border-collapse: collapse!important;
 }
 
-table.dataTable tbody tr.selected td:not(:first-child) {
+table.dataTable tbody tr.selected td:not(:first-child),
+table.dataTable tbody tr.selected td:not(:first-child) a{
     background-color: $blue;
     color: $white;
-}
-
-table.dataTable tr .select-checkbox::after {
-    font-family: "FontAwesome";
-    content: "\f096";
-}
-
-table.dataTable tr.selected .select-checkbox::after {
-    content: "\f046";
 }
 
 table.dataTable th.focus,

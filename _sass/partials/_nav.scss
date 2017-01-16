@@ -49,16 +49,12 @@
     transform: translateX(0px);
 }
 
-.pace-progress-inner {
-    display: none;
-}
-
 .navbar .nav .dropdown-toggle::after {
     border: none;
     vertical-align: initial;
 }
 
-.navbar .nav .dropdown-menu {
-    max-height: 260px;
-    overflow-x: hidden;
+.dt-button-collection.dropdown-menu {
+    max-height: 80vh;
+    overflow: scroll;
 }

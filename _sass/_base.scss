@@ -8,14 +8,12 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: $black;
 }
 
 main {
     flex: 1 1 auto;
     overflow-y: scroll;
     position: relative;
-    background-color: $white;
 }
 
 a {
