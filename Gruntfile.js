@@ -79,6 +79,7 @@ module.exports = function(grunt) {
                     'node_modules/pnotify/dist/pnotify.js',
                     'node_modules/pnotify/dist/pnotify.buttons.js',
                     'node_modules/dropzone/dist/dropzone.js',
+                    'node_modules/jszip/dist/jszip.min.js',
                     'node_modules/datatables.net/js/jquery.dataTables.js',
                     'node_modules/datatables.net-buttons/js/dataTables.buttons.js',
                     'node_modules/datatables.net-buttons/js/buttons.html5.js',
