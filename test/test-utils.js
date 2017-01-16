@@ -1,19 +1,11 @@
 import test from 'tape';
-import getUrlParameter from '../js/utils/get-url-parameter';
-import exportXML from '../js/utils/export-xml';
+import getUrlParameter from '../_js/utils/get-url-parameter';
 
 test('get url paramter test', function(t) {
-    t.throws(
-        function() {
-            getUrlParameter('http://example.com', 'id');
-        },
-        Error,
-        'should throw an error when the required parameter is missing'
-    );
 
     t.throws(
         function() {
-            getUrlParameter('http://example.com?id=no', 'id', 'int');
+            getUrlParameter('http://example.com?id=sometext', 'id', 'int');
         },
         Error,
         'should throw an error when the required parameter is the wrong type'
@@ -29,18 +21,6 @@ test('get url paramter test', function(t) {
         getUrlParameter('http://example.com?msg=hello', 'msg'),
         'hello',
         'should return the parameter as a string'
-    );
-
-    t.end();
-});
-
-test('export xml test', function(t) {
-    t.doesNotThrow(
-        function() {
-            exportXML([]);
-        },
-        Error,
-        'should throw an error when the required parameter is missing'
     );
 
     t.end();
