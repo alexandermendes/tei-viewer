@@ -217,8 +217,9 @@
 
     <!-- Handle <dimensions> -->
     <xsl:template match="*//tei:dimensions">
-	<xsl:text>&lt;br&gt;</xsl:text>
-	<xsl:value-of select="concat(./tei:height, @unit, 'x', ./tei:width, @unit, ' ', @type)" />
+	<xsl:text>&lt;span class="hidden-xs-up"&gt;; &lt;/span&gt;</xsl:text>
+	<xsl:text>&lt;br&gt;&lt;br&gt;</xsl:text>
+	<xsl:value-of select="concat(./tei:height, @unit, ' x ', ./tei:width, @unit, ' ', @type)" />
     </xsl:template>
 
     <!-- Add an HTML link to tags with @target and @key attributes starting with http -->
@@ -248,6 +249,7 @@
 	    <xsl:for-each select="$xpath">
 		<xsl:apply-templates select="." />
 		<xsl:if test="position() != last()">
+		    <xsl:text>&lt;span class="hidden-xs-up"&gt;; &lt;/span&gt;</xsl:text>
 		    <xsl:text>&lt;br&gt;&lt;br&gt;</xsl:text>
 		</xsl:if>
 	    </xsl:for-each>
