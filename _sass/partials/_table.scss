@@ -18,6 +18,11 @@
     outline: initial;
 }
 
+table.dataTable td.dataTables_empty {
+    position: fixed;
+    min-width: 100vw!important;
+}
+
 .dt-button.buttons-columnVisibility span::before {
     font-family: "FontAwesome";
     content: "\f00d";
