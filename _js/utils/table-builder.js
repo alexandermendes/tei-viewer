@@ -180,11 +180,11 @@ class TableBuilder {
                                         const id = parseInt($('tr.selected').attr('id'));
 
                                         // Load the record into the editor modal
-                                        dbServer.get(id).then(function(record) {
+                                        dbServer.get(id).then((record) => {
+                                            $('#editor-modal').modal('show');
                                             const container = $('#editor-modal .modal-body')[0],
                                                   editor    = new Editor(container, record, this.xsltFilename);
                                             $('#editor-modal .modal-title').html(`Editing ${record.filename}`);
-                                            $('#editor-modal').modal('show');
                                             editor.refresh();
 
                                             // Handle save button click event
