@@ -15299,7 +15299,7 @@
 	                            "className": "buttons-delete",
 	                            "action": function action(evt, dt, node, conf) {
 	                                $('tbody tr.selected').each(function () {
-	                                    var id = $(this).attr('id');
+	                                    var id = parseInt($(this).attr('id'));
 	                                    _dbServer2.default.remove(id).then(function () {
 	                                        dt.rows('#' + id).remove().draw();
 	                                    }).catch(function (err) {

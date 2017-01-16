@@ -145,7 +145,7 @@ class TableBuilder {
                                 "className": "buttons-delete",
                                 "action": function (evt, dt, node, conf) {
                                     $('tbody tr.selected').each(function() {
-                                        const id = $(this).attr('id');
+                                        const id = parseInt($(this).attr('id'));
                                         dbServer.remove(id).then(function() {
                                             dt.rows('#' + id).remove().draw();
                                         }).catch(function(err) {
