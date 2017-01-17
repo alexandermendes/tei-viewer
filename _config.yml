@@ -5,7 +5,7 @@ author-url: https://github.com/alexandermendes
 email: alexanderhmendes@gmail.com
 description: An application for viewing and manipulating TEI XML documents in table form.
 repository: alexandermendes/tei-viewer
-sample-url: http://www.dropbox.com/s/t0ahw14fk75atkt/tei.json?dl=1
+sample-url: https://cdn.rawgit.com/alexandermendes/tei-viewer/master/sample.json
 sample-citation: Sample taken from the British Library's Hebrew manuscripts collections 
 
 # Build settings
