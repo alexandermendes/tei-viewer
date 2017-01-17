@@ -19,3 +19,4 @@ script:
   - npm test
   - grunt build
   - bundle exec jekyll build
+  - htmlproofer ./_site --allow-hash-href
