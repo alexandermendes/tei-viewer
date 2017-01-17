@@ -130,7 +130,6 @@ module.exports = function(grunt) {
         },
     });
 
-    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-modernizr');
     grunt.loadNpmTasks('grunt-webpack');
     grunt.loadNpmTasks('grunt-contrib-concat');
