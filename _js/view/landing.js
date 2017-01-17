@@ -8,11 +8,12 @@ let landing;
  * Handle Get Started button click.
  */
 $('#get-started').on('click', function() {
+    const baseurl = $(this).data('baseurl');
     dbServer.count().then(function(n) {
         if (n > 0) {
-            window.location.href = '/tables';
+            window.location.href = `${baseurl}/tables`;
         } else {
-            window.location.href = '/upload';
+            window.location.href = `${baseurl}/upload`;
         }
     });
 });
