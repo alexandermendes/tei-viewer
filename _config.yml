@@ -18,7 +18,6 @@ exclude:
   - 'LICENSE'
   - 'README.md'
 markdown: kramdown
-highlighter: rogue
 sass:
   style: compressed
 collections:
