@@ -278,22 +278,26 @@ class TableBuilder {
         let transformer = new Transformer(this.xsltFilename),
             allRecords  = [];
 
-        dbServer.getAll().then(function(records) {
-            allRecords = records;
-            return transformer.filterRecordsToUpdate(allRecords);
-        }).then(function(recordsToUpdate) {
-            if(recordsToUpdate.length) {
-                notify(`Transforming ${recordsToUpdate.length} records,
-                       please wait...`, 'info');
-            }
-            return transformer.transformMultiple(recordsToUpdate);
-        }).then(function(transformedRecords) {
-            return dbServer.updateAll(transformedRecords);
-        }).then(function() {
-            resolve(this.build(this.getDataset(allRecords)));
-        }).catch(function(err) {
-            notify(err, 'error');
-            throw err;
+        return new Promise((resolve, reject) => {
+            dbServer.getAll().then((records) => {
+                allRecords = records;
+                return transformer.filterRecordsToUpdate(allRecords);
+            }).then((recordsToUpdate) => {
+                if(recordsToUpdate.length) {
+                    notify(`Transforming ${recordsToUpdate.length} records,
+                           please wait...`, 'info');
+                }
+                return transformer.transformMultiple(recordsToUpdate);
+            }).then((transformedRecords) => {
+                return dbServer.updateAll(transformedRecords);
+            }).then(() => {
+                return this.build(this.getDataset(allRecords));
+            }).then(function(table) {
+                resolve(table);
+            }).catch(function(err) {
+                notify(err, 'error');
+                throw err;
+            });
         });
     }
 

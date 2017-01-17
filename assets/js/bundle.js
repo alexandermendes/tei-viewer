@@ -433,24 +433,30 @@
 	    }, {
 	        key: 'buildFromDB',
 	        value: function buildFromDB() {
+	            var _this4 = this;
+
 	            var transformer = new _transformer2.default(this.xsltFilename),
 	                allRecords = [];
 
-	            _dbServer2.default.getAll().then(function (records) {
-	                allRecords = records;
-	                return transformer.filterRecordsToUpdate(allRecords);
-	            }).then(function (recordsToUpdate) {
-	                if (recordsToUpdate.length) {
-	                    (0, _notify2.default)('Transforming ' + recordsToUpdate.length + ' records,\n                       please wait...', 'info');
-	                }
-	                return transformer.transformMultiple(recordsToUpdate);
-	            }).then(function (transformedRecords) {
-	                return _dbServer2.default.updateAll(transformedRecords);
-	            }).then(function () {
-	                resolve(this.build(this.getDataset(allRecords)));
-	            }).catch(function (err) {
-	                (0, _notify2.default)(err, 'error');
-	                throw err;
+	            return new Promise(function (resolve, reject) {
+	                _dbServer2.default.getAll().then(function (records) {
+	                    allRecords = records;
+	                    return transformer.filterRecordsToUpdate(allRecords);
+	                }).then(function (recordsToUpdate) {
+	                    if (recordsToUpdate.length) {
+	                        (0, _notify2.default)('Transforming ' + recordsToUpdate.length + ' records,\n                           please wait...', 'info');
+	                    }
+	                    return transformer.transformMultiple(recordsToUpdate);
+	                }).then(function (transformedRecords) {
+	                    return _dbServer2.default.updateAll(transformedRecords);
+	                }).then(function () {
+	                    return _this4.build(_this4.getDataset(allRecords));
+	                }).then(function (table) {
+	                    resolve(table);
+	                }).catch(function (err) {
+	                    (0, _notify2.default)(err, 'error');
+	                    throw err;
+	                });
 	            });
 	        }
 
@@ -459,11 +465,11 @@
 	    }, {
 	        key: 'buildFromJSONP',
 	        value: function buildFromJSONP(url) {
-	            var _this4 = this;
+	            var _this5 = this;
 
 	            return new Promise(function (resolve, reject) {
-	                _this4.downloadDataset(url).then(function (dataset) {
-	                    return _this4.build(dataset);
+	                _this5.downloadDataset(url).then(function (dataset) {
+	                    return _this5.build(dataset);
 	                }).then(function (table) {
 	                    table.buttons('.buttons-xml-export').disable();
 	                    table.buttons('.buttons-delete').disable();
