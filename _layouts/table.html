@@ -1,0 +1,19 @@
+---
+layout: uncontained
+active: table
+---
+
+<main id="table-view">
+    <table class="table table-bordered dataTable" data-xslt="{{ page.xslt }}">
+        <thead>
+            <tr>
+                <th class="bg-faded select-all">#</th>
+                {{ content }}
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</main>
+
+{% include editor-modal.html %}

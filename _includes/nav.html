@@ -1,81 +1,34 @@
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="fa fa-bars"></span>
-            </button>
-            <a class="navbar-brand" href="{{ site.github.url }}">Tei Viewer</a>
-        </div>
+<nav id="main-nav" class="navbar navbar-light navbar-static-top bg-faded">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ site.github.url }}">Tei Viewer</a>
+        <button class="navbar-toggler hidden-lg-up float-xs-right" type="button" data-toggle="collapse"
+                data-target="#main-navbar">
+        </button>
+        <div id="main-navbar" class="collapse navbar-toggleable-md">
+            <ul class="nav navbar-nav">
+                <li class="nav-item">
+                    <a href="{{ site.github.url }}/tables" class="nav-link">Tables</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ site.github.url }}/docs" class="nav-link">Help</a>
+                </li>
+            </ul>
 
-        <div class="collapse navbar-collapse" id="main-navbar">
-            <ul class="nav navbar-nav" id="tei-view-menu">
-                <li>
-                    <form class="navbar-form upload-form" method="post" action="" enctype="multipart/form-data">
-                        <span class="btn btn-success btn-file">
-                            Add Files <input type="file" class="add-files" name="files[]" accept=".xml" multiple>
-                        </span>
-                    </form>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Hide
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" id="hide-menu"></ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Show
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" id="show-menu"></ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Clear
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" id="clear-menu">
-                        <li><a href="#" id="clear-selected">Selected Rows</a></li>
-                        <li><a href="#" id="clear-all">All Rows</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" id="csv-export">Export</a>
-                </li>
-                <li>
-                    <a href="#" onclick="window.print()">Print</a>
-                </li>
-                <li>
-                    <a href="#" data-toggle="modal" data-target="#settings-modal">Settings</a>
-                </li>
-                <li>
-                    <a href="#" data-toggle="modal" data-target="#help-modal" data-remote="false">Help</a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav" id="xml-view-menu" style="display: none;">
-                <li>
-                    <p class="navbar-btn">
-                        <a href="#" class="btn btn-default" id="xml-cancel">Cancel</a>
-                    </p>
-                </li>
-                <li>
-                    <p class="navbar-btn">
-                        <a href="#" class="btn btn-success" id="xml-save">Save</a>
-                    </p>
-                </li>
-                <li>
-                    <p class="navbar-btn">
-                        <a href="#" class="btn btn-info" id="xml-download">Download</a>
-                    </p>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="{{ site.github.repository_url }}" id="gh-link">
-                        <span class="hidden-xs fa fa-github fa-2x"></span>
-                        <span class="visible-xs">View on GitHub</span>
-                    </a>
-                </li>
-            </ul>
+            <form class="form-inline float-lg-right">
+
+                {% if page.active == 'tables' %}
+                    {% unless page.path contains "index.html" %}
+                    <input id="table-search" type="search" class="form-control" placeholder="Search">
+                    {% endunless %}
+                {% endif %}
+
+                {% unless page.active == 'upload' %}
+                <a href="{{ site.github.url }}/upload" class="btn btn-primary form-control nav-link">Upload</a>
+                {% else %}
+                <button id="start-upload" class="btn btn-primary form-control nav-link">Upload Files</button>
+                {% endunless %}
+            </form>
+
         </div>
     </div>
 </nav>
