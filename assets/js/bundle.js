@@ -10722,9 +10722,10 @@
 	        value: function loadXSLT() {
 	            var _this = this;
 
+	            var baseurl = $('#base-url').data('url');
 	            return new Promise(function (resolve, reject) {
 	                $.ajax({
-	                    url: '/assets/xslt/' + _this.xsltFilename
+	                    url: baseurl + '/assets/xslt/' + _this.xsltFilename
 	                }).done(function (data) {
 	                    try {
 	                        _this.xsltProc.importStylesheet(data);

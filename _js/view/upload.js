@@ -53,6 +53,7 @@ if($('#upload-view').length) {
         const nErrors = dz.files.filter(function(el) {
             return el.status == "error";
         }).length;
+        const baseurl = $('#base-url').data('url');
 
         if (nErrors > 0) {
             $('#total-progress').attr('value', 0);
@@ -68,7 +69,7 @@ if($('#upload-view').length) {
                 dz.removeFile(f);
             }
         } else {
-            window.location.href = '/tables';
+            window.location.href = `${baseurl}/tables`;
         }
     });
 
