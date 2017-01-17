@@ -134,6 +134,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('dev', ['modernizr:build', 'webpack:dev', 'concat', 'copy', 'watch']);
     grunt.registerTask('build', ['modernizr:build', 'webpack:build', 'concat', 'copy']);
+    grunt.registerTask('dev', ['build', 'watch']);
 };
