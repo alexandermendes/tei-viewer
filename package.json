@@ -20,9 +20,7 @@
         "codemirror":"^5",
         "db.js":"^0",
         "font-awesome":"^4",
-        "mustache":"^2",
         "showdown":"^1",
-        "bootpag":"^1",
         "modernizr": "^3",
         "pnotify": "^3",
         "urijs": "^1",
@@ -50,7 +48,6 @@
         "grunt-contrib-watch": "^1",
         "grunt-contrib-copy": "^1",
         "babel-tape-runner": "^2",
-        "babel-istanbul": "^0",
         "tape": "^4",
         "tap-spec": "4",
         "jshint": "^2"
