@@ -100,7 +100,6 @@ module.exports = function(grunt) {
                     'node_modules/pnotify/dist/pnotify.brighttheme.css',
                     'node_modules/codemirror/lib/codemirror.css',
                     'node_modules/dropzone/dist/dropzone.css',
-                    'node_modules/animate.css/animate.css',
                     'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
                     'node_modules/pygments-css/default.css'
                 ],
