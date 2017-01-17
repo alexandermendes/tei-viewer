@@ -8,54 +8,63 @@ description: The TEI Viewer documentation.
 # Getting started
 
 TEI Viewer provides a way to view collections of TEI XML documents in table form,
-potentially making it easier to identify key information or locate errors across
-thousands of individual files. Data can be exported in various formats
+making it easier to identify key information or locate errors across thousands of
+files.
 
 
-## Uploading data
+## Uploading
 
 To upload your TEI XML files click the **Upload** button to the right of the
 navigation bar, select your files then click **Upload Files**. The files are
-actually stored locally (using [IndexedDB](https://en.wikipedia.org/wiki/Indexed_Database_API))
-so will persist between uses of the application, unless you clear your browser's cache.
+stored locally (using [IndexedDB](https://en.wikipedia.org/wiki/Indexed_Database_API))
+and will persist between uses of the application, unless you clear your browser's cache.
 
 
-## Manipulating data
+## Manipulating
 
 Each table provides some basic spreadsheet-style functions, such as sorting, reordering
-hiding and showing columns. There are also functions to search and export your data
-in Excel, CSV, JSON and JSONP formats.
+hiding and showing columns, as well as functions to search and export your data in Excel,
+CSV, JSON and JSONP formats.
 
 
-## Sharing data
+## Sharing
 
 Data exported in JSONP format can be subsequently loaded into the table by passing
-the location of the file to the `dataset` URL parameter. This means that you can easily
-share tables without each user needing to go through the upload process themselves.
+the location of the external file to the `dataset` URL parameter. This means that you
+can easily share tables with other users.
 
 Here's a full example using Dropbox:
 
-1. Upload your records then open the relevant table.
+1. Upload your TEI records and navigate to the relevant table.
 2. Export your data in JSONP format.
-3. Upload the exported `.json` file to Dropbox.
-4. Create and copy the [shared link](https://www.dropbox.com/en/help/167) for the file.
-5. Replace `dl=0` with `dl=1` at the end of the copied URL.
-6. Send this URL to TEI Viewer using the `dataset` parameter.
+3. Upload the exported `data.json` file to Dropbox.
+4. In Dropbox, create a [shared URL](https://www.dropbox.com/en/help/167) for the file.
+5. Replace `dl=0` with `dl=1` at the end of this shared URL.
+6. Send the URL to TEI Viewer using the `dataset` parameter.
 
-```http
-{{ site.baseurl }}/\{your-table\}?dataset={dropbox-url}
+```
+{{ site.github.url }}/{path-to-table}?dataset={dataset-url}
+```
+
+So, you could now embed a table of TEI metadata into your own website like this:
+
+```html
+<iframe src="{{ site.github.url }}/{path-to-table}?dataset={dataset-ur}"
+        style="height: 400px; width: 100%;">
+</iframe>
 ```
 
 
 # Development
 
 TEI Viewer is open source and all contributions are welcome, the source code is
-available on [GitHub]({{ site.github_url }}).
+available on [GitHub]({{ site.github.repository_url }}).
 
 
 ## Setup
 
-A development environment can be setup as follows (requires [Node.js](https://nodejs.org/)):
+Ensure that [Ruby](https://www.ruby-lang.org/en/downloads/) >= 2.1.0 and [Node.js](https://nodejs.org/)
+are installed, then:
 
 ```shell
 # install packages
@@ -76,5 +85,5 @@ bundle exec jekyll serve
 XML documents are transformed to a flat hierarchical structure using XSLT then
 converted into JSON (to improve performance when building the table). The original
 XML and the transformed JSON data are stored using IndexedDB. HTML table layouts
-are stored in the `_tables` folder and specify the associated `.xsl` file and
-the tag names to be included.
+are stored in the `_tables` folder and specify an `.xsl` file and the column headings
+to be included.
