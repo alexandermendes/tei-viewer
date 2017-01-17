@@ -39992,12 +39992,11 @@
 	 * Handle Get Started button click.
 	 */
 	$('#get-started').on('click', function () {
-	    var baseurl = $(this).data('baseurl');
 	    _dbServer2.default.count().then(function (n) {
 	        if (n > 0) {
-	            window.location.href = baseurl + '/tables';
+	            window.location.href = '/tables';
 	        } else {
-	            window.location.href = baseurl + '/upload';
+	            window.location.href = '/upload';
 	        }
 	    });
 	});
