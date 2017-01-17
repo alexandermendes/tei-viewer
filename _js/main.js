@@ -1,10 +1,5 @@
-import table from './view/table';
-import upload from './view/upload';
-import notify from './view/notify';
-import docs from './view/docs';
-import landing from './view/landing';
-
 import checkHTML5 from './utils/check-html5';
+import notify from './view/notify';
 
 try {
     checkHTML5();
@@ -12,3 +7,8 @@ try {
     notify(err.message, 'error');
     throw err;
 }
+
+import table from './view/table';
+import upload from './view/upload';
+import docs from './view/docs';
+import landing from './view/landing';
