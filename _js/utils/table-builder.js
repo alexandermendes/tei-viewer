@@ -74,7 +74,8 @@ class TableBuilder {
                         "buttons": [
                             {
                                 "extend": "excelHtml5",
-                                "title": "buttons-excel-export",
+                                "title": "teiviewer-excel-export"
+                                "className": "buttons-excel-export",
                                 "exportOptions": {
                                     "columns": function (idx, data, node) {
                                         return idx !== 0 && idx !== 1;
@@ -83,7 +84,8 @@ class TableBuilder {
                             },
                             {
                                 "extend": "csvHtml5",
-                                "title": "buttons-csv-export",
+                                "title": "teiviewer-csv-export"
+                                "className": "buttons-csv-export",
                                 "exportOptions": {
                                     "columns": function (idx, data, node) {
                                         return idx !== 0 && idx !== 1;
