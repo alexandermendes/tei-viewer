@@ -78,7 +78,7 @@ class TableBuilder {
                                 "className": "buttons-excel-export",
                                 "exportOptions": {
                                     "columns": function (idx, data, node) {
-                                        return idx !== 0 && idx !== 1;
+                                        return idx !== 0;
                                     }
                                 }
                             },
@@ -88,7 +88,7 @@ class TableBuilder {
                                 "className": "buttons-csv-export",
                                 "exportOptions": {
                                     "columns": function (idx, data, node) {
-                                        return idx !== 0 && idx !== 1;
+                                        return idx !== 0;
                                     }
                                 }
                             },

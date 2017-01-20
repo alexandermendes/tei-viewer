@@ -342,7 +342,7 @@
 	                            "className": "buttons-excel-export",
 	                            "exportOptions": {
 	                                "columns": function columns(idx, data, node) {
-	                                    return idx !== 0 && idx !== 1;
+	                                    return idx !== 0;
 	                                }
 	                            }
 	                        }, {
@@ -351,7 +351,7 @@
 	                            "className": "buttons-csv-export",
 	                            "exportOptions": {
 	                                "columns": function columns(idx, data, node) {
-	                                    return idx !== 0 && idx !== 1;
+	                                    return idx !== 0;
 	                                }
 	                            }
 	                        }, {
