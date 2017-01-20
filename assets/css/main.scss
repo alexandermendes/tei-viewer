@@ -4,28 +4,28 @@
 
 @font-face {
     font-family: Catamaran;
-    src: url('/assets/fonts/Catamaran/Catamaran-Regular.ttf') format('truetype');
+    src: url('{{ site.baseurl }}/assets/fonts/Catamaran/Catamaran-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: Catamaran;
-    src: url('/assets/fonts/Catamaran/Catamaran-ExtraBold.ttf') format('truetype');
+    src: url('{{ site.baseurl }}/assets/fonts/Catamaran/Catamaran-ExtraBold.ttf') format('truetype');
     font-weight: 800;
     font-style: normal;
 }
 
 @font-face {
     font-family: Noto_Sans;
-    src: url('/assets/fonts/Noto_Sans/NotoSans-Regular.ttf') format('truetype');
+    src: url('{{ site.baseurl }}/assets/fonts/Noto_Sans/NotoSans-Regular.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
 }
 
 @font-face {
     font-family: Noto_Sans;
-    src: url('/assets/fonts/Noto_Sans/NotoSans-Bold.ttf') format('truetype');
+    src: url('{{ site.baseurl }}/assets/fonts/Noto_Sans/NotoSans-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
 }
