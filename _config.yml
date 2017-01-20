@@ -7,8 +7,6 @@ description: An application for viewing and manipulating TEI XML documents in ta
 sample-url: https://cdn.rawgit.com/alexandermendes/tei-viewer/master/sample.json.js
 sample-citation: Sample taken from the British Library's Hebrew manuscripts collections
 repository: alexandermendes/tei-viewer
-github:  # Overridden by GH pages in production
-  - url: http://localhost:4000
 
 # Build settings
 incremental: true
