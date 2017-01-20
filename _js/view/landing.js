@@ -8,7 +8,7 @@ let landing;
  * Handle Get Started button click.
  */
 $('#get-started').on('click', function() {
-    const baseurl = $(this).data('baseurl');
+    const baseurl = $('#base-url').data('baseurl');
     dbServer.count().then(function(n) {
         if (n > 0) {
             window.location.href = `${baseurl}/tables`;

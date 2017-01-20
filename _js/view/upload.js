@@ -53,7 +53,7 @@ if($('#upload-view').length) {
         const nErrors = dz.files.filter(function(el) {
             return el.status == "error";
         }).length;
-        const baseurl = $('#base-url').data('url');
+        const baseurl = $('#base-url').data('baseurl');
 
         if (nErrors > 0) {
             $('#total-progress').attr('value', 0);

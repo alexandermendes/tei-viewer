@@ -17,7 +17,7 @@ class Transformer {
      * Load the XSLT stylesheet.
      */
     loadXSLT() {
-        const baseurl = $('#base-url').data('url');
+        const baseurl = $('#base-url').data('baseurl');
         return new Promise((resolve, reject) => {
             $.ajax({
                 url: `${baseurl}/assets/xslt/${this.xsltFilename}`,
