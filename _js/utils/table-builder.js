@@ -1,7 +1,6 @@
 import he from 'he';
 
 import dbServer from '../model/db-server';
-import Editor from '../utils/editor';
 import exportXML from '../utils/export-xml';
 import exportJSON from '../utils/export-json';
 import Transformer from '../utils/transformer';
@@ -172,38 +171,7 @@ class TableBuilder {
                                         });
                                     });
                                 }
-                            },
-                            {
-                                "text": "XML Editor",
-                                "className": "buttons-xml-editor",
-                                "action": function (evt, dt, node, conf) {
-                                    if ($('tr.selected').length !== 1) {
-                                        notify('Please select a single row to edit', 'info');
-                                    } else {
-                                        const id = parseInt($('tr.selected').attr('id'));
-
-                                        // Load the record into the editor modal
-                                        dbServer.get(id).then((record) => {
-                                            $('#editor-modal').modal('show');
-                                            const container = $('#editor-modal .modal-body')[0],
-                                                  editor    = new Editor(container, record, this.xsltFilename);
-                                            $('#editor-modal .modal-title').html(`Editing ${record.filename}`);
-                                            editor.refresh();
-
-                                            // Handle save button click event
-                                            $('#editor-modal #save-xml').on('click', function(evt){
-                                                editor.save();
-                                                dt.rows('#' + id).data(record[this.xsltFilename]).draw();
-                                                $('#editor-modal').modal('hide');
-                                                notify('Record saved!', 'success');
-                                            });
-                                        }).catch(function (err) {
-                                            notify(err.message, 'error');
-                                            throw err;
-                                        });
-                                    }
-                                }
-                            },
+                            }
                         ]
                     },
                     {
@@ -312,7 +280,6 @@ class TableBuilder {
                 table.buttons('.buttons-xml-export').disable();
                 table.buttons('.buttons-delete').disable();
                 table.buttons('.buttons-delete-all').disable();
-                table.buttons('.buttons-xml-editor').disable();
                 resolve(table);
             }).catch(function(err) {
                 throw err;
