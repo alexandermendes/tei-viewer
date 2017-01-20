@@ -43,13 +43,13 @@ Here's a full example using Dropbox:
 6. Send the URL to TEI Viewer using the `dataset` parameter.
 
 ```
-{{ site.github.url }}/{path-to-table}?dataset={dataset-url}
+{{ site.baseurl }}/{path-to-table}?dataset={dataset-url}
 ```
 
 So, you could now embed a table of TEI metadata into your own website like this:
 
 ```html
-<iframe src="{{ site.github.url }}/{path-to-table}?dataset={dataset-ur}"
+<iframe src="{{ site.baseurl }}/{path-to-table}?dataset={dataset-ur}"
         style="height: 400px; width: 100%;">
 </iframe>
 ```
