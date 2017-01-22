@@ -102,8 +102,8 @@
 	        for (var _iterator = required[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	            var feature = _step.value;
 
-	            if (!feature) {
-	                throw new Error('Your browser does not support the required' + 'HTML5 features, please upgrade.');
+	            if (feature) {
+	                throw new Error('Your browser does not support the required ' + 'HTML5 features, please upgrade.');
 	            }
 	        }
 	    } catch (err) {
@@ -522,7 +522,7 @@
 	        value: function buildFromJSONP(url) {
 	            var _this4 = this;
 
-	            return new Promise(function (resolve, reject) {
+	            return new Promised(function (resolve, reject) {
 	                _this4.downloadDataset(url).then(function (dataset) {
 	                    return _this4.build(dataset);
 	                }).then(function (table) {

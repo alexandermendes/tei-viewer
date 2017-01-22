@@ -19,30 +19,14 @@ module.exports = function(grunt) {
         },
 
         webpack: {
-            dev: {
-                entry: "./_js/main.js",
-                output: {
-                    path: "./assets/js",
-                    filename: "bundle.js",
-                },
-                module: {
-                    loaders: [
-                        {
-                            test: /\.js$/,
-                            exclude: /node_modules/,
-                            loader: 'babel-loader',
-                            query: {
-                                presets: ['es2015']
-                            }
-                        }
-                    ]
-                }
-            },
             build: {
-                entry: "./_js/main.js",
+                entry: {
+                    main: "./_js/main.js",
+                    checks: "./_js/checks.js"
+                },
                 output: {
                     path: "./assets/js",
-                    filename: "bundle.js",
+                    filename: "[name]-bundle.js",
                 },
                 module: {
                     loaders: [
@@ -122,7 +106,7 @@ module.exports = function(grunt) {
             },
             js: {
                 files: ['./_js/*.js', './_js/**/*.js'],
-                tasks: ['webpack:dev', 'modernizr']
+                tasks: ['webpack:build', 'modernizr']
             }
         },
     });
