@@ -1,4 +1,6 @@
 import JSZip from 'jszip';
+import FileSaver from 'file-saver';
+
 
 /**
  * Export zipped XML records.
@@ -9,7 +11,7 @@ const exportXML = function(records) {
         zip.file(r.filename, r.xml);
     }
     zip.generateAsync({type: "blob"}).then(function(blob) {
-        saveAs(blob, "teiviewer-xml-export.zip");
+        FileSaver.saveAs(blob, "teiviewer-xml-export.zip");
     });
     return zip;
 };
