@@ -46,7 +46,6 @@ class TableBuilder {
                   table   = this.tableElem.DataTable({
                 "data": dataSet,
                 "dom": "Bfrtip",
-                "deferRender": true,
                 "colReorder": {
                     "fixedColumnsLeft": 1,
                 },

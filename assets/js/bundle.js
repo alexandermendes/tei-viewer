@@ -311,7 +311,6 @@
 	                    table = _this2.tableElem.DataTable({
 	                    "data": dataSet,
 	                    "dom": "Bfrtip",
-	                    "deferRender": true,
 	                    "colReorder": {
 	                        "fixedColumnsLeft": 1
 	                    },
@@ -26952,22 +26951,15 @@
 	/**
 	 * Return a URL parameter.
 	 */
-	var getUrlParameter = function getUrlParameter(url, param, type) {
+	var getUrlParameter = function getUrlParameter(url, parameter) {
 	    var uri = new _urijs2.default(url),
 	        query = _urijs2.default.parseQuery(uri.query());
 
-	    if (!uri.hasQuery(param)) {
+	    if (!uri.hasQuery(parameter)) {
 	        return null;
 	    }
 
-	    if (type == 'int') {
-	        if (isNaN(parseInt(query[param]))) {
-	            throw new Error('Parameter "' + param + '" must be an integer');
-	        }
-	        return parseInt(query[param]);
-	    }
-
-	    return query[param];
+	    return query[parameter];
 	};
 
 	exports.default = getUrlParameter;
