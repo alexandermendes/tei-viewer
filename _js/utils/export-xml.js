@@ -8,9 +8,10 @@ const exportXML = function(records) {
     for (let r of records) {
         zip.file(r.filename, r.xml);
     }
-    zip.generateAsync({type:"blob"}).then(function(blob) {
+    zip.generateAsync({type: "blob"}).then(function(blob) {
         saveAs(blob, "teiviewer-xml-export.zip");
     });
+    return zip;
 };
 
 export default exportXML;
