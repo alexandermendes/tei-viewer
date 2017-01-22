@@ -1,3 +1,6 @@
+import db from 'db.js';
+
+
 /**
  * Database server class.
  */
