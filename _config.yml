@@ -19,6 +19,8 @@ exclude:
   - 'LICENSE'
   - 'README.md'
   - '*.log'
+  - 'Gemfile'
+  - 'Gemfile.lock'
 markdown: kramdown
 sass:
   style: compressed
