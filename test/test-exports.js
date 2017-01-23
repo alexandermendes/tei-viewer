@@ -16,24 +16,26 @@ test('export xml test', function(t) {
     t.end();
 });
 
+
 test('export json test', function(t) {
 
     exportJSON(dataset).file("data.json").async("string").then(function (data) {
-        t.equal(
-            JSON.parse(data),
-            JSON.parse(dataset),
-            'the complete dataset should be added to the json file'
-        );
-    });
 
-    exportJSON(dataset, true).file("data.json").async("string").then(function (data) {
-        const expected = `callback(${JSON.stringify(dataset, null, 2)})`;
         t.equal(
             data,
-            expected,
+            JSON.stringify(dataset, null, 2),
+            'the complete dataset should be added to the json file'
+        );
+
+        return exportJSON(dataset, true).file("data.json").async("string");
+    }).then(function (data) {
+
+        t.equal(
+            data,
+            `callback(${JSON.stringify(dataset, null, 2)})`,
             'the json data should be padded'
         );
-    });
 
-    t.end();
+        t.end();
+    });
 });
