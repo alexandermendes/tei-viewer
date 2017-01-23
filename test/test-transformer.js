@@ -9,8 +9,8 @@ test('transformer test', function(t) {
     const transformer = new Transformer("example.xsl"),
           text        = "Some text";
     let fragment = document.createDocumentFragment(),
-        textNode = document.createTextNode(txt);
-    fragment.appendChild(txtNode);
+        textNode = document.createTextNode(text);
+    fragment.appendChild(textNode);
 
     t.equal(
         transformer.filterRecordsToUpdate(records).length,
