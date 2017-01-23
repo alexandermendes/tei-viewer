@@ -16,7 +16,7 @@ class Transformer {
     /**
      * Load the XSLT stylesheet.
      */
-    loadXSLT() {
+    _loadXSLT() {
         const baseurl  = $('#base-url').data('baseurl'),
               xsltProc = new XSLTProcessor();
 
@@ -38,18 +38,9 @@ class Transformer {
     }
 
     /**
-     * Return the records that need to be transformed.
-     */
-    filterRecordsToUpdate(records) {
-        return records.filter((el) => {
-            return !(this.xsltFilename in el);
-        });
-    }
-
-    /**
      * Extract the text from a document fragment.
      */
-    fragmentToText(fragment) {
+    _fragmentToText(fragment) {
         const div   = document.createElement('div'),
               clone = fragment.cloneNode(true);
         div.appendChild(clone);
@@ -59,10 +50,10 @@ class Transformer {
     /**
      * Update a record.
      */
-    updateRecord(record, xsltProcessor) {
+    _updateRecord(record, xsltProcessor) {
         const xml = $.parseXML(record.xml),
               doc = xsltProcessor.transformToFragment(xml, document),
-              txt = this.fragmentToText(doc);
+              txt = this._fragmentToText(doc);
 
         xml2js.parseString(txt, (err, result) => {
             result.TEI.DT_RowId = record.id; // Set DataTables row ID
@@ -72,12 +63,21 @@ class Transformer {
     }
 
     /**
+     * Return the records that need to be transformed.
+     */
+    filterRecordsToUpdate(records) {
+        return records.filter((el) => {
+            return !(this.xsltFilename in el);
+        });
+    }
+
+    /**
      * Return the updated record.
      */
     transform(record) {
         return new Promise((resolve, reject) => {
-            this.loadXSLT().then((xsltProcessor) => {
-                resolve(this.updateRecord(record, xsltProcessor));
+            this._loadXSLT().then((xsltProcessor) => {
+                resolve(this._updateRecord(record, xsltProcessor));
             }).catch(function(err) {
                 reject(err);
             });
@@ -90,9 +90,9 @@ class Transformer {
     transformMultiple(records) {
         let promises = [];
         return new Promise((resolve, reject) => {
-            this.loadXSLT().then((xsltProcessor) => {
+            this._loadXSLT().then((xsltProcessor) => {
                 for (let r of records) {
-                    promises.push(this.updateRecord(r, xsltProcessor));
+                    promises.push(this._updateRecord(r, xsltProcessor));
                 }
                 resolve(Promise.all(promises));
             }).catch(function(err) {
