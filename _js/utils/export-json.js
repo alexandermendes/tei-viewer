@@ -14,7 +14,7 @@ const exportJSON = function(dataSet, wrapJSON) {
     }
 
     zip.file('data.json', json);
-    zip.generateAsync({type:'blob'}).then(function(blob) {
+    zip.generateAsync({type: 'blob'}).then(function(blob) {
         FileSaver.saveAs(blob, 'teiviewer-json-export.zip');
     });
     return zip;
