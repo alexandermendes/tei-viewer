@@ -6,9 +6,9 @@ rvm:
   - 2.2.5
 
 env:
-  - TRAVIS_NODE_VERSION="4"
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+    - TRAVIS_NODE_VERSION="4"
 
 install:
   - npm install -g grunt-cli
