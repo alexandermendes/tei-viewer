@@ -26,12 +26,12 @@
 	</Shelfmark>
 
 	 <xsl:call-template name="addElement">
-	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem[1]/tei:title" />
+	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem/tei:title" />
 	    <xsl:with-param name="tag" select="'Title'" />
 	</xsl:call-template>
 
 	 <xsl:call-template name="addElement">
-	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem[1]/tei:author/tei:persName" />
+	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem/tei:author/tei:persName" />
 	    <xsl:with-param name="tag" select="'Authors'" />
 	</xsl:call-template>
 
@@ -46,42 +46,42 @@
 	</xsl:call-template>
 
 	<xsl:call-template name="addElement">
-	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem[1]/tei:decoNote[@type='initial']" />
+	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem/tei:decoNote[@type='initial']" />
 	    <xsl:with-param name="tag" select="'Decorations-InitialWords'" />
 	</xsl:call-template>
 
 	<xsl:call-template name="addElement">
-	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem[1]/tei:decoNote[@type='miniature']" />
+	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem/tei:decoNote[@type='miniature']" />
 	    <xsl:with-param name="tag" select="'Decorations-Miniatures'" />
 	</xsl:call-template>
 
 	<xsl:call-template name="addElement">
-	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem[1]/tei:decoNote[@type='illustration']" />
+	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem/tei:decoNote[@type='illustration']" />
 	    <xsl:with-param name="tag" select="'Decorations-Illustrations'" />
 	</xsl:call-template>
 
 	<xsl:call-template name="addElement">
-	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem[1]/tei:decoNote[@type='paratext']" />
+	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem/tei:decoNote[@type='paratext']" />
 	    <xsl:with-param name="tag" select="'Decorations-Paratext'" />
 	</xsl:call-template>
 
 	<xsl:call-template name="addElement">
-	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem[1]/tei:decoNote[@type='borders']" />
+	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem/tei:decoNote[@type='borders']" />
 	    <xsl:with-param name="tag" select="'Decorations-Borders'" />
 	</xsl:call-template>
 
 	<xsl:call-template name="addElement">
-	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem[1]/tei:decoNote[@type='other']" />
+	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem/tei:decoNote[@type='other']" />
 	    <xsl:with-param name="tag" select="'Decorations-Other'" />
 	</xsl:call-template>'
 
 	<xsl:call-template name="addElement">
-	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem[1]/tei:colophon" />
+	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem/tei:colophon" />
 	    <xsl:with-param name="tag" select="'Colophon'" />
 	</xsl:call-template>
 
 	<xsl:call-template name="addElement">
-	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem[1]/tei:note" />
+	    <xsl:with-param name="xpath" select=".//tei:msContents/tei:msItem/tei:note" />
 	    <xsl:with-param name="tag" select="'Comments'" />
 	</xsl:call-template>
 
