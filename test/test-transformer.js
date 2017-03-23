@@ -1,4 +1,5 @@
 import 'jsdom-global/register';
+import sinon from 'sinon';
 import test from 'tape';
 import records from "./fixtures/records"
 import Transformer from '../_js/utils/transformer';
@@ -7,9 +8,10 @@ import Transformer from '../_js/utils/transformer';
 test('transformer test', function(t) {
 
     const transformer = new Transformer("example.xsl"),
-          text        = "Some text";
+          xmlText     = "<TEI></TEI>";
     let fragment = document.createDocumentFragment(),
-        textNode = document.createTextNode(text);
+        textNode = document.createTextNode(xmlText),
+        xsltProc = {transformToFragment: function(x, y) {return fragment;}};
     fragment.appendChild(textNode);
 
     t.equal(
@@ -19,12 +21,16 @@ test('transformer test', function(t) {
     );
 
     t.equal(
-        transformer.fragmentToText(fragment),
-        text,
+        transformer._fragmentToText(fragment),
+        xmlText,
         'text should be extracted from the document fragment'
     );
 
-    'record should be updated'
+    t.equal(
+        transformer._updateRecord(records[1], xsltProc)["example.xsl"],
+        "",
+        'the record should be updated for the current XSLT'
+    );
 
     t.end();
 });
