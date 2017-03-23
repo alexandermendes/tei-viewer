@@ -5,14 +5,14 @@ active: docs
 description: The TEI Viewer documentation.
 ---
 
-# Getting started
+# TEI-Viewer documentation
 
 TEI Viewer provides a way to view collections of TEI XML documents in table form,
 making it easier to identify key information or locate errors across thousands of
 files.
 
 
-## Uploading
+## Uploading Files
 
 To upload your TEI XML files click the **Upload** button to the right of the
 navigation bar, select your files then click **Upload Files**. The files are
@@ -20,14 +20,14 @@ stored locally (using [IndexedDB](https://en.wikipedia.org/wiki/Indexed_Database
 and will persist between uses of the application, unless you clear your browser's cache.
 
 
-## Manipulating
+## Manipulating Files
 
-Each table provides some basic spreadsheet-style functions, such as sorting, reordering
+Each table provides some basic spreadsheet-style functions, such as sorting, reordering,
 hiding and showing columns, as well as functions to search and export your data in Excel,
 CSV, JSON and JSONP formats.
 
 
-## Sharing
+## Sharing Datasets
 
 Data exported in JSONP format can be subsequently loaded into the table by passing
 the location of the external file to the `dataset` URL parameter. This means that you
@@ -43,13 +43,13 @@ Here's a full example using Dropbox:
 6. Send the URL to TEI Viewer using the `dataset` parameter.
 
 ```
-{{ site.baseurl }}/{path-to-table}?dataset={dataset-url}
+{{ site.github.url }}/{path-to-table}?dataset={dataset-url}
 ```
 
 So, you could now embed a table of TEI metadata into your own website like this:
 
 ```html
-<iframe src="{{ site.baseurl }}/{path-to-table}?dataset={dataset-ur}"
+<iframe src="{{ site.github.url }}/{path-to-table}?dataset={dataset-ur}"
         style="height: 400px; width: 100%;">
 </iframe>
 ```

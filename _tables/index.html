@@ -15,3 +15,14 @@ description: Select a table in which to display your TEI records.
     </a>
     {% endunless %}
 {% endfor %}
+</div>
+
+<p class="lead">or select a dataset</p>
+<hr>
+<div class="list-group">
+{% for table in site.datasets %}
+    <a href="{{ table.url | prepend: site.baseurl }}" class="list-group-item list-group-item-action">
+        <h5 class="list-group-item-heading">{{ table.title }}</h5>
+    </a>
+{% endfor %}
+</div>
