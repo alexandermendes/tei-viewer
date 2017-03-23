@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import Dropzone from 'dropzone';
 import dbServer from '../model/db-server';
 
