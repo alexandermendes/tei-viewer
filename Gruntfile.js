@@ -34,10 +34,6 @@ module.exports = function(grunt) {
                             test: /\.js$/,
                             exclude: /node_modules/,
                             loader: 'babel-loader'
-                        },
-                        {
-                            test: /pnotify\.js/,
-                            loader: 'imports?global=>window,this=>window'
                         }
                     ]
                 },
@@ -47,6 +43,34 @@ module.exports = function(grunt) {
                             warnings: false
                         }
                     }),
+                    new webpack.ProvidePlugin({
+                        jQuery: 'jquery',
+                        $: 'jquery',
+                        jquery: 'jquery',
+                        "window.jQuery": "jquery",
+                        PNotify: 'pnotify'
+                    })
+                ]
+            },
+            dev: {
+                entry: {
+                    main: "./_js/main.js",
+                    checks: "./_js/checks.js"
+                },
+                output: {
+                    path: "./assets/js",
+                    filename: "[name]-bundle.js",
+                },
+                module: {
+                    loaders: [
+                        {
+                            test: /\.js$/,
+                            exclude: /node_modules/,
+                            loader: 'babel-loader'
+                        }
+                    ]
+                },
+                plugins: [
                     new webpack.ProvidePlugin({
                         jQuery: 'jquery',
                         $: 'jquery',
@@ -110,7 +134,7 @@ module.exports = function(grunt) {
             },
             js: {
                 files: ['./_js/*.js', './_js/**/*.js'],
-                tasks: ['webpack:build', 'modernizr']
+                tasks: ['webpack:dev', 'modernizr:build']
             }
         },
     });
@@ -121,6 +145,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('build', ['modernizr:build', 'webpack:build', 'concat', 'copy']);
-    grunt.registerTask('dev', ['build', 'watch']);
+    grunt.registerTask('build', ['modernizr:build', 'concat', 'copy', 'webpack:build']);
+    grunt.registerTask('dev', ['modernizr:build', 'concat', 'copy', 'webpack:dev', 'watch']);
 };
