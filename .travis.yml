@@ -3,12 +3,10 @@ sudo: false
 language: ruby
 
 rvm:
-  - 2.2.5
+  - 2.4.0
 
-env:
-  global:
-    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-    - TRAVIS_NODE_VERSION="4"
+before install:
+  - node --version
 
 install:
   - npm install -g grunt-cli
