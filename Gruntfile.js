@@ -46,13 +46,6 @@ module.exports = function(grunt) {
                         compress: {
                             warnings: false
                         }
-                    }),
-                    new webpack.ProvidePlugin({
-                        jQuery: 'jquery',
-                        $: 'jquery',
-                        jquery: 'jquery',
-                        "window.jQuery": "jquery",
-                        PNotify: 'pnotify'
                     })
                 ]
             }
@@ -62,9 +55,12 @@ module.exports = function(grunt) {
             js: {
                 src: [
                     'node_modules/jquery/dist/jquery.js',
+					'node_modules/pace-progress/pace.js',
                     'node_modules/tether/dist/js/tether.js',
                     'node_modules/bootstrap/dist/js/bootstrap.js',
                     'node_modules/db.js/dist/db.js',
+					'node_modules/dropzone/dist/dropzone.js',		
+					'node_modules/jszip/dist/jszip.min.js',
                     'node_modules/pnotify/dist/pnotify.js',
                     'node_modules/pnotify/dist/pnotify.buttons.js',
                     'node_modules/datatables.net/js/jquery.dataTables.js',
@@ -73,6 +69,7 @@ module.exports = function(grunt) {
                     'node_modules/datatables.net-buttons/js/buttons.colVis.js',
                     'node_modules/datatables.net-select/js/dataTables.select.js',
                     'node_modules/datatables.net-colreorder/js/dataTables.colReorder.js',
+					 'node_modules/file-saver/FileSaver.js'
                 ],
                 dest: 'assets/js/vendor.bundle.js',
                 nonull: true
