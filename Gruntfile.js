@@ -121,3 +121,4 @@ module.exports = function(grunt) {
     grunt.registerTask('build', ['modernizr:build', 'webpack:build', 'concat', 'copy']);
     grunt.registerTask('dev', ['build', 'watch']);
 };
+

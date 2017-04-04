@@ -15,6 +15,8 @@ npm install
 gem install bundler
 # install gems
 bundle install
+# Install Grunt CLI
+npm install -g grunt-cli
 # run development tasks
 grunt dev
 # serve
