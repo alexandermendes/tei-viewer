@@ -6,9 +6,11 @@ rvm:
   - 2.4.0
 
 before install:
-  - node --version
+  - . $HOME/.nvm/nvm.sh
 
 install:
+  - nvm install stable
+  - nvm use stable
   - npm install -g grunt-cli
   - npm install
   - bundle install
