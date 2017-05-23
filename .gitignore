@@ -1,10 +1,4 @@
 node_modules
 Gemfile.lock
 _site/
-.vagrant/*
-static/*
-.gitignore
-.jekyll-metadata
-*.log
-*.rdb
-*.scssc
+npm-debug.log

@@ -64,7 +64,8 @@ let config = {
     },
     resolve: {
         alias: {
-            modernizr$: path.resolve(__dirname, ".modernizrrc")
+            modernizr$: path.resolve(__dirname, ".modernizrrc"),
+            vue$: "vue/dist/vue.esm.js"
         }
     },
     plugins: [
