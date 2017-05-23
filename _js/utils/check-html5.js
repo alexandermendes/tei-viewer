@@ -1,4 +1,4 @@
-import Modernizr from "modernizer";
+import Modernizr from "modernizr";
 
 /**
  * Check for requried HTML5 features.
