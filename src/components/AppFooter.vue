@@ -10,3 +10,52 @@
         </div>
     </footer>
 </template>
+
+<script>
+export default {}
+</script>
+
+<style lang="scss">
+@import 
+    "~bootstrap/scss/bootstrap",
+    "~bootstrap-vue/dist/bootstrap-vue",
+    "~style/_vars.scss"
+;
+
+footer {
+    width: 100%;
+    height: $footer-height;
+    border-top: $border-light;
+    bottom: 0;
+}
+
+footer .container-fluid {
+    height: 100%;
+}
+
+footer .row {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+footer .pagination,
+footer label {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+footer .page-link {
+    padding: 0.45rem 0.85rem;
+}
+
+footer .form-control {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+}
+
+footer .fa {
+    color: darken($grey, 35%);
+}
+</style>

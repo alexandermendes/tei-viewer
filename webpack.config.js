@@ -65,7 +65,8 @@ let config = {
     resolve: {
         alias: {
             modernizr$: path.resolve(__dirname, ".modernizrrc"),
-            vue$: "vue/dist/vue.esm.js"
+            vue$: "vue/dist/vue.esm.js",
+            style: path.resolve(__dirname, './src/assets/style')
         }
     },
     plugins: [

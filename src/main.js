@@ -1,7 +1,8 @@
-import 'bootstrap';
 import Vue from 'vue'
-import './assets/style/app.scss'
 import App from './components/App.vue'
+import BootstrapVue from 'bootstrap-vue';
+
+Vue.use(BootstrapVue);
 
 /* eslint-disable no-new */
 new Vue({

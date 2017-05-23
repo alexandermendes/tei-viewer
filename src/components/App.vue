@@ -1,28 +1,40 @@
  <template>
     <div class="app">
-        <div class="container app-content">
-        </div>
+        <app-navbar></app-navbar>
+        <main>
+        </main>
+        <app-footer></app-footer>
   </div>
 </template>
 
 <script>
-import AppNav from './AppNav.vue'
+import AppNavbar from './AppNavbar.vue'
 import AppFooter from './AppFooter.vue'
 
 export default {
     name: 'app',
     components: { 
-        AppNav, 
+        AppNavbar, 
         AppFooter 
-    },
-    data () {
-        return {
-            title: "Hello"
-        }
     }
 }
 </script>
 
 <style lang="scss">
-
+html {
+	display: flex;
+    
+    body {
+        min-height: 100vh;
+        min-width: 100vw;
+        display: flex;
+        flex-direction: column;
+        
+        main {
+            flex: 1 1 0;
+            overflow-y: auto;
+            position: relative;
+        }
+    }
+}
 </style>

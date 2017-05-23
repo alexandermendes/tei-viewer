@@ -12,16 +12,3 @@ $border-light:            1px solid rgba(0,0,0,.125);
 $footer-height:           85px;
 
 $fa-font-path:            '~font-awesome/fonts';
-
-@import
-    "~bootstrap/scss/bootstrap",
-    "~font-awesome/scss/font-awesome",
-    "~pnotify/src/pnotify",
-    "~pnotify/src/pnotify.mobile",
-    "~pnotify/src/pnotify.buttons",
-    "~pnotify/src/pnotify.brighttheme",
-    "~pace-progress/themes/blue/pace-theme-minimal",
-    "~dropzone/dist/dropzone",
-    "~datatables.net-bs/css/dataTables.bootstrap.css",
-    "~pygments-css/default.css"
-;
