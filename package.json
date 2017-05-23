@@ -64,6 +64,7 @@
     "tape": "^4.6.0",
     "url-loader": "^0.5.8",
     "vue-loader": "^12.1.0",
+    "vue-router": "^2.5.3",
     "vue-template-compiler": "^2.3.3",
     "webpack": "^2.6.0",
     "webpack-dev-server": "^2.4.5"

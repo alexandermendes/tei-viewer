@@ -1,6 +1,7 @@
 import Vue from 'vue'
-import App from './components/App.vue'
+import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue';
+import router from './router'
 
 Vue.use(BootstrapVue);
 
@@ -8,5 +9,6 @@ Vue.use(BootstrapVue);
 new Vue({
     el: '#app',
     template: '<App/>',
-    components: { App }
+    components: { App },
+    router
 })

@@ -32,7 +32,7 @@ let config = {
             {
                 test: /\.(jpe?g|png|gif)$/i,
                 use: [
-                    "url-loader?limit=10000", 
+                    "url-loader?limit=10000",
                     "img-loader"
                 ]
             },
@@ -41,7 +41,7 @@ let config = {
             },
             {   test: /\.(ttf|eot|svg)$/,
                 use: [
-                    "url-loader?limit=10000", 
+                    "url-loader?limit=10000",
                     "file-loader"
                 ]
             },
@@ -56,7 +56,7 @@ let config = {
             {
                 test: /\.modernizrrc?$/,
                 use: [
-                    "modernizr-loader", 
+                    "modernizr-loader",
                     "json-loader"
                 ]
             }
@@ -64,9 +64,10 @@ let config = {
     },
     resolve: {
         alias: {
-            modernizr$: path.resolve(__dirname, ".modernizrrc"),
-            vue$: "vue/dist/vue.esm.js",
-            style: path.resolve(__dirname, './src/assets/style')
+            modernizr$: path.resolve(__dirname, '.modernizrrc'),
+            vue$: 'vue/dist/vue.esm.js',
+            style: path.resolve(__dirname, 'src/assets/style'),
+            components: path.resolve(__dirname, 'src/components')
         }
     },
     plugins: [
