@@ -1,0 +1,12 @@
+{
+  "minify": true,
+  "options": [
+    "setClasses"
+  ],
+  "feature-detects": [
+    "css/flexbox",
+    "file/api",
+    "indexeddb",
+    "blob"
+  ]
+}

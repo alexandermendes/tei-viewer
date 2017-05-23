@@ -1,142 +1,20 @@
----
-layout: default
-title: TEI Viewer
-description: An application for viewing and manipulating TEI XML documents in table form.
----
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ title }}</title>
+        <!-- Bootstrap 4 DataTables integration not on npm yet -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.bootstrap4.min.css">
+    </head>
+    <body>
+        <div id="app"></div>
+        <script src="/dist/build.js"></script>
+        <!-- Bootstrap 4 DataTables integration not on npm yet -->
+        <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.bootstrap4.min.js"></script>
+    </body>
 
-<main id="landing-view" class="bg-faded">
-
-    <div class="container">
-
-        <header class="mt-3 mb-3">
-            <div class="row text-xs-center">
-                <div class="col-xs-12">
-                    <img src="{{ '/assets/img/logo.png' | prepend: site.baseurl | replace: 'http://', '//' }}" class="img-fluid" alt="TEI Viewer logo" />
-                    <p class="lead mt-2">View and manipulate TEI XML documents in table form.</p>
-                    <button id="get-started" class="btn btn-outline-danger mt-3">Get Started</button>
-                </div>
-            </div>
-        </header>
-
-        <hr>
-
-        <section id="demo" class="mt-3 mb-3">
-            <div class="row">
-                <div class="col-xs-12 text-xs-center">
-                    <p><strong>Demo</strong></p>
-                    <a href="#demo"><span class="fa fa-arrow-down"></span></a>
-                </div>
-            </div>
-
-            <div class="row mt-3">
-                <div class="col-xs-12">
-                    <div id="landing-table">
-
-                        <div class="loading-overlay">
-                            <span class="fa fa-spinner fa-spin fa-2x"></span>
-                        </div>
-
-                        <nav class="navbar navbar-light navbar-static-top bg-faded">
-                            <div class="container-fluid">
-                                <ul class="nav navbar-nav"></ul>
-                                <form class="form-inline float-sm-right">
-                                    <input id="table-search" type="search" class="form-control" placeholder="Search">
-                                </form>
-                            </div>
-                        </nav>
-
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="bg-faded select-all">#</th>
-                                    <th>Shelfmark</th>
-                                    <th>Title</th>
-                                    <th>Authors</th>
-                                    <th>Contents</th>
-                                    <th>Language</th>
-                                    <th>Scribes</th>
-                                    <th>Physical Description</th>
-                                    <th>Extent</th>
-                                    <th>Script</th>
-                                    <th>Number Of Scribes</th>
-                                    <th>Date</th>
-                                    <th>Provenance</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-
-                        <footer class="bg-faded text-xs-center">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <span id="table-pagination"></span>
-                                        <span id="table-info"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </footer>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xs-12 text-xs-center mt-1">
-                <span id="sample-data" data-url="{{ site.sample-url }}"></span>
-                <p><small>{{ site.sample-citation }}</small></p>
-            </div>
-        </section>
-
-        <section id="features" class="mt-3">
-            <div class="row text-xs-center">
-
-                <div class="col-xs-12 col-md-4 pt-3">
-                    <span class="fa fa-table fa-4x pb-1"></span>
-                    <h3>Analyse</h3>
-                    <p>
-                        View large batches of TEI documents in table form to help quickly identify key
-                        information. All data is stored in the browser and persists between
-                        uses, with no need to create an account to get started.
-                    </p>
-                </div>
-
-                <div class="col-xs-12 col-md-4 pt-3">
-                    <span class="fa fa-file-excel-o fa-4x pb-1"></span>
-                    <h3>Export</h3>
-                    <p>
-                        Export your tables in Excel, CSV or JSON formats. The latter can be used to
-                        subsequently reload data directly into the table, allowing you to easily
-                        share your transformations with others.
-                    </p>
-                </div>
-
-                <div class="col-xs-12 col-md-4 pt-3">
-                    <span class="fa fa-github fa-4x pb-1"></span>
-                    <h3>Customise</h3>
-                    <p>
-                        Each table layout simply defines the XSLT file to use for the initial transformation
-                        and the columns to include. This makes it straightforward to edit the source code
-                        and make new layouts available.
-                    </p>
-                </div>
-
-            </div>
-        </section>
-
-        <div class="row pb-1 pt-3">
-            <div class="col-xs-12 text-xs-center">
-                <strong>See the <a href="{{ '/docs' | prepend: site.baseurl }}" target="_blank">documentation</a> for more details.</strong>
-            </div>
-        </div>
-
-        <section id="author" class="pt-1 pb-1">
-            <div class="row text-xs-center">
-                <div class="col-xs-12">
-                    <p><small>Created by <a href="{{ site.author-url }}" target="_blank">{{ site.author }}</a></small></p>
-                </div>
-            </div>
-        </section>
-
-    </div>
-</main>
+</html>

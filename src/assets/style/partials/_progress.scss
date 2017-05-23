@@ -1,0 +1,10 @@
+#total-progress {
+    height: 0.5rem;
+    border-radius: 0;
+    margin: 0 auto;
+    
+    &[value="0"],
+    &[value="100"] {
+        display: none;
+    }
+}

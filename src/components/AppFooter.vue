@@ -1,0 +1,12 @@
+<template>
+    <footer id="main-footer" class="hidden-print bg-faded text-xs-center">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12">
+                    <span id="table-pagination"></span>
+                    <span id="table-info"></span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</template>

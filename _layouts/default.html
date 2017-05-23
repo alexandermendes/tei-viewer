@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ site.title }}{% if page.title %} | {{ page.title }}{% endif %}</title>
+        <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+        <meta name="author" content="{{ site.author }}">
+
+        <!-- Bootstrap 4 DataTables integration not on npm yet -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.bootstrap4.min.css">
+        
+        
+        <link rel="stylesheet" href="{{ site.baseurl }}/../dist/style.css?90ed3d8502961107ce07">
+        
+    </head>
+    <body>
+        <span id="base-url" data-baseurl="{{ site.baseurl }}"></span>
+        
+        {{ content }}
+        
+        <!-- Bootstrap 4 DataTables integration not on npm yet -->
+        <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.bootstrap4.min.js"></script>
+    </body>
+
+</html>

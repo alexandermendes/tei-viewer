@@ -1,0 +1,28 @@
+/** General */
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 1 auto;
+    overflow-y: scroll;
+    position: relative;
+}
+
+a {
+    color: $red;
+}
+
+a:hover,
+a:active,
+a:focus {
+    color: darken($red, 10%);
+    text-decoration: none;
+}

@@ -1,0 +1,31 @@
+#landing-view .fa {
+    color: $red;
+}
+
+#landing-table {
+    background-color: $white;
+    overflow: auto;
+    max-height: 500px;
+    height: 500px;
+    border: $border-light;
+    position: relative;
+}
+
+#landing-table {
+    display: flex;
+    flex-direction: column;
+}
+
+#landing-table .bg-faded {
+    background-color: $white;
+}
+
+#landing-table .dataTables_wrapper {
+    overflow-y: hidden;
+    position: relative;
+}
+
+#landing-view hr {
+    border-top: $border-light;
+    border-bottom: 1px solid $white;
+}

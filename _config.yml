@@ -8,18 +8,19 @@ sample-url: https://cdn.rawgit.com/alexandermendes/tei-viewer/master/sample.json
 sample-citation: Sample taken from the British Library's collection of Hebrew manuscripts
 repository: alexandermendes/tei-viewer
 baseurl: /tei-viewer
-  
 
 # Build settings
 incremental: true
 exclude:
   - 'test/'
   - 'node_modules/'
-  - 'Gruntfile.js'
+  - 'src/'
   - 'package.json'
   - 'LICENSE'
   - 'README.md'
   - '*.log'
+  - 'bootstrap.sh'
+  - 'Vagrantfile'
   - 'Gemfile'
   - 'Gemfile.lock'
 markdown: kramdown
