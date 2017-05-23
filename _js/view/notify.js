@@ -1,12 +1,16 @@
+import PNotify from 'pnotify';
+import 'pnotify/src/pnotify.buttons';
+import 'pnotify/src/pnotify.mobile';
+
 /*
  * Display a notification.
  */
 const notify = function(msg, type) {
 
     const opts = {
-        title: type.charAt(0).toUpperCase() + type.slice(1),
+        title: type ? type.charAt(0).toUpperCase() + type.slice(1) : 'Info',
         text: msg,
-        type: type,
+        type: type || 'info',
         hide : false,
         buttons: {
             closer: true,

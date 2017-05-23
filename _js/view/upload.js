@@ -1,4 +1,3 @@
-import dbServer from '../model/db-server';
 import notify from '../view/notify';
 import TEIDropzone from '../utils/tei-dropzone';
 
@@ -6,10 +5,10 @@ let upload;
 
 /** Start the upload. */
 $("#start-upload").on('click', function(evt) {
-    const dz     =  Dropzone.forElement("#upload-form"),
-          nFiles = dz.getFilesWithStatus(Dropzone.ADDED).length;
+    const dz     =  TEIDropzone.forElement("#upload-form"),
+          nFiles = dz.getFilesWithStatus(TEIDropzone.ADDED).length;
     if (nFiles > 0) {
-        dz.enqueueFiles(dz.getFilesWithStatus(Dropzone.ADDED));
+        dz.enqueueFiles(dz.getFilesWithStatus(TEIDropzone.ADDED));
     } else {
         notify('Please choose some files to upload!', 'info');
     }
@@ -74,7 +73,7 @@ if($('#upload-view').length) {
     });
 
     /** Hide form when a file is added. */
-    dz.on("addedfile", function(file) {
+    dz.on("addedfile", function() {
         $("#upload-form").hide();
     });
 

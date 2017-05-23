@@ -1,3 +1,5 @@
+import Modernizr from "modernizer";
+
 /**
  * Check for requried HTML5 features.
  */

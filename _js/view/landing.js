@@ -23,7 +23,7 @@ if ($('#landing-view').length) {
           tableBuilder = new TableBuilder(tableElem),
           sampleUrl    = $('#sample-data').data('url');
 
-    tableBuilder.buildFromJSONP(sampleUrl).then(function(table) {
+    tableBuilder.buildFromJSONP(sampleUrl).then(function() {
         $('#landing-table .loading-overlay').hide();
     }).catch(function(err) {
         notify(err, 'error');

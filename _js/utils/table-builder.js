@@ -41,7 +41,7 @@ class TableBuilder {
      * Build the table.
      */
     build(dataSet) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const columns = this.getColumns(),
                   table   = this.tableElem.DataTable({
                 "data": dataSet,
@@ -52,7 +52,7 @@ class TableBuilder {
                 "columnDefs": [
                     {
                         "targets": "_all",
-                        "render": function (data, type, full, meta) {
+                        "render": function (data) {
                             return he.decode(data.toString());  // Decode HTML entities
                         }
                     },
@@ -75,7 +75,7 @@ class TableBuilder {
                                 "title": "teiviewer-excel-export",
                                 "className": "buttons-excel-export",
                                 "exportOptions": {
-                                    "columns": function (idx, data, node) {
+                                    "columns": function (idx) {
                                         return idx !== 0;
                                     }
                                 }
@@ -85,7 +85,7 @@ class TableBuilder {
                                 "title": "teiviewer-csv-export",
                                 "className": "buttons-csv-export",
                                 "exportOptions": {
-                                    "columns": function (idx, data, node) {
+                                    "columns": function (idx) {
                                         return idx !== 0;
                                     }
                                 }
@@ -93,7 +93,7 @@ class TableBuilder {
                             {
                                 "text": "XML",
                                 "className": "buttons-xml-export",
-                                "action": function (evt, dt, node, conf) {
+                                "action": function () {
                                     dbServer.getAll().then(function(records) {
                                         exportXML(records);
                                     }).catch(function(err) {
@@ -105,8 +105,8 @@ class TableBuilder {
                             {
                                 "text": "JSON",
                                 "className": "buttons-json-export",
-                                "action": function (evt, dt, node, conf) {
-                                    dbServer.getAll().then(function(records) {
+                                "action": function () {
+                                    dbServer.getAll().then(function() {
                                         exportJSON(dataSet, false);
                                     }).catch(function(err) {
                                         notify(err.message, 'error');
@@ -117,8 +117,8 @@ class TableBuilder {
                             {
                                 "text": "JSONP",
                                 "className": "buttons-jsonp-export",
-                                "action": function (evt, dt, node, conf) {
-                                    dbServer.getAll().then(function(records) {
+                                "action": function () {
+                                    dbServer.getAll().then(function() {
                                         exportJSON(dataSet, true);
                                     }).catch(function(err) {
                                         notify(err.message, 'error');
@@ -144,7 +144,7 @@ class TableBuilder {
                             {
                                 "text": "Delete",
                                 "className": "buttons-delete",
-                                "action": function (evt, dt, node, conf) {
+                                "action": function (evt, dt) {
                                     $('tbody tr.selected').each(function() {
                                         const id = parseInt($(this).attr('id'));
                                         dbServer.remove(id).then(function() {
@@ -159,9 +159,8 @@ class TableBuilder {
                             {
                                 "text": "Delete All",
                                 "className": "buttons-delete-all",
-                                "action": function (evt, dt, node, conf) {
-                                    $('tbody tr').each(function() {
-                                        const id = $(this).attr('id');
+                                "action": function () {
+                                    $('tbody tr').each(function(evt, dt) {
                                         dbServer.clear().then(function() {
                                             dt.rows().remove().draw();
                                         }).catch(function(err) {
@@ -247,7 +246,7 @@ class TableBuilder {
         let transformer = new Transformer(this.xsltFilename),
             allRecords  = [];
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             dbServer.getAll().then((records) => {
                 allRecords = records;
                 return transformer.filterRecordsToUpdate(allRecords);
@@ -272,7 +271,7 @@ class TableBuilder {
 
     /** Build the table with data loaded from a JSONP URL. */
     buildFromJSONP(url) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.downloadDataset(url).then((dataset) => {
                 return this.build(dataset);
             }).then(function(table) {

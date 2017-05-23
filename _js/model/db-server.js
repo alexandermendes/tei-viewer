@@ -1,3 +1,5 @@
+import db from 'db.js';
+
 /**
  * Database server class.
  */
@@ -32,7 +34,6 @@ class DBServer {
                 resolve();
             }).catch(function(err) {
                 if (err.type === 'blocked') {
-                    oldConnection.close();
                     return err.resume;
                 }
                 reject(err);
@@ -94,7 +95,7 @@ class DBServer {
      */
     updateAll(records) {
         let updatePromises = [];
-        return new Promise((resolve, reject)  => {
+        return new Promise((resolve)  => {
             for (let r of records) {
                 updatePromises.push(this.update(r));
             }
@@ -138,7 +139,7 @@ class DBServer {
     /**
      * Clear all records.
      */
-    clear(id) {
+    clear() {
         return new Promise((resolve, reject)  => {
             this.connect().then(() => {
                 return this.server.tei.clear();
@@ -153,7 +154,7 @@ class DBServer {
     /**
      * Count records.
      */
-    count(id) {
+    count() {
         return new Promise((resolve, reject)  => {
             this.connect().then(() => {
                 return this.server.tei.count();

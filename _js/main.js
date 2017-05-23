@@ -1,4 +1,4 @@
-import table from './view/table';
-import upload from './view/upload';
-import docs from './view/docs';
-import landing from './view/landing';
+import './view/table';
+import './view/upload';
+import './view/docs';
+import './view/landing';
