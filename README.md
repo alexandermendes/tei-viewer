@@ -6,7 +6,7 @@ A Vue SPA project for viewing and manipulating TEI XML documents in table form.
 
 [Try it here](https://alexandermendes.github.io/tei-viewer)
 
-The site is built with Webpack and served with GitHub Pages.
+Built with Webpack and served with GitHub Pages.
 
 ```
 # install dependencies
@@ -15,6 +15,6 @@ npm install
 # serve with hot reload at localhost:8080
 npm run dev
 
-# build for production with minification
+# build for production
 npm run build
 ```
