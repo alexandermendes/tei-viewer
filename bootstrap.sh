@@ -20,11 +20,11 @@ gem install bundler
 cd /vagrant
 bundle install
 
-# Install Grunt CLI
-# npm install -g grunt-cli
+# Install dependencies
+npm install
 
 # Run dev tasks
-# grunt dev
+npm run dev
 
 # Serve
-# bundle exec jekyll serve --detach --host=0.0.0.0
+bundle exec jekyll serve --detach --host=0.0.0.0
