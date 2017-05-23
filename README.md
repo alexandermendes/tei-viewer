@@ -12,19 +12,9 @@ The site is built with Jekyll and served with GitHub Pages.
 # install dependencies
 npm install
 
-# install bundler
-gem install bundler
+# serve with hot reload at localhost:8080
+npm run dev
 
-# install gems
-bundle install
-
-# build
+# build for production with minification
 npm run build
-
-# serve at http://localhost/tei-viewer
-bundle exec jekyll serve
 ```
-
-Alternatively, you can run it with Vagrant using `vagrant up`.
-
-See the [documentation](https://alexandermendes.github.io/tei-viewer/docs) for further details.
