@@ -1,4 +1,4 @@
-![TEI Viewer logo](assets/img/logo.png)
+# TEI-Viewer
 
 [![Build Status](https://travis-ci.org/alexandermendes/tei-viewer.svg?branch=master)](https://travis-ci.org/alexandermendes/tei-viewer)
 
