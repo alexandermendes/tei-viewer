@@ -12,8 +12,8 @@
                 <b-nav-item-dropdown text="Format" right>
                     <!-- available formats injected -->
                 </b-nav-item-dropdown>
-                <b-form-input v-model="text" id="search" type="search" placeholder="Search"></b-form-input>
-                <b-form-file multiple v-model="array" id="upload" choose-label="Add Files"></b-form-file>
+                <b-form-input id="search" type="search" placeholder="Search"></b-form-input>
+                <b-form-file multiple id="upload" choose-label="Add Files"></b-form-file>
             </b-nav>
         </b-collapse>
     </b-navbar>
@@ -31,8 +31,6 @@ export default {}
 ;
 
 .navbar {
-    @extend .bg-faded;
-    border-bottom: 1px solid $gray-lighter;
 
     .navbar-brand {
         font-weight: $font-weight-bold;

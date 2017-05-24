@@ -5,12 +5,11 @@ import Table from './components/Table.vue'
 Vue.use(Router)
 
 export default new Router({
-    mode: 'history',
     routes: [
         {
-            path: '/:table',
-            name: 'landing',
+            path: '/tables/:id',
+            name: 'table',
             component: Table
-        },
+        }
     ]
 })
