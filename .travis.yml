@@ -1,22 +1,12 @@
-sudo: false
+language: node_js
 
-language: ruby
-
-rvm:
-  - 2.2.5
-
-env:
-  global:
-    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-    - TRAVIS_NODE_VERSION="4"
+node_js:
+  - "7"
+  - "6"
 
 install:
-  - npm install -g grunt-cli
   - npm install
-  - bundle install
 
 script:
-  - npm run lint -s
+  - npm run lint
   - npm test
-  - grunt build
-  - bundle exec jekyll build
