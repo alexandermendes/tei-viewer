@@ -8,8 +8,8 @@
 
                     <ul class="list-unstyled m-0">
                         <li class="justify-content-between" v-for="f in files">
-                            {{ f }}
-                            <span class="close" v-on:click="removeFile(f)">&times;</span>
+                            {{ f.name }}
+                            <span class="close" v-on:click="files.pop(f)">&times;</span>
                         </li>
                     </ul>
 
@@ -21,7 +21,7 @@
                         <span class="btn btn-primary btn-file" role="button">
                             Add Files <input type="file" accept="application/xml" @change="onFileChange" multiple>
                         </span>
-                        <button type="button" role="button" class="btn btn-success" v-on:click="generate" :disabled="!filesAdded || !selectedFormat">Generate</button>
+                        <button type="button" role="button" class="btn btn-success" v-on:click="generate" :disabled="!files.length || !selectedFormat">Generate</button>
                     </form>
                 </div>
             </div>
@@ -30,15 +30,8 @@
 </template>
 
 <script>
-import localForage from "localforage";
 import blxsl from "./assets/xsl/bl.xsl";
 import axios from 'axios';
-
-localForage.config({
-    name        : 'TEI-Viewer',
-    version     : 1.0,
-    storeName   : 'teixml',
-});
 
 export default {
     name: 'app',
@@ -48,69 +41,48 @@ export default {
             formats: [
                 "bl-simple.xsl"
             ],
-            selectedFormat: ""
+            selectedFormat: "",
+            files: []
         }
     },
     methods: {
         onFileChange(e) {
-            let files  = e.target.files || e.dataTransfer.files,
+            let chosenFiles  = e.target.files || e.dataTransfer.files,
                 reader = {};
 
-            if (!files.length) {
+            if (!chosenFiles.length) {
                 return;
             }
 
-            for (let f of files) {
+            for (let f of chosenFiles) {
                 reader = new FileReader();
                 reader.onload = () => {
-                    localForage.setItem(f.name, reader.result);
+                    this.files.push({
+                        name: f.name,
+                        data: reader.result
+                    });
                 };
-
                 reader.readAsText(f);
             }
-            this.$forceUpdate()
         },
         generate() {
             const xsltProc  = new XSLTProcessor(),
                   domParser = new DOMParser();
 
-            console.log(this.selectedFormat);
             const xsl = domParser.parseFromString(blxsl, "text/xml");
 
             xsltProc.importStylesheet(xsl);
 
-            localForage.keys().then(function(keys) {
+            for (let f of this.files) {
+                    let xml   = domParser.parseFromString(f.data, "text/xml"),
+                        doc   = xsltProc.transformToFragment(xml, document),
+                        div   = document.createElement('div'),
+                        clone = doc.cloneNode(true);
 
-                for (let k of keys) {
-                    localForage.getItem(k).then(function(item) {
-                        let xml   = domParser.parseFromString(item, "text/xml"),
-                            doc   = xsltProc.transformToFragment(xml, document),
-                            div   = document.createElement('div'),
-                            clone = doc.cloneNode(true);
+                    div.appendChild(clone);
+                    console.log(div.innerHTML);
+            }
 
-                        div.appendChild(clone);
-                        console.log(div.innerHTML);
-                    });
-                }
-
-            }).then(function() {
-                // localForage.clear();
-            });
-        },
-        removeFile(f) {
-            localForage.removeItem(f);
-        }
-    },
-    asyncComputed: {
-        filesAdded() {
-            return localForage.length().then(function(l) {
-                return l > 0;
-            });
-        },
-        files() {
-            return localForage.keys().then(function(keys) {
-                return keys;
-            })
         }
     }
 }
