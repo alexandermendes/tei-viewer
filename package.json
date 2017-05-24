@@ -12,6 +12,7 @@
     "url": "https://github.com/alexandermendes/tei-viewer/issues"
   },
   "dependencies": {
+    "axios": "^0.16.1",
     "bootstrap": "^4.0.0-alpha.6",
     "he": "^1.1.0",
     "localforage": "^1.5.0",
