@@ -21,7 +21,7 @@
                         <span class="btn btn-primary btn-file" role="button">
                             Add Files <input type="file" accept="application/xml" @change="onFileChange" multiple>
                         </span>
-                        <button type="button" role="button" class="btn btn-success" v-on:click="generate" :disabled="!filesAdded ">Generate</button>
+                        <button type="button" role="button" class="btn btn-success" v-on:click="generate" :disabled="!filesAdded || !selectedFormat">Generate</button>
                     </form>
                 </div>
             </div>
