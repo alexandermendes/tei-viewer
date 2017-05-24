@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/alexandermendes/tei-viewer.svg?branch=master)](https://travis-ci.org/alexandermendes/tei-viewer)
 
-A Vue SPA project for viewing and manipulating TEI XML documents in table form.
+A tool to convert TEI XML to Google Sheets.
 
 [Try it here](https://alexandermendes.github.io/tei-viewer)
 

@@ -1,7 +1,7 @@
 {
   "name": "tei-viewer",
-  "version": "0.3.0",
-  "description": "A web application for viewing and manipulating TEI XML documents in table form.",
+  "version": "2.0.0",
+  "description": "Convert TEI XML to Google Sheets.",
   "main": "index.html",
   "repository": {
     "type": "git",
@@ -13,21 +13,12 @@
   },
   "dependencies": {
     "bootstrap": "^4.0.0-alpha.6",
-    "bootstrap-vue": "^0.16.1",
-    "db.js": "^0.15.0",
-    "dropzone": "^4.3.0",
-    "file-saver": "^1.3.0",
-    "font-awesome": "^4.7.0",
     "he": "^1.1.0",
-    "jszip": "^3.1.0",
-    "localforage": "^1.5.0",
     "modernizr": "^3",
     "pace-progress": "^1.0.0",
     "pnotify": "^3.0.0",
-    "pygments-css": "^1.0.0",
     "urijs": "^1.18.0",
     "vue": "^2.3.3",
-    "vue-handsontable-official": "^0.2.5",
     "xml2js": "0.4.0"
   },
   "devDependencies": {
