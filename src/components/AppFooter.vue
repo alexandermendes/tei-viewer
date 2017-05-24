@@ -24,7 +24,7 @@ export default {}
 
 footer {
     width: 100%;
-    border-top: $border-light;
+    border-top: 1px solid $gray-lighter;
     bottom: 0;
 }
 
