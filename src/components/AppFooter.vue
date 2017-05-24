@@ -16,7 +16,7 @@ export default {}
 </script>
 
 <style lang="scss">
-@import 
+@import
     "~bootstrap/scss/bootstrap",
     "~bootstrap-vue/dist/bootstrap-vue",
     "~style/_vars.scss"
@@ -24,7 +24,6 @@ export default {}
 
 footer {
     width: 100%;
-    height: $footer-height;
     border-top: $border-light;
     bottom: 0;
 }

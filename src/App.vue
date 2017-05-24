@@ -22,20 +22,17 @@ export default {
 </script>
 
 <style lang="scss">
-html {
-	display: flex;
+.app {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
 
-    body {
-        min-height: 100vh;
-        min-width: 100vw;
-        display: flex;
-        flex-direction: column;
-
-        main {
-            flex: 1 1 0;
-            overflow-y: auto;
-            position: relative;
-        }
-    }
+main {
+    flex: 1 1 0;
+    overflow-y: auto;
+    position: relative;
 }
 </style>
