@@ -40,6 +40,8 @@ export default {}
     }
 
     .nav-item {
+        display: flex;
+        align-items: center;
         font-size: $font-size-xs;
         font-weight: $font-weight-bold;
         letter-spacing: 0.8px;
