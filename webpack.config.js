@@ -32,6 +32,10 @@ let config = {
                 ]
             },
             {
+                test: /\.xsl$/,
+                use: 'raw-loader'
+            },
+            {
                 test: /\.vue$/,
                 loader: 'vue-loader'
             },

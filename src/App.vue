@@ -14,7 +14,7 @@
                     </ul>
 
                     <form>
-                        <select class="custom-select">
+                        <select v-model="selectedFormat">
                           <option disabled selected hidden>Choose Format</option>
                           <option v-for="fmt in formats">{{ fmt }}</option>
                         </select>
@@ -31,7 +31,8 @@
 
 <script>
 import localForage from "localforage";
-import xml2js from 'xml2js';
+import blxsl from "./assets/xsl/bl.xsl";
+import axios from 'axios';
 
 localForage.config({
     name        : 'TEI-Viewer',
@@ -46,7 +47,8 @@ export default {
         return {
             formats: [
                 "bl-simple.xsl"
-            ]
+            ],
+            selectedFormat: ""
         }
     },
     methods: {
@@ -69,14 +71,30 @@ export default {
             this.$forceUpdate()
         },
         generate() {
+            const xsltProc  = new XSLTProcessor(),
+                  domParser = new DOMParser();
+
+            console.log(this.selectedFormat);
+            const xsl = domParser.parseFromString(blxsl, "text/xml");
+
+            xsltProc.importStylesheet(xsl);
+
             localForage.keys().then(function(keys) {
+
                 for (let k of keys) {
                     localForage.getItem(k).then(function(item) {
-                        console.log(item);
+                        let xml   = domParser.parseFromString(item, "text/xml"),
+                            doc   = xsltProc.transformToFragment(xml, document),
+                            div   = document.createElement('div'),
+                            clone = doc.cloneNode(true);
+
+                        div.appendChild(clone);
+                        console.log(div.innerHTML);
                     });
                 }
+
             }).then(function() {
-                localForage.clear();
+                // localForage.clear();
             });
         },
         removeFile(f) {
