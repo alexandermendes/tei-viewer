@@ -1,17 +1,12 @@
 'use strict';
 
-const webpack    = require('webpack'),
-      path       = require('path');
-
-const CleanPlugin    = require('clean-webpack-plugin'),
-      FaviconsPlugin = require('favicons-webpack-plugin');
-
-const distPath = path.resolve(__dirname, './dist');
+const webpack = require('webpack'),
+      path    = require('path');
 
 let config = {
     entry: "./src/main.js",
     output: {
-        path: distPath,
+        path: path.resolve(__dirname, './dist'),
         publicPath: "/dist/",
         filename: "build.js"
     },
@@ -36,15 +31,6 @@ let config = {
                     "img-loader"
                 ]
             },
-            {   test: /\.woff(2)?$/,
-                loader: "url-loader?limit=10000&mimetype=application/font-woff"
-            },
-            {   test: /\.(ttf|eot|svg)$/,
-                use: [
-                    "url-loader?limit=10000",
-                    "file-loader"
-                ]
-            },
             {
                 test: /\.vue$/,
                 loader: 'vue-loader'
@@ -52,22 +38,6 @@ let config = {
             {
                 test: require.resolve("pace-progress"),
                 loader: "imports-loader?define=>false"
-            },
-            {
-                test: require.resolve('numbro'),
-                loader: 'expose-loader?numbro'
-            },
-            {
-                test: require.resolve('moment'),
-                loader: 'expose-loader?moment'
-            },
-            {
-                test: require.resolve('pikaday'),
-                loader: 'expose-loader?Pikaday'
-            },
-            {
-                test: require.resolve('zeroclipboard'),
-                loader: 'expose-loader?ZeroClipboard'
             },
             {
                 test: /\.modernizrrc?$/,
@@ -81,25 +51,24 @@ let config = {
     resolve: {
         alias: {
             modernizr$: path.resolve(__dirname, '.modernizrrc'),
-            vue$: 'vue/dist/vue.esm.js',
-            style: path.resolve(__dirname, 'src/assets/style')
+            vue$: 'vue/dist/vue.esm.js'
         }
-    },
-    plugins: [
-        new CleanPlugin([
-            distPath
-        ]),
-        new webpack.ProvidePlugin({
-            jQuery: 'jquery',
-            $: 'jquery',
-            jquery: 'jquery',
-            Tether: 'tether'
-        })
-    ]
+    }
 };
 
 if (process.env.NODE_ENV === 'production') {
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+    module.exports.plugins = [
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        }),
+    ]
 }
 
 module.exports = config;
