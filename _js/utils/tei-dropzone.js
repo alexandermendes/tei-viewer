@@ -1,45 +1,55 @@
+import $ from 'jquery';
+import Dropzone from 'dropzone';
 import dbServer from '../model/db-server';
 
+
 /**
- * Subclass of Dropzone that uploads records to IndexedDB.
+ * Subclass of Dropzone that uploads records to a database.
  */
 class TEIDropzone extends Dropzone {
 
+    /**
+     * Initialise.
+     */
     constructor(elementId, opts) {
         super(elementId, opts);
         Dropzone.autoDiscover = false;
     }
 
+    /**
+     * Save a file to the database.
+     */
+    _save(f) {
+        return (evt) => {
+
+            try {
+                $.parseXML(evt.target.result);
+            } catch(error) {
+                this._errorProcessing([f], "Invalid XML");
+                return;
+            }
+
+            dbServer.add({
+                xml: evt.target.result,
+                filename: f.name
+            }).then(() => {
+                this._finished([f], 'Success');
+            }).catch((error) => {
+                this._errorProcessing([f], error.message);
+            });
+        };
+    }
+
+    /**
+     * Upload an array of files.
+     */
     uploadFiles(files) {
-        const _this = this;
         let reader = {};
-
-        function saveFile(f) {
-            return function(evt) {
-
-                try {
-                    $.parseXML(evt.target.result);
-                } catch(error) {
-                    _this._errorProcessing([f], "Invalid XML");
-                    return;
-                }
-
-                dbServer.add({
-                    xml: evt.target.result,
-                    filename: f.name
-                }).then(function() {
-                    _this._finished([f], 'Success');
-                }).catch(function(error) {
-                    _this._errorProcessing([f], error.message);
-                });
-            };
-        }
-
         for (let f of files) {
             reader = new FileReader();
-            reader.onload = saveFile(f);
+            reader.onload = this._save(f);
             reader.readAsText(f);
-            _this.emit("updateprogress");
+            this.emit("updateprogress");
         }
     }
 

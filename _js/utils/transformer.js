@@ -1,5 +1,6 @@
 import xml2js from 'xml2js';
 
+
 /**
  * A class for handing XSLT transformations.
  */
@@ -10,25 +11,26 @@ class Transformer {
      */
     constructor(xsltFilename) {
         this.xsltFilename = xsltFilename;
-        this.xsltProc = new XSLTProcessor();
     }
 
     /**
      * Load the XSLT stylesheet.
      */
     loadXSLT() {
-        const baseurl = $('#base-url').data('baseurl');
+        const baseurl  = $('#base-url').data('baseurl'),
+              xsltProc = new XSLTProcessor();
+
         return new Promise((resolve, reject) => {
             $.ajax({
                 url: `${baseurl}/assets/xslt/${this.xsltFilename}`,
             }).done((data) => {
                 try {
-                    this.xsltProc.importStylesheet(data);
+                    xsltProc.importStylesheet(data);
                 } catch(err) {
                     // Error not always specified so throw a new one
                     reject(new Error(`Couldn't loading ${this.xsltFilename}`));
                 }
-                resolve();
+                resolve(xsltProc);
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 reject(`Error loading XSLT: ${errorThrown}`);
             });
@@ -57,9 +59,9 @@ class Transformer {
     /**
      * Update a record.
      */
-    updateRecord(record) {
+    updateRecord(record, xsltProcessor) {
         const xml = $.parseXML(record.xml),
-              doc = this.xsltProc.transformToFragment(xml, document),
+              doc = xsltProcessor.transformToFragment(xml, document),
               txt = this.fragmentToText(doc);
 
         xml2js.parseString(txt, (err, result) => {
@@ -74,8 +76,8 @@ class Transformer {
      */
     transform(record) {
         return new Promise((resolve, reject) => {
-            this.loadXSLT().then(() => {
-                resolve(this.updateRecord(record));
+            this.loadXSLT().then((xsltProcessor) => {
+                resolve(this.updateRecord(record, xsltProcessor));
             }).catch(function(err) {
                 reject(err);
             });
@@ -88,9 +90,9 @@ class Transformer {
     transformMultiple(records) {
         let promises = [];
         return new Promise((resolve, reject) => {
-            this.loadXSLT().then(() => {
+            this.loadXSLT().then((xsltProcessor) => {
                 for (let r of records) {
-                    promises.push(this.updateRecord(r));
+                    promises.push(this.updateRecord(r, xsltProcessor));
                 }
                 resolve(Promise.all(promises));
             }).catch(function(err) {

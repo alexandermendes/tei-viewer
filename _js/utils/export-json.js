@@ -1,4 +1,5 @@
 import JSZip from 'jszip';
+import FileSaver from 'file-saver';
 
 
 /**
@@ -13,9 +14,10 @@ const exportJSON = function(dataSet, wrapJSON) {
     }
 
     zip.file('data.json', json);
-    zip.generateAsync({type:'blob'}).then(function(blob) {
-        saveAs(blob, 'teiviewer-json-export.zip');
+    zip.generateAsync({type: 'blob'}).then(function(blob) {
+        FileSaver.saveAs(blob, 'teiviewer-json-export.zip');
     });
+    return zip;
 };
 
 export default exportJSON;
