@@ -10,6 +10,8 @@ The site is built with Jekyll and served with GitHub Pages.
 
 ```
 # install npm packages
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/alexandermendes/tei-viewer.svg)](https://greenkeeper.io/)
 npm install
 # install bundler
 gem install bundler
